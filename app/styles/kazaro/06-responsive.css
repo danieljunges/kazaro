@@ -1,0 +1,19 @@
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 980px) {
+  .hero-inner, .trust-split, .pro-banner-inner { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .pros-grid, .how-grid, .testim-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .sp-sidebar { display: none; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-row { grid-template-columns: 1fr; }
+  .dash-sidebar { display: none; }
+  .dash-body { margin-left: 0; }
+  .services-list { grid-template-columns: 1fr; }
+  .pp-header { flex-direction: column; align-items: flex-start; margin-top: -40px; }
+  .pp-actions { margin-top: 12px; }
+  .trust-visual { display: none; }
+}
