@@ -1,0 +1,20 @@
+Kazaro — Supabase
+
+1) Abra o projeto no Supabase → SQL Editor → cole o arquivo:
+   migrations/20250331120000_initial_schema.sql
+   → Run (sem erros).
+
+2) Tabelas criadas:
+   - profiles        (ligada a auth.users; criada automaticamente no cadastro)
+   - professionals   (perfil público do prestador; slug único)
+   - pro_services    (serviços com preço)
+
+3) Inserir um prestador de teste (substitua USER_ID pelo uuid em Authentication → Users):
+   - Veja EXEMPLO_PRESTADOR.sql nesta pasta.
+
+4) Busca /perfil:
+   - /search lê public.professionals. Se a tabela estiver vazia, aparece estado “Ainda não há profissionais na base”.
+   - Se a query falhar (projeto sem migrar), o site usa os mocks antigos.
+
+5) Auth:
+   - Redirect URLs: https://SEU_DOMINIO/auth/callback

@@ -1,12 +1,34 @@
 import Link from "next/link";
 
-export function SearchEmptyState() {
+type Variant = "qa" | "database-empty";
+
+export function SearchEmptyState({ variant = "qa" }: { variant?: Variant }) {
+  if (variant === "database-empty") {
+    return (
+      <div className="search-empty">
+        <p className="search-empty__title">Ainda não há profissionais na base</p>
+        <p className="search-empty__text">
+          As tabelas do Supabase estão prontas — cadastre prestadores no painel (SQL ou painel admin) para eles
+          aparecerem aqui automaticamente.
+        </p>
+        <div className="search-empty__actions">
+          <Link href="/para-profissionais" className="search-empty__btn">
+            Área do prestador
+          </Link>
+          <Link href="/" className="search-empty__link">
+            Voltar ao início
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="search-empty">
       <p className="search-empty__title">Nenhum profissional encontrado</p>
       <p className="search-empty__text">
-        Tente outro termo, mude os filtros à esquerda ou amplie a região quando a busca real estiver
-        ligada ao mapa.
+        Tente outro termo, mude os filtros à esquerda ou amplie a região quando a busca estiver ligada a dados
+        reais.
       </p>
       <div className="search-empty__actions">
         <Link href="/search" className="search-empty__btn">

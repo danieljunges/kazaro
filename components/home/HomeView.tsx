@@ -547,7 +547,7 @@ export function HomeView() {
                 Selo de perfil verificado após análise
               </div>
             </div>
-            <Link href="/dashboard" className="btn-white">
+            <Link href="/para-profissionais" className="btn-white">
               Criar perfil profissional →
             </Link>
           </div>

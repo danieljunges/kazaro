@@ -18,13 +18,16 @@ export function MarketingNav() {
             <a href="/#como-funciona">Como funciona</a>
           </li>
           <li>
-            <Link href="/#profissionais">Para profissionais</Link>
+            <Link href="/para-profissionais">Para profissionais</Link>
           </li>
         </ul>
         <div className="nav-right">
-          <button type="button" className="btn-ghost">
+          <Link href="/entrar" className="btn-ghost">
             Entrar
-          </button>
+          </Link>
+          <Link href="/criar-conta" className="btn-ghost">
+            Criar conta
+          </Link>
           <Link href="/search" className="btn-cta">
             Agendar agora →
           </Link>

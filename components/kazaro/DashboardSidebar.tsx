@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 import { LogoIcon } from "./Brand";
 
 const NAV = [
@@ -44,8 +45,9 @@ function Icon({ name }: { name: (typeof NAV)[number]["icon"] }) {
   );
 }
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ userEmail }: { userEmail: string | null }) {
   const [active, setActive] = useState(0);
+
   return (
     <aside className="dash-sidebar">
       <div className="ds-logo">
@@ -55,12 +57,32 @@ export function DashboardSidebar() {
         <span className="ds-logo-name">Kazaro</span>
       </div>
       <div className="ds-profile">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="https://i.pravatar.cc/80?img=11" alt="Carlos" />
-        <div>
-          <div className="ds-pname">Carlos Machado</div>
-          <div className="ds-prole">Encanador · 4.9 ⭐</div>
-        </div>
+        {userEmail ? (
+          <>
+            <div className="ds-ava-letter" aria-hidden>
+              {(userEmail[0] ?? "?").toUpperCase()}
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <div className="ds-pname">{userEmail.split("@")[0]}</div>
+              <div className="ds-prole" style={{ wordBreak: "break-all" }}>
+                {userEmail}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="https://i.pravatar.cc/80?img=11" alt="" />
+            <div>
+              <div className="ds-pname">Modo demonstração</div>
+              <div className="ds-prole">
+                <Link href="/entrar">Entrar</Link>
+                {" · "}
+                <Link href="/criar-conta">Criar conta</Link>
+              </div>
+            </div>
+          </>
+        )}
       </div>
       <span className="ds-nav-label">Menu</span>
       {NAV.map((item, i) => (
@@ -76,6 +98,13 @@ export function DashboardSidebar() {
         </button>
       ))}
       <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--border)" }}>
+        {userEmail ? <SignOutButton /> : null}
+        <Link href="/pro" className="ds-link" style={{ fontSize: "12.5px" }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+          Ativar Perfil Pro
+        </Link>
         <Link href="/" className="ds-link" style={{ fontSize: "12.5px" }}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />

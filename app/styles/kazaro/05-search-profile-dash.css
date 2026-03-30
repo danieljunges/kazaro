@@ -247,6 +247,36 @@ button.chip { -webkit-appearance: none; appearance: none; }
   border: 4px solid var(--paper);
   box-shadow: var(--shadow-lg);
 }
+.pp-pic .pp-avatar-initials {
+  width: 108px;
+  height: 108px;
+  border-radius: 20px;
+  border: 4px solid var(--paper);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(140deg, #8a9e7a, #5e7a4e);
+}
+.pp-pic .pp-avatar-initials.ph-2 {
+  background: linear-gradient(140deg, #7a8a9e, #4e5e7a);
+}
+.pp-pic .pp-avatar-initials.ph-3 {
+  background: linear-gradient(140deg, #9e8a7a, #7a5e4e);
+}
+.pp-pic .pp-avatar-initials.ph-4 {
+  background: linear-gradient(140deg, #8a7a9e, #5e4e7a);
+}
+.pp-pic .pp-avatar-initials.ph-5 {
+  background: linear-gradient(140deg, #9e9a7a, #7a764e);
+}
+.pp-pic .pp-avatar-initials.ph-6 {
+  background: linear-gradient(140deg, #7a9e8a, #4e7a5e);
+}
 .pp-verified-pill {
   position: absolute;
   bottom: -7px;

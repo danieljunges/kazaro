@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 
-const tabs = ["Serviços", "Sobre", "Avaliações (127)"];
-
-export function ProfileTabs() {
+export function ProfileTabs({ reviewsCount }: { reviewsCount: string }) {
   const [active, setActive] = useState(0);
+  const tabs = ["Serviços", "Sobre", `Avaliações (${reviewsCount})`];
   return (
     <div className="pp-tabs">
       {tabs.map((label, i) => (

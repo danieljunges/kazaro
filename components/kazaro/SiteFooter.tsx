@@ -35,16 +35,19 @@ export function SiteFooter() {
             <div className="footer-col-title">Empresa</div>
             <ul className="footer-links">
               <li>
-                <a href="#">Sobre o Kazaro</a>
+                <Link href="/sobre">Sobre o Kazaro</Link>
               </li>
               <li>
-                <Link href="/dashboard">Para profissionais</Link>
+                <Link href="/para-profissionais">Para profissionais</Link>
+              </li>
+              <li>
+                <Link href="/pro">Perfil Pro (30 dias)</Link>
               </li>
               <li>
                 <a href="/#como-funciona">Como funciona</a>
               </li>
               <li>
-                <a href="#">Blog</a>
+                <Link href="/blog">Blog</Link>
               </li>
             </ul>
           </div>
@@ -52,13 +55,13 @@ export function SiteFooter() {
             <div className="footer-col-title">Suporte</div>
             <ul className="footer-links">
               <li>
-                <a href="#">Central de ajuda</a>
+                <Link href="/ajuda">Central de ajuda</Link>
               </li>
               <li>
-                <a href="#">Fale conosco</a>
+                <Link href="/contato">Fale conosco</Link>
               </li>
               <li>
-                <a href="#">Garantia Kazaro</a>
+                <Link href="/garantia">Garantia Kazaro</Link>
               </li>
             </ul>
           </div>
@@ -66,8 +69,8 @@ export function SiteFooter() {
         <div className="footer-bottom">
           <span className="footer-copy">© {new Date().getFullYear()} Kazaro. Florianópolis, SC.</span>
           <div className="footer-legal">
-            <a href="#">Privacidade</a>
-            <a href="#">Termos</a>
+            <Link href="/privacidade">Privacidade</Link>
+            <Link href="/termos">Termos</Link>
           </div>
         </div>
       </div>

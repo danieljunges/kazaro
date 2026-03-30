@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { DashboardSidebar } from "@/components/kazaro/DashboardSidebar";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function formatTodayPtBR() {
   return new Intl.DateTimeFormat("pt-BR", {
@@ -9,12 +11,17 @@ function formatTodayPtBR() {
   }).format(new Date());
 }
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
   const subtitle = formatTodayPtBR();
+  const supabase = await getSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <div className="home-editorial">
       <div className="dash">
-        <DashboardSidebar />
+        <DashboardSidebar userEmail={user?.email ?? null} />
         <div className="dash-body">
         <div className="dash-topbar">
           <div>
@@ -87,13 +94,24 @@ export default function DashboardPage() {
               <div className="kpi-label">Mensagens</div>
             </div>
           </div>
+          <div className="dash-card" style={{ marginBottom: 18 }}>
+            <div className="dc-head">
+              Perfil Pro{" "}
+              <Link className="dc-link" href="/pro">
+                Ver plano →
+              </Link>
+            </div>
+            <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14, lineHeight: 1.6 }}>
+              Destaque seu perfil por 30 dias com mais visibilidade nas buscas e selo Pro na vitrine de profissionais.
+            </p>
+          </div>
           <div className="dash-row">
             <div className="dash-card">
               <div className="dc-head">
                 Receita mensal{" "}
-                <a className="dc-link" href="#">
+                <Link className="dc-link" href="/dashboard/receita">
                   Ver detalhes →
-                </a>
+                </Link>
               </div>
               <div className="chart">
                 {[
@@ -123,9 +141,9 @@ export default function DashboardPage() {
             <div className="dash-card">
               <div className="dc-head">
                 Mensagens{" "}
-                <a className="dc-link" href="#">
+                <Link className="dc-link" href="/dashboard/mensagens">
                   Ver todas →
-                </a>
+                </Link>
               </div>
               <div className="msg-list">
                 <div className="msg-item">
