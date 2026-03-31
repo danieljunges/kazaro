@@ -1,0 +1,139 @@
+import { getSupabaseServerClient } from "@/lib/supabase/server";
+
+export type BookingServiceOption = { id: string; name: string };
+
+export type BookingPageContext = {
+  professionalId: string;
+  slug: string;
+  displayName: string;
+  services: BookingServiceOption[];
+};
+
+export async function fetchBookingPageContext(slug: string): Promise<BookingPageContext | null> {
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data: pro, error: pErr } = await supabase
+      .from("professionals")
+      .select("id, slug, display_name")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (pErr || !pro?.id) return null;
+
+    const { data: svc } = await supabase
+      .from("pro_services")
+      .select("id, name")
+      .eq("professional_id", pro.id)
+      .order("sort_order", { ascending: true });
+
+    return {
+      professionalId: pro.id as string,
+      slug: pro.slug as string,
+      displayName: pro.display_name as string,
+      services: ((svc ?? []) as { id: string; name: string }[]).map((s) => ({ id: s.id, name: s.name })),
+    };
+  } catch {
+    return null;
+  }
+}
+
+export type IncomingBookingRow = {
+  id: string;
+  scheduled_at: string;
+  status: string;
+  client_name_snapshot: string;
+  client_email_snapshot: string | null;
+  service_name_snapshot: string | null;
+  client_note: string | null;
+};
+
+export async function fetchIncomingBookingsForPro(
+  professionalId: string,
+  limit = 20,
+): Promise<IncomingBookingRow[]> {
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("bookings")
+      .select(
+        "id, scheduled_at, status, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note",
+      )
+      .eq("professional_id", professionalId)
+      .order("scheduled_at", { ascending: false })
+      .limit(limit);
+
+    if (error || !data) return [];
+    return data as IncomingBookingRow[];
+  } catch {
+    return [];
+  }
+}
+
+export type MyBookingRow = {
+  id: string;
+  scheduled_at: string;
+  status: string;
+  service_name_snapshot: string | null;
+  professionals: { display_name: string; slug: string } | null;
+};
+
+export async function fetchMyBookingsAsClient(userId: string, limit = 15): Promise<MyBookingRow[]> {
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("bookings")
+      .select(
+        `
+        id,
+        scheduled_at,
+        status,
+        service_name_snapshot,
+        professionals (
+          display_name,
+          slug
+        )
+      `,
+      )
+      .eq("client_id", userId)
+      .order("scheduled_at", { ascending: false })
+      .limit(limit);
+
+    if (error || !data) return [];
+    return data as unknown as MyBookingRow[];
+  } catch {
+    return [];
+  }
+}
+
+export async function countPendingIncomingBookings(professionalId: string): Promise<number> {
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { count, error } = await supabase
+      .from("bookings")
+      .select("*", { count: "exact", head: true })
+      .eq("professional_id", professionalId)
+      .eq("status", "pending");
+
+    if (error) return 0;
+    return count ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** Pedidos que ainda exigem ação ou estão em andamento (visão KPI). */
+export async function countActiveIncomingBookings(professionalId: string): Promise<number> {
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { count, error } = await supabase
+      .from("bookings")
+      .select("*", { count: "exact", head: true })
+      .eq("professional_id", professionalId)
+      .in("status", ["pending", "confirmed"]);
+
+    if (error) return 0;
+    return count ?? 0;
+  } catch {
+    return 0;
+  }
+}

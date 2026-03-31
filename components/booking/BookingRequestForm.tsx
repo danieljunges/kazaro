@@ -1,0 +1,193 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, FormEvent, useEffect } from "react";
+import { BOOKING_TIME_OPTIONS } from "@/lib/booking/constants";
+import type { BookingPageContext } from "@/lib/supabase/bookings";
+import { submitBookingRequest } from "@/app/profissional/[id]/agendar/actions";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+
+type Props = {
+  context: BookingPageContext;
+  /** índice do serviço na lista (query ?servico=) */
+  initialServiceIndex: number | null;
+};
+
+function todayIsoDate() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+export function BookingRequestForm({ context, initialServiceIndex }: Props) {
+  const router = useRouter();
+  const [date, setDate] = useState(todayIsoDate());
+  const [time, setTime] = useState<string>(BOOKING_TIME_OPTIONS[0]);
+  const [serviceId, setServiceId] = useState<string>(() => {
+    if (initialServiceIndex == null || !context.services.length) return "";
+    const i = Math.max(0, Math.min(initialServiceIndex, context.services.length - 1));
+    return context.services[i]?.id ?? "";
+  });
+  const [note, setNote] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
+
+  const loginNext = `/profissional/${context.slug}/agendar`;
+
+  const [sessionChecked, setSessionChecked] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const supabase = getSupabaseBrowserClient();
+      const { data } = await supabase.auth.getSession();
+      if (!cancelled) {
+        setLoggedIn(!!data.session);
+        setSessionChecked(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      const result = await submitBookingRequest({
+        professionalId: context.professionalId,
+        date,
+        time,
+        proServiceId: serviceId || null,
+        clientNote: note,
+      });
+      if (!result.ok) {
+        setError(result.message);
+        return;
+      }
+      setDone(true);
+      router.refresh();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (!sessionChecked) {
+    return (
+      <p className="sec-sub booking-muted" style={{ margin: 0 }}>
+        Carregando…
+      </p>
+    );
+  }
+
+  if (!loggedIn) {
+    return (
+      <div className="booking-guest">
+        <p className="sec-sub" style={{ margin: "0 0 16px" }}>
+          Para enviar um pedido de agendamento para <strong>{context.displayName}</strong>, entre na sua conta (ou crie
+          uma em poucos segundos).
+        </p>
+        <div className="booking-guest-actions">
+          <Link href={`/entrar?next=${encodeURIComponent(loginNext)}`} className="btn-cta">
+            Entrar
+          </Link>
+          <Link href="/criar-conta" className="btn-ghost">
+            Criar conta
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (done) {
+    return (
+      <div className="booking-success">
+        <p className="booking-success-title">Pedido enviado</p>
+        <p className="sec-sub" style={{ margin: "0 0 20px" }}>
+          {context.displayName} receberá seu pedido com data, horário e observações. Você pode acompanhar o status em{" "}
+          <Link href="/dashboard" className="auth-link">
+            Dashboard
+          </Link>
+          .
+        </p>
+        <div className="booking-guest-actions">
+          <Link href={`/profissional/${context.slug}`} className="btn-ghost">
+            Voltar ao perfil
+          </Link>
+          <Link href="/search" className="btn-cta">
+            Buscar outros profissionais
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <form className="booking-form" onSubmit={onSubmit}>
+      <label className="auth-field">
+        <span className="auth-label">Data preferida</span>
+        <input
+          className="auth-input"
+          type="date"
+          required
+          min={todayIsoDate()}
+          value={date}
+          onChange={(ev) => setDate(ev.target.value)}
+        />
+      </label>
+
+      <label className="auth-field">
+        <span className="auth-label">Horário sugerido</span>
+        <select className="auth-input" value={time} onChange={(ev) => setTime(ev.target.value)} required>
+          {BOOKING_TIME_OPTIONS.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="auth-field">
+        <span className="auth-label">Serviço (opcional)</span>
+        <select
+          className="auth-input"
+          value={serviceId}
+          onChange={(ev) => setServiceId(ev.target.value)}
+          disabled={context.services.length === 0}
+        >
+          <option value="">A combinar com o profissional</option>
+          {context.services.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="auth-field">
+        <span className="auth-label">Observações</span>
+        <textarea
+          className="auth-input booking-textarea"
+          rows={4}
+          maxLength={2000}
+          value={note}
+          onChange={(ev) => setNote(ev.target.value)}
+          placeholder="Endereço ou referência, tipo de problema, melhor forma de contato…"
+        />
+      </label>
+
+      {error ? <p className="auth-error">{error}</p> : null}
+
+      <button type="submit" className="btn-cta auth-submit" disabled={loading}>
+        {loading ? "Enviando…" : "Enviar pedido de agendamento"}
+      </button>
+    </form>
+  );
+}

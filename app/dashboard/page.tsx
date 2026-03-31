@@ -1,5 +1,10 @@
 import Link from "next/link";
 import { DashboardSidebar } from "@/components/kazaro/DashboardSidebar";
+import {
+  countActiveIncomingBookings,
+  fetchIncomingBookingsForPro,
+  fetchMyBookingsAsClient,
+} from "@/lib/supabase/bookings";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function formatTodayPtBR() {
@@ -11,12 +16,62 @@ function formatTodayPtBR() {
   }).format(new Date());
 }
 
+function formatBookingWhen(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(d);
+}
+
+function statusLabelPt(status: string): string {
+  switch (status) {
+    case "pending":
+      return "Pendente";
+    case "confirmed":
+      return "Confirmado";
+    case "cancelled":
+      return "Cancelado";
+    case "completed":
+      return "Concluído";
+    default:
+      return status;
+  }
+}
+
+function statusStyle(status: string): { background: string; color: string } {
+  switch (status) {
+    case "confirmed":
+      return { background: "var(--success-bg)", color: "var(--success)" };
+    case "pending":
+      return { background: "var(--coral-bg)", color: "var(--coral)" };
+    case "cancelled":
+      return { background: "var(--ember-bg)", color: "var(--ember)" };
+    case "completed":
+      return { background: "var(--cream)", color: "var(--ink60)" };
+    default:
+      return { background: "var(--cream)", color: "var(--ink60)" };
+  }
+}
+
 export default async function DashboardPage() {
   const subtitle = formatTodayPtBR();
   const supabase = await getSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const uid = user?.id;
+  const [incomingBookings, myBookingsAsClient, activeOrdersCount] = uid
+    ? await Promise.all([
+        fetchIncomingBookingsForPro(uid, 12),
+        fetchMyBookingsAsClient(uid, 8),
+        countActiveIncomingBookings(uid),
+      ])
+    : [[], [], 0];
 
   return (
     <div className="home-editorial">
@@ -64,9 +119,11 @@ export default async function DashboardPage() {
                     <rect x="9" y="3" width="6" height="4" rx="2" />
                   </svg>
                 </div>
-                <span className="kpi-pill pill-up">2 novos</span>
+                <span className="kpi-pill pill-up">
+                  {activeOrdersCount > 0 ? `${activeOrdersCount} ativos` : "em tempo real"}
+                </span>
               </div>
-              <div className="kpi-val">4</div>
+              <div className="kpi-val">{activeOrdersCount}</div>
               <div className="kpi-label">Pedidos ativos</div>
             </div>
             <div className="kpi-card">
@@ -186,72 +243,101 @@ export default async function DashboardPage() {
               </div>
             </div>
           </div>
-          <div className="dash-card">
-            <div className="dc-head">Pedidos recentes</div>
-            <div style={{ overflowX: "auto" }}>
-              <table className="orders-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Cliente</th>
-                    <th>Serviço</th>
-                    <th>Data</th>
-                    <th>Status</th>
-                    <th>Valor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="o-id">#1042</td>
-                    <td className="o-client">Mariana Souza</td>
-                    <td>Conserto de vazamento</td>
-                    <td>29 mar, 14h</td>
-                    <td>
-                      <span className="o-status" style={{ background: "var(--success-bg)", color: "var(--success)" }}>
-                        Confirmado
-                      </span>
-                    </td>
-                    <td className="o-price">R$ 120</td>
-                  </tr>
-                  <tr>
-                    <td className="o-id">#1041</td>
-                    <td className="o-client">Felipe Andrade</td>
-                    <td>Instalação de aquecedor</td>
-                    <td>30 mar, 10h</td>
-                    <td>
-                      <span className="o-status" style={{ background: "var(--coral-bg)", color: "var(--coral)" }}>
-                        Pendente
-                      </span>
-                    </td>
-                    <td className="o-price">R$ 280</td>
-                  </tr>
-                  <tr>
-                    <td className="o-id">#1040</td>
-                    <td className="o-client">Beatriz Corrêa</td>
-                    <td>Desentupimento</td>
-                    <td>28 mar, 09h</td>
-                    <td>
-                      <span className="o-status" style={{ background: "var(--cream)", color: "var(--ink60)" }}>
-                        Concluído
-                      </span>
-                    </td>
-                    <td className="o-price">R$ 150</td>
-                  </tr>
-                  <tr>
-                    <td className="o-id">#1039</td>
-                    <td className="o-client">André Lacerda</td>
-                    <td>Conserto de vazamento</td>
-                    <td>27 mar, 15h</td>
-                    <td>
-                      <span className="o-status" style={{ background: "var(--cream)", color: "var(--ink60)" }}>
-                        Concluído
-                      </span>
-                    </td>
-                    <td className="o-price">R$ 120</td>
-                  </tr>
-                </tbody>
-              </table>
+          {myBookingsAsClient.length > 0 ? (
+            <div className="dash-card" style={{ marginBottom: 18 }}>
+              <div className="dc-head">Meus agendamentos</div>
+              <p style={{ margin: "0 0 14px", color: "var(--ink60)", fontSize: 14 }}>
+                Pedidos que você enviou a profissionais pelo Kazaro.
+              </p>
+              <div style={{ overflowX: "auto" }}>
+                <table className="orders-table">
+                  <thead>
+                    <tr>
+                      <th>Profissional</th>
+                      <th>Serviço</th>
+                      <th>Data</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {myBookingsAsClient.map((row) => {
+                      const pro = row.professionals;
+                      const st = statusStyle(row.status);
+                      return (
+                        <tr key={row.id}>
+                          <td className="o-client">
+                            {pro?.slug ? (
+                              <Link href={`/profissional/${pro.slug}`} className="dc-link" style={{ fontWeight: 700 }}>
+                                {pro.display_name}
+                              </Link>
+                            ) : (
+                              pro?.display_name ?? "—"
+                            )}
+                          </td>
+                          <td>{row.service_name_snapshot ?? "A combinar"}</td>
+                          <td>{formatBookingWhen(row.scheduled_at)}</td>
+                          <td>
+                            <span className="o-status" style={{ background: st.background, color: st.color }}>
+                              {statusLabelPt(row.status)}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
+          ) : null}
+          <div className="dash-card">
+            <div className="dc-head">Pedidos recebidos (agendamentos)</div>
+            {incomingBookings.length === 0 ? (
+              <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14, lineHeight: 1.6 }}>
+                Nenhum pedido ainda. Com perfil de profissional cadastrado, solicitações feitas em{" "}
+                <Link href="/search" className="dc-link">
+                  /search
+                </Link>{" "}
+                e no seu perfil público aparecem aqui com contato e data sugerida.
+              </p>
+            ) : (
+              <div style={{ overflowX: "auto" }}>
+                <table className="orders-table">
+                  <thead>
+                    <tr>
+                      <th>Cliente</th>
+                      <th>Contato</th>
+                      <th>Serviço</th>
+                      <th>Data</th>
+                      <th>Status</th>
+                      <th>Obs.</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {incomingBookings.map((row) => {
+                      const st = statusStyle(row.status);
+                      return (
+                        <tr key={row.id}>
+                          <td className="o-client">{row.client_name_snapshot}</td>
+                          <td style={{ fontSize: 12 }}>{row.client_email_snapshot ?? "—"}</td>
+                          <td>{row.service_name_snapshot ?? "A combinar"}</td>
+                          <td>{formatBookingWhen(row.scheduled_at)}</td>
+                          <td>
+                            <span className="o-status" style={{ background: st.background, color: st.color }}>
+                              {statusLabelPt(row.status)}
+                            </span>
+                          </td>
+                          <td style={{ fontSize: 12, maxWidth: 200 }} title={row.client_note ?? undefined}>
+                            {row.client_note
+                              ? `${row.client_note.slice(0, 80)}${row.client_note.length > 80 ? "…" : ""}`
+                              : "—"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       </div>

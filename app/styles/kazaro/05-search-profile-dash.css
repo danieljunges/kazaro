@@ -341,9 +341,14 @@ button.chip { -webkit-appearance: none; appearance: none; }
   letter-spacing: -.02em;
   box-shadow: var(--shadow-sm);
   transition: all .2s;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 7px;
+  text-decoration: none;
+  cursor: pointer;
+}
+a.btn-book-now:visited {
+  color: var(--ink);
 }
 .btn-book-now:hover {
   background: var(--lime-bright);
@@ -725,10 +730,52 @@ button.chip { -webkit-appearance: none; appearance: none; }
   display: inline-block;
 }
 .o-price {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 15px;
   font-weight: 800;
   color: var(--ink);
   letter-spacing: -.03em;
+}
+
+/* ─── Pedido de agendamento (/profissional/…/agendar) ─── */
+.home-editorial .booking-section {
+  padding: 48px var(--page-x, 24px) 80px;
+}
+.home-editorial .booking-card {
+  max-width: 520px;
+  margin: 0 auto;
+}
+.home-editorial .booking-title {
+  font-size: clamp(28px, 4vw, 38px);
+  margin-bottom: 10px;
+}
+.home-editorial .booking-lead {
+  margin: 0 0 28px;
+  line-height: 1.55;
+}
+.home-editorial .booking-muted {
+  color: var(--ink60);
+}
+.home-editorial .booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.home-editorial .booking-textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.45;
+}
+.home-editorial .booking-guest-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.home-editorial .booking-success-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 8px;
 }
 

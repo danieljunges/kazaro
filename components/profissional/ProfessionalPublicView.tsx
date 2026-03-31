@@ -68,7 +68,7 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
             </svg>
             Mensagem
           </button>
-          <button type="button" className="btn-book-now">
+          <Link href={`/profissional/${detail.slug}/agendar`} className="btn-book-now">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
               <line x1="16" y1="2" x2="16" y2="6" />
@@ -76,7 +76,7 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
               <line x1="3" y1="10" x2="21" y2="10" />
             </svg>
             Agendar agora
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -97,17 +97,17 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
             Nenhum serviço cadastrado ainda neste perfil.
           </p>
         ) : (
-          detail.services.map((s) => (
-            <div key={s.name} className="service-item">
+          detail.services.map((s, i) => (
+            <div key={`${s.name}-${i}`} className="service-item">
               <div className="si-name">{s.name}</div>
               <div className="si-desc">{s.desc}</div>
               <div className="si-footer">
                 <div>
                   <span className="si-price">{s.price}</span> <span className="si-unit">/ serviço</span>
                 </div>
-                <button type="button" className="btn-contratar">
+                <Link href={`/profissional/${detail.slug}/agendar?servico=${i}`} className="btn-contratar">
                   Contratar →
-                </button>
+                </Link>
               </div>
             </div>
           ))
