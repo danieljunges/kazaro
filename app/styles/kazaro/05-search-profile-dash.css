@@ -180,12 +180,13 @@ button.chip { -webkit-appearance: none; appearance: none; }
 .sp-item-price { text-align: right; flex-shrink: 0; }
 .sp-item-from { font-size: 11px; color: var(--ink40); font-weight: 500; margin-bottom: 1px; }
 .sp-item-val {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 28px;
   font-weight: 800;
   color: var(--ink);
   letter-spacing: -.05em;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 .tag {
   font-size: 11px;
@@ -256,11 +257,12 @@ button.chip { -webkit-appearance: none; appearance: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 34px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.9);
   background: linear-gradient(140deg, #8a9e7a, #5e7a4e);
+  letter-spacing: -0.02em;
 }
 .pp-pic .pp-avatar-initials.ph-2 {
   background: linear-gradient(140deg, #7a8a9e, #4e5e7a);
@@ -368,12 +370,13 @@ a.btn-book-now:visited {
 .pp-stat { padding: 16px 20px; text-align: center; border-right: 1px solid var(--border); }
 .pp-stat:last-child { border-right: none; }
 .pp-stat-val {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 28px;
   font-weight: 900;
   color: var(--ink);
   letter-spacing: -.05em;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 .pp-stat-label { font-size: 12px; color: var(--ink60); font-weight: 500; margin-top: 4px; }
 
@@ -423,11 +426,12 @@ a.btn-book-now:visited {
 }
 .si-footer { display: flex; align-items: baseline; justify-content: space-between; }
 .si-price {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 22px;
   font-weight: 800;
   color: var(--ink);
   letter-spacing: -.04em;
+  font-variant-numeric: tabular-nums;
 }
 .si-unit { font-size: 12px; color: var(--ink40); font-weight: 400; }
 .btn-contratar {
@@ -615,13 +619,14 @@ a.btn-book-now:visited {
 .pill-up { background: var(--success-bg); color: var(--success); }
 .pill-warn { background: var(--coral-bg); color: var(--coral); }
 .kpi-val {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 27px;
   font-weight: 900;
   color: var(--ink);
   letter-spacing: -.05em;
   margin-bottom: 3px;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 .kpi-label { font-size: 12.5px; color: var(--ink60); font-weight: 500; }
 
@@ -729,6 +734,47 @@ a.btn-book-now:visited {
   letter-spacing: .01em;
   display: inline-block;
 }
+
+.kz-mini-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--border2);
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 10px;
+  letter-spacing: -0.01em;
+  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+  cursor: pointer;
+}
+.kz-mini-btn:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--cream);
+}
+.kz-mini-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.kz-mini-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.kz-mini-btn--confirmed {
+  background: var(--success-bg);
+  color: var(--success);
+  border-color: rgba(42, 107, 69, 0.18);
+}
+.kz-mini-btn--cancelled {
+  background: var(--coral-bg);
+  color: var(--coral);
+  border-color: rgba(255, 90, 44, 0.2);
+}
+.kz-mini-btn--completed {
+  background: var(--cream);
+  color: var(--ink60);
+}
 .o-price {
   font-family: var(--sans);
   font-size: 15px;
@@ -777,5 +823,52 @@ a.btn-book-now:visited {
   font-weight: 700;
   color: var(--ink);
   margin: 0 0 8px;
+}
+
+.home-editorial .booking-success {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.home-editorial .booking-recap {
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(223, 255, 77, 0.08), rgba(255, 255, 255, 1) 55%);
+  border-radius: 14px;
+  padding: 14px 14px 12px;
+  margin: 0 0 18px;
+}
+
+.home-editorial .booking-recap-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  padding: 7px 4px;
+  align-items: baseline;
+  border-bottom: 1px solid rgba(230, 226, 218, 0.7);
+}
+.home-editorial .booking-recap-row:last-of-type {
+  border-bottom: none;
+}
+.home-editorial .booking-recap-k {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink40);
+}
+.home-editorial .booking-recap-v {
+  font-size: 13.5px;
+  color: var(--ink);
+  font-weight: 700;
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+.home-editorial .booking-recap-hint {
+  margin: 10px 4px 0;
+  font-size: 12.5px;
+  color: var(--ink60);
+  line-height: 1.5;
 }
 

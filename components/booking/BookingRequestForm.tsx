@@ -35,6 +35,12 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [submitted, setSubmitted] = useState<{
+    date: string;
+    time: string;
+    serviceLabel: string;
+    note: string;
+  } | null>(null);
 
   const loginNext = `/profissional/${context.slug}/agendar`;
 
@@ -59,8 +65,14 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+    if (!context.isBookable || !context.professionalId) {
+      setError(context.unavailableReason ?? "Este perfil ainda não aceita agendamentos reais.");
+      return;
+    }
     setLoading(true);
     try {
+      const serviceLabel =
+        context.services.find((s) => s.id === serviceId)?.name || (serviceId ? "Serviço selecionado" : "A combinar");
       const result = await submitBookingRequest({
         professionalId: context.professionalId,
         date,
@@ -72,6 +84,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
         setError(result.message);
         return;
       }
+      setSubmitted({ date, time, serviceLabel, note: note.trim() });
       setDone(true);
       router.refresh();
     } finally {
@@ -106,7 +119,37 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     );
   }
 
+  if (!context.isBookable || !context.professionalId) {
+    return (
+      <div className="booking-guest">
+        <p className="sec-sub" style={{ margin: "0 0 12px" }}>
+          {context.unavailableReason ?? "Este perfil ainda não está habilitado para agendamento real."}
+        </p>
+        <div className="booking-guest-actions">
+          <Link href="/search" className="btn-cta">
+            Ver profissionais ativos
+          </Link>
+          <Link href={`/profissional/${context.slug}`} className="btn-ghost">
+            Voltar ao perfil
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (done) {
+    const when = (() => {
+      const d = new Date(`${(submitted?.date ?? date).trim()}T${(submitted?.time ?? time).trim()}:00`);
+      if (Number.isNaN(d.getTime())) return `${submitted?.date ?? date} · ${submitted?.time ?? time}`;
+      return new Intl.DateTimeFormat("pt-BR", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(d);
+    })();
+
     return (
       <div className="booking-success">
         <p className="booking-success-title">Pedido enviado</p>
@@ -117,6 +160,25 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
           </Link>
           .
         </p>
+        <div className="booking-recap" aria-label="Resumo do pedido">
+          <div className="booking-recap-row">
+            <span className="booking-recap-k">Quando</span>
+            <span className="booking-recap-v">{when}</span>
+          </div>
+          <div className="booking-recap-row">
+            <span className="booking-recap-k">Serviço</span>
+            <span className="booking-recap-v">{submitted?.serviceLabel ?? "A combinar"}</span>
+          </div>
+          {submitted?.note ? (
+            <div className="booking-recap-row">
+              <span className="booking-recap-k">Obs.</span>
+              <span className="booking-recap-v">{submitted.note}</span>
+            </div>
+          ) : null}
+          <p className="booking-recap-hint">
+            Sem pagamento agora. Assim que o profissional confirmar, você verá o status no Dashboard.
+          </p>
+        </div>
         <div className="booking-guest-actions">
           <Link href={`/profissional/${context.slug}`} className="btn-ghost">
             Voltar ao perfil

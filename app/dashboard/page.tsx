@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DashboardSidebar } from "@/components/kazaro/DashboardSidebar";
+import { BookingStatusButtons } from "@/components/dashboard/BookingStatusButtons";
 import {
   countActiveIncomingBookings,
   fetchIncomingBookingsForPro,
@@ -310,6 +311,7 @@ export default async function DashboardPage() {
                       <th>Data</th>
                       <th>Status</th>
                       <th>Obs.</th>
+                      <th style={{ textAlign: "right" }}>Ações</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -330,6 +332,9 @@ export default async function DashboardPage() {
                             {row.client_note
                               ? `${row.client_note.slice(0, 80)}${row.client_note.length > 80 ? "…" : ""}`
                               : "—"}
+                          </td>
+                          <td style={{ textAlign: "right" }}>
+                            <BookingStatusButtons bookingId={row.id} currentStatus={row.status} />
                           </td>
                         </tr>
                       );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CompactNav } from "@/components/kazaro/CompactNav";
 import { BookingRequestForm } from "@/components/booking/BookingRequestForm";
+import { resolveProfessionalDetail } from "@/lib/professionals";
 import { fetchBookingPageContext } from "@/lib/supabase/bookings";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
 
@@ -26,8 +27,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AgendarPage({ params, searchParams }: Props) {
   const { id: slug } = await params;
   const sp = await searchParams;
-  const ctx = await fetchBookingPageContext(slug);
-  if (!ctx) notFound();
+  const fromDb = await fetchBookingPageContext(slug);
+  const ctx =
+    fromDb ??
+    (() => {
+      const detail = resolveProfessionalDetail(slug);
+      return {
+        professionalId: null,
+        slug: detail.slug,
+        displayName: detail.name,
+        services: detail.services.map((s, i) => ({ id: `demo-${i}`, name: s.name })),
+        isBookable: false,
+        unavailableReason:
+          "Este perfil ainda está em modo demonstração. Para testar envio real, use um profissional cadastrado no Supabase.",
+      };
+    })();
+  if (!ctx?.slug) notFound();
 
   let initialServiceIndex: number | null = null;
   if (sp.servico != null && sp.servico !== "") {

@@ -1,5 +1,7 @@
+﻿import { Suspense } from "react";
 import type { Metadata } from "next";
 import "./globals.css";
+import { RouteScrollTop } from "@/components/common/RouteScrollTop";
 import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -7,7 +9,7 @@ const siteUrl = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${SITE_NAME} — Serviços para casa em Florianópolis`,
+    default: `${SITE_NAME} - Servicos para casa em Florianopolis`,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
@@ -16,12 +18,12 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     url: siteUrl,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} — Serviços para casa em Florianópolis`,
+    title: `${SITE_NAME} - Servicos para casa em Florianopolis`,
     description: SITE_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} — Serviços para casa em Florianópolis`,
+    title: `${SITE_NAME} - Servicos para casa em Florianopolis`,
     description: SITE_DESCRIPTION,
   },
   robots: {
@@ -51,7 +53,12 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <Suspense fallback={null}>
+          <RouteScrollTop />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }

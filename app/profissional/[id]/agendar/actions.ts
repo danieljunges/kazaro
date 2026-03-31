@@ -99,6 +99,14 @@ export async function submitBookingRequest(
   });
 
   if (insErr) {
+    const msg = insErr.message?.toLowerCase() ?? "";
+    if (msg.includes("relation") && msg.includes("bookings")) {
+      return {
+        ok: false,
+        message:
+          "Tabela de agendamentos ainda não foi criada no banco. Rode a migration 20250331140000_bookings.sql no Supabase.",
+      };
+    }
     return { ok: false, message: insErr.message || "Não foi possível salvar o pedido." };
   }
 

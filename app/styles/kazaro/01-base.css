@@ -1,8 +1,8 @@
-/* ─────────────────────────────────────────
+﻿/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    RESET & BASE
-───────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+html { scroll-behavior: auto; font-size: 16px; }
 body {
   font-family: 'Satoshi', system-ui, sans-serif;
   background: var(--paper);
@@ -15,10 +15,10 @@ img { display: block; max-width: 100%; }
 button { cursor: pointer; font-family: inherit; }
 a { text-decoration: none; color: inherit; }
 
-/* ─────────────────────────────────────────
-   DESIGN TOKENS — estética referência:
-   cream quente · preto forte · lima/chartreuse · cantos generosos
-───────────────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   DESIGN TOKENS â€” estÃ©tica referÃªncia:
+   cream quente Â· preto forte Â· lima/chartreuse Â· cantos generosos
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
   --paper:   #F6F5F2;
   --cream:   #EEEDE8;
@@ -32,22 +32,22 @@ a { text-decoration: none; color: inherit; }
   --border:  #E6E2DA;
   --border2: #D5D0C6;
 
-  /* Acento principal — lima / chartreuse (refs. lumin, dashboards tech) */
+  /* Acento principal â€” lima / chartreuse (refs. lumin, dashboards tech) */
   --lime:        #DFFF4D;
   --lime-bright: #EEFF7A;
   --lime-dim:    rgba(210, 255, 80, 0.16);
   --lime-muted:  rgba(210, 255, 80, 0.09);
 
-  /* Aliases legados (ember → lime no produto) */
+  /* Aliases legados (ember â†’ lime no produto) */
   --ember:   var(--lime);
   --ember2:  var(--lime-bright);
   --ember-bg: var(--lime-dim);
 
-  /* Secundário quente — destaques humanos (ref. Momentum) */
+  /* SecundÃ¡rio quente â€” destaques humanos (ref. Momentum) */
   --coral:     #FF5A2C;
   --coral-bg:  rgba(255, 90, 44, 0.09);
 
-  /* Verde só para “ok / verificado” — mais escuro, menos genérico */
+  /* Verde sÃ³ para â€œok / verificadoâ€ â€” mais escuro, menos genÃ©rico */
   --sage:      #1E3D2A;
   --sage2:     #2D5A3D;
   --sage3:     #3D7A53;
@@ -76,3 +76,4 @@ a { text-decoration: none; color: inherit; }
   --shadow-ember: var(--shadow-lime);
   --glass: rgba(255, 255, 255, 0.72);
 }
+

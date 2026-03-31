@@ -3,10 +3,12 @@ import { getSupabaseServerClient } from "@/lib/supabase/server";
 export type BookingServiceOption = { id: string; name: string };
 
 export type BookingPageContext = {
-  professionalId: string;
+  professionalId: string | null;
   slug: string;
   displayName: string;
   services: BookingServiceOption[];
+  isBookable: boolean;
+  unavailableReason?: string;
 };
 
 export async function fetchBookingPageContext(slug: string): Promise<BookingPageContext | null> {
@@ -31,6 +33,7 @@ export async function fetchBookingPageContext(slug: string): Promise<BookingPage
       slug: pro.slug as string,
       displayName: pro.display_name as string,
       services: ((svc ?? []) as { id: string; name: string }[]).map((s) => ({ id: s.id, name: s.name })),
+      isBookable: true,
     };
   } catch {
     return null;
@@ -45,6 +48,7 @@ export type IncomingBookingRow = {
   client_email_snapshot: string | null;
   service_name_snapshot: string | null;
   client_note: string | null;
+  client_id: string;
 };
 
 export async function fetchIncomingBookingsForPro(
@@ -56,7 +60,7 @@ export async function fetchIncomingBookingsForPro(
     const { data, error } = await supabase
       .from("bookings")
       .select(
-        "id, scheduled_at, status, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note",
+        "id, scheduled_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note",
       )
       .eq("professional_id", professionalId)
       .order("scheduled_at", { ascending: false })
