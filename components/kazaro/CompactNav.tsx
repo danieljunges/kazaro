@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NavUserMenu } from "@/components/kazaro/NavUserMenu";
 
 type Props = {
   backHref: string;
@@ -19,6 +20,7 @@ export function CompactNav({ backHref, backLabel }: Props) {
           <Link className="btn-ghost" href={backHref}>
             {backLabel}
           </Link>
+          <NavUserMenu />
           <Link href="/search" className="btn-cta">
             Agendar agora →
           </Link>

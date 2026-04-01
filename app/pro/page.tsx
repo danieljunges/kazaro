@@ -57,7 +57,7 @@ export default function ProPage() {
             <Link href="/dashboard" className="btn-cta pro-plan__cta">
               Ativar Perfil Pro agora →
             </Link>
-            <p className="pro-plan__foot">Pagamento e recorrencia serao conectados com Supabase + Stripe na etapa backend.</p>
+            <p className="pro-plan__foot">Pagamento e recorrência serão conectados com Stripe na etapa backend.</p>
           </aside>
         </div>
       </section>

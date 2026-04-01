@@ -12,7 +12,7 @@ export default function DashboardMensagensPage() {
             Caixa de mensagens
           </h1>
           <p className="sec-sub" style={{ marginBottom: 18 }}>
-            Histórico de conversa, filtros e respostas rápidas estarão conectados no backend com dados do Supabase.
+            Histórico de conversa, filtros e respostas rápidas serão conectados no backend com dados reais.
           </p>
           <Link href="/dashboard" className="btn-cta">
             Voltar para visão geral →

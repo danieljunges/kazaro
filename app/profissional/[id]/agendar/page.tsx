@@ -39,7 +39,7 @@ export default async function AgendarPage({ params, searchParams }: Props) {
         services: detail.services.map((s, i) => ({ id: `demo-${i}`, name: s.name })),
         isBookable: false,
         unavailableReason:
-          "Este perfil ainda está em modo demonstração. Para testar envio real, use um profissional cadastrado no Supabase.",
+          "Este perfil ainda está em modo demonstração. Para testar envio real, use um profissional já cadastrado e ativo.",
       };
     })();
   if (!ctx?.slug) notFound();

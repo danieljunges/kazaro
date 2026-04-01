@@ -29,7 +29,7 @@ export default function EntrarPage() {
             Entrar no Kazaro
           </h1>
           <p className="sec-sub" style={{ marginBottom: 8 }}>
-            Use o mesmo e-mail e senha do cadastro. Sessão protegida com Supabase Auth.
+            Use o mesmo e-mail e senha do cadastro para acessar sua conta.
           </p>
           <Suspense fallback={<LoginFallback />}>
             <LoginForm />

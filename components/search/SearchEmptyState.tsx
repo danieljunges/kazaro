@@ -8,8 +8,8 @@ export function SearchEmptyState({ variant = "qa" }: { variant?: Variant }) {
       <div className="search-empty">
         <p className="search-empty__title">Ainda não há profissionais na base</p>
         <p className="search-empty__text">
-          As tabelas do Supabase estão prontas — cadastre prestadores no painel (SQL ou painel admin) para eles
-          aparecerem aqui automaticamente.
+          A base está pronta — cadastre prestadores no painel (SQL ou painel admin) para eles aparecerem aqui
+          automaticamente.
         </p>
         <div className="search-empty__actions">
           <Link href="/para-profissionais" className="search-empty__btn">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NavUserMenu } from "@/components/kazaro/NavUserMenu";
 
 export function MarketingNav() {
   return (
@@ -22,12 +23,7 @@ export function MarketingNav() {
           </li>
         </ul>
         <div className="nav-right">
-          <Link href="/entrar" className="btn-ghost">
-            Entrar
-          </Link>
-          <Link href="/criar-conta" className="btn-ghost">
-            Criar conta
-          </Link>
+          <NavUserMenu />
           <Link href="/search" className="btn-cta">
             Agendar agora →
           </Link>

@@ -20,7 +20,7 @@ export default function CriarContaPage() {
             Criar conta
           </h1>
           <p className="sec-sub" style={{ marginBottom: 8 }}>
-            Em segundos você começa. Se o projeto exigir confirmação por e-mail, enviaremos um link automático.
+            Em segundos você começa. Depois é só agendar ou acompanhar seus pedidos.
           </p>
           <SignupForm />
         </div>

@@ -89,6 +89,109 @@
   align-items: center;
   gap: 10px;
 }
+
+/* ─── Menu do usuário (logado) ─── */
+.home-editorial .nav-user {
+  position: relative;
+}
+.home-editorial .nav-user-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--border-md);
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 6px 10px 6px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.home-editorial .nav-user-btn:hover {
+  background: var(--cream-alt);
+  border-color: var(--border-md);
+}
+.home-editorial .nav-user-btn:active {
+  transform: scale(0.98);
+}
+.home-editorial .nav-user-ava {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--lime);
+  display: grid;
+  place-items: center;
+  font-size: 12.5px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.home-editorial .nav-user-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.home-editorial .nav-user-caret {
+  opacity: 0.7;
+  font-size: 12px;
+}
+.home-editorial .nav-user-pop {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 230px;
+  background: var(--white);
+  border: 1px solid var(--border-md);
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgba(22, 22, 14, 0.12);
+  padding: 10px;
+  z-index: 400;
+}
+.home-editorial .nav-user-email {
+  font-size: 12px;
+  color: var(--ink50);
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+  font-weight: 500;
+  word-break: break-all;
+}
+.home-editorial .nav-user-link {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 9px 10px;
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.home-editorial .nav-user-link:hover {
+  background: var(--cream-alt);
+}
+.home-editorial .nav-user-link--danger {
+  color: #a33b2f;
+}
+.home-editorial .nav-user-link--danger:hover {
+  background: rgba(196, 92, 74, 0.08);
+}
+.home-editorial .nav-user-link:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .home-editorial .btn-ghost {
   font-family: var(--sans);
   font-size: 13px;

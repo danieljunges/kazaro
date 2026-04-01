@@ -22,12 +22,10 @@ export function SignupForm() {
   const [password2, setPassword2] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [info, setInfo] = useState<string | null>(null);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
-    setInfo(null);
 
     if (password !== password2) {
       setError("As senhas não coincidem.");
@@ -64,9 +62,8 @@ export function SignupForm() {
         return;
       }
 
-      setInfo(
-        "Enviamos um link de confirmação para seu e-mail. Abra-o para ativar a conta — depois você pode entrar aqui.",
-      );
+      router.push("/entrar?cadastro=ok");
+      router.refresh();
     } catch {
       setError("Não foi possível conectar. Verifique sua internet e tente de novo.");
     } finally {
@@ -130,7 +127,6 @@ export function SignupForm() {
       </label>
 
       {error ? <p className="auth-error">{error}</p> : null}
-      {info ? <p className="auth-banner auth-banner--ok">{info}</p> : null}
 
       <button type="submit" className="btn-cta auth-submit" disabled={loading}>
         {loading ? "Criando…" : "Criar conta"}
