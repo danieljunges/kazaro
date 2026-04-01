@@ -11,9 +11,11 @@ function initialFromEmail(email: string | null): string {
   return /[A-Z0-9]/.test(c) ? c : "?";
 }
 
-export function NavUserMenu() {
-  const [checked, setChecked] = useState(false);
-  const [user, setUser] = useState<SessionUser | null>(null);
+export function NavUserMenu({ initialEmail }: { initialEmail?: string | null }) {
+  const [checked, setChecked] = useState(initialEmail !== undefined);
+  const [user, setUser] = useState<SessionUser | null>(
+    initialEmail !== undefined ? { email: initialEmail ?? null } : null,
+  );
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);

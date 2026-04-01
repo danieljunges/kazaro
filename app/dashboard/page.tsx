@@ -6,6 +6,7 @@ import {
   fetchIncomingBookingsForPro,
   fetchMyBookingsAsClient,
 } from "@/lib/supabase/bookings";
+import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function formatTodayPtBR() {
@@ -66,13 +67,15 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   const uid = user?.id;
-  const [incomingBookings, myBookingsAsClient, activeOrdersCount] = uid
+  const [role, incomingBookings, myBookingsAsClient, activeOrdersCount] = uid
     ? await Promise.all([
+        fetchMyProfileRole(uid),
         fetchIncomingBookingsForPro(uid, 12),
         fetchMyBookingsAsClient(uid, 8),
         countActiveIncomingBookings(uid),
       ])
-    : [[], [], 0];
+    : ["client", [], [], 0];
+  const isPro = role === "professional";
 
   return (
     <div className="home-editorial">
@@ -152,6 +155,23 @@ export default async function DashboardPage() {
               <div className="kpi-label">Mensagens</div>
             </div>
           </div>
+          {!isPro ? (
+            <div className="dash-card" style={{ marginBottom: 18 }}>
+              <div className="dc-head">Modo cliente</div>
+              <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14, lineHeight: 1.6 }}>
+                Você está usando a conta como cliente. Para aparecer nas buscas e receber pedidos, ative o perfil de
+                prestador.
+              </p>
+              <div style={{ display: "flex", gap: 10, marginTop: 14, flexWrap: "wrap" }}>
+                <Link href="/para-profissionais" className="btn-cta">
+                  Ativar perfil de prestador →
+                </Link>
+                <Link href="/search" className="btn-ghost">
+                  Buscar serviços
+                </Link>
+              </div>
+            </div>
+          ) : null}
           <div className="dash-card" style={{ marginBottom: 18 }}>
             <div className="dc-head">
               Perfil Pro{" "}
@@ -290,60 +310,58 @@ export default async function DashboardPage() {
               </div>
             </div>
           ) : null}
-          <div className="dash-card">
-            <div className="dc-head">Pedidos recebidos (agendamentos)</div>
-            {incomingBookings.length === 0 ? (
-              <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14, lineHeight: 1.6 }}>
-                Nenhum pedido ainda. Com perfil de profissional cadastrado, solicitações feitas em{" "}
-                <Link href="/search" className="dc-link">
-                  /search
-                </Link>{" "}
-                e no seu perfil público aparecem aqui com contato e data sugerida.
-              </p>
-            ) : (
-              <div style={{ overflowX: "auto" }}>
-                <table className="orders-table">
-                  <thead>
-                    <tr>
-                      <th>Cliente</th>
-                      <th>Contato</th>
-                      <th>Serviço</th>
-                      <th>Data</th>
-                      <th>Status</th>
-                      <th>Obs.</th>
-                      <th style={{ textAlign: "right" }}>Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {incomingBookings.map((row) => {
-                      const st = statusStyle(row.status);
-                      return (
-                        <tr key={row.id}>
-                          <td className="o-client">{row.client_name_snapshot}</td>
-                          <td style={{ fontSize: 12 }}>{row.client_email_snapshot ?? "—"}</td>
-                          <td>{row.service_name_snapshot ?? "A combinar"}</td>
-                          <td>{formatBookingWhen(row.scheduled_at)}</td>
-                          <td>
-                            <span className="o-status" style={{ background: st.background, color: st.color }}>
-                              {statusLabelPt(row.status)}
-                            </span>
-                          </td>
-                          <td style={{ fontSize: 12, maxWidth: 200 }} title={row.client_note ?? undefined}>
-                            {row.client_note
-                              ? `${row.client_note.slice(0, 80)}${row.client_note.length > 80 ? "…" : ""}`
-                              : "—"}
-                          </td>
-                          <td style={{ textAlign: "right" }}>
-                            <BookingStatusButtons bookingId={row.id} currentStatus={row.status} />
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+          {isPro ? (
+            <div className="dash-card">
+              <div className="dc-head">Pedidos recebidos (agendamentos)</div>
+              {incomingBookings.length === 0 ? (
+                <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14, lineHeight: 1.6 }}>
+                  Nenhum pedido ainda. Assim que clientes agendarem pelo seu perfil público, eles aparecem aqui.
+                </p>
+              ) : (
+                <div style={{ overflowX: "auto" }}>
+                  <table className="orders-table">
+                    <thead>
+                      <tr>
+                        <th>Cliente</th>
+                        <th>Contato</th>
+                        <th>Serviço</th>
+                        <th>Data</th>
+                        <th>Status</th>
+                        <th>Obs.</th>
+                        <th style={{ textAlign: "right" }}>Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {incomingBookings.map((row) => {
+                        const st = statusStyle(row.status);
+                        return (
+                          <tr key={row.id}>
+                            <td className="o-client">{row.client_name_snapshot}</td>
+                            <td style={{ fontSize: 12 }}>{row.client_email_snapshot ?? "—"}</td>
+                            <td>{row.service_name_snapshot ?? "A combinar"}</td>
+                            <td>{formatBookingWhen(row.scheduled_at)}</td>
+                            <td>
+                              <span className="o-status" style={{ background: st.background, color: st.color }}>
+                                {statusLabelPt(row.status)}
+                              </span>
+                            </td>
+                            <td style={{ fontSize: 12, maxWidth: 200 }} title={row.client_note ?? undefined}>
+                              {row.client_note
+                                ? `${row.client_note.slice(0, 80)}${row.client_note.length > 80 ? "…" : ""}`
+                                : "—"}
+                            </td>
+                            <td style={{ textAlign: "right" }}>
+                              <BookingStatusButtons bookingId={row.id} currentStatus={row.status} />
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
