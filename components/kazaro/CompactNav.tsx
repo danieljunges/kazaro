@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { NavUserMenuServer } from "@/components/kazaro/NavUserMenuServer";
+import { SiteNavDrawer } from "@/components/kazaro/SiteNavDrawer";
 
 type Props = {
   backHref: string;
@@ -17,12 +18,14 @@ export function CompactNav({ backHref, backLabel }: Props) {
           Kazaro
         </Link>
         <div className="nav-right">
-          <Link className="btn-ghost" href={backHref}>
+          <SiteNavDrawer variant="compact" backHref={backHref} backLabel={backLabel} />
+          <Link className="btn-ghost nav-compact-back-desktop" href={backHref}>
             {backLabel}
           </Link>
           <NavUserMenuServer />
           <Link href="/search" className="btn-cta">
-            Agendar serviço →
+            <span className="nav-cta-long">Agendar serviço →</span>
+            <span className="nav-cta-short">Agendar →</span>
           </Link>
         </div>
       </div>

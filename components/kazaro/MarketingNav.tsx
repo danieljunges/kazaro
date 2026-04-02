@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { NavUserMenuServer } from "@/components/kazaro/NavUserMenuServer";
+import { SiteNavDrawer } from "@/components/kazaro/SiteNavDrawer";
 
 export function MarketingNav() {
   return (
@@ -23,9 +24,11 @@ export function MarketingNav() {
           </li>
         </ul>
         <div className="nav-right">
+          <SiteNavDrawer variant="marketing" />
           <NavUserMenuServer />
           <Link href="/search" className="btn-cta">
-            Agendar serviço →
+            <span className="nav-cta-long">Agendar serviço →</span>
+            <span className="nav-cta-short">Agendar →</span>
           </Link>
         </div>
       </div>

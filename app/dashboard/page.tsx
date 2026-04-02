@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DashboardSidebar } from "@/components/kazaro/DashboardSidebar";
 import { BookingStatusButtons } from "@/components/dashboard/BookingStatusButtons";
+import { DashboardMobileMenu } from "@/components/dashboard/DashboardMobileMenu";
 import { DashboardUserMenu } from "@/components/dashboard/DashboardUserMenu";
 import {
   countActiveIncomingBookings,
@@ -86,10 +87,13 @@ export default async function DashboardPage() {
         <DashboardSidebar userEmail={user?.email ?? null} />
         <div className="dash-body">
         <div className="dash-topbar">
-          <div>
+          <div className="dash-topbar-lead">
+            <DashboardMobileMenu />
+            <div className="dash-topbar-titles">
             <div className="dt-title">Visão geral</div>
             <div className="dt-sub" style={{ textTransform: "capitalize" }}>
               {subtitle}
+            </div>
             </div>
           </div>
           <div className="dt-right">
