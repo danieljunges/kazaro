@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { CompactNav } from "@/components/kazaro/CompactNav";
+import { requireProfessionalTools } from "@/lib/auth/require-pro-tools";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { fetchEarningsThisMonth } from "@/lib/supabase/earnings";
 
@@ -11,11 +11,8 @@ function formatBRLFromCents(cents: number): string {
 }
 
 export default async function DashboardGanhosPage() {
+  const { user } = await requireProfessionalTools("/dashboard/ganhos");
   const supabase = await getSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user?.id) redirect("/entrar?next=/dashboard/ganhos");
 
   const { totalCents, completedCount } = await fetchEarningsThisMonth(user.id);
 

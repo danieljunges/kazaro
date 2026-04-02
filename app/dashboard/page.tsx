@@ -8,7 +8,7 @@ import {
   fetchIncomingBookingsForPro,
   fetchMyBookingsAsClient,
 } from "@/lib/supabase/bookings";
-import { fetchMyProfileRole } from "@/lib/supabase/profile";
+import { fetchMyProfileRole, type ProfileRole } from "@/lib/supabase/profile";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { fetchMyProfile } from "@/lib/supabase/profile-data";
 
@@ -62,7 +62,13 @@ function statusStyle(status: string): { background: string; color: string } {
   }
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ conta?: string }>;
+}) {
+  const sp = await searchParams;
+  const showAccountActivated = sp.conta === "ativada";
   const subtitle = formatTodayPtBR();
   const supabase = await getSupabaseServerClient();
   const {
@@ -77,18 +83,18 @@ export default async function DashboardPage() {
         fetchMyBookingsAsClient(uid, 8),
         countActiveIncomingBookings(uid),
       ])
-    : ["client", [], [], 0];
+    : (["client", [], [], 0] as [ProfileRole, [], [], number]);
   const isPro = role === "professional";
   const profile = uid ? await fetchMyProfile(uid) : null;
 
   return (
     <div className="home-editorial">
       <div className="dash">
-        <DashboardSidebar userEmail={user?.email ?? null} />
+        <DashboardSidebar userEmail={user?.email ?? null} accountKind={role} />
         <div className="dash-body">
         <div className="dash-topbar">
           <div className="dash-topbar-lead">
-            <DashboardMobileMenu />
+            <DashboardMobileMenu accountKind={role} />
             <div className="dash-topbar-titles">
             <div className="dt-title">Visão geral</div>
             <div className="dt-sub" style={{ textTransform: "capitalize" }}>
@@ -105,12 +111,17 @@ export default async function DashboardPage() {
             </button>
             <DashboardUserMenu
               initialEmail={user?.email ?? null}
-              initialRole={isPro ? "professional" : "client"}
               initialAvatarUrl={profile?.avatar_url ?? null}
+              showProLinks={role !== "client"}
             />
           </div>
         </div>
         <div className="dash-content">
+          {showAccountActivated ? (
+            <p className="auth-banner auth-banner--ok" style={{ marginBottom: 18 }}>
+              Conta ativada com sucesso. Bem-vindo(a) ao Kazaro!
+            </p>
+          ) : null}
           <div className="kpi-grid">
             <div className="kpi-card">
               <div className="kpi-top">
@@ -280,7 +291,7 @@ export default async function DashboardPage() {
               <p style={{ margin: "0 0 14px", color: "var(--ink60)", fontSize: 14 }}>
                 Pedidos que você enviou a profissionais pelo Kazaro.
               </p>
-              <div style={{ overflowX: "auto" }}>
+              <div className="kz-table-scroll">
                 <table className="orders-table">
                   <thead>
                     <tr>
@@ -328,7 +339,7 @@ export default async function DashboardPage() {
                   Nenhum pedido ainda. Assim que clientes agendarem pelo seu perfil público, eles aparecem aqui.
                 </p>
               ) : (
-                <div style={{ overflowX: "auto" }}>
+                <div className="kz-table-scroll">
                   <table className="orders-table">
                     <thead>
                       <tr>

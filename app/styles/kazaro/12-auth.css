@@ -98,6 +98,61 @@
   color: var(--lime-deep);
 }
 
+.home-editorial .auth-role-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 520px) {
+  .home-editorial .auth-role-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.home-editorial .auth-role-opt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-md);
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.home-editorial .auth-role-opt input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.home-editorial .auth-role-opt--on {
+  border-color: var(--ink50);
+  box-shadow: 0 0 0 3px rgba(200, 241, 53, 0.22);
+  background: rgba(168, 208, 32, 0.06);
+}
+
+.home-editorial .auth-role-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.home-editorial .auth-role-hint {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--ink50);
+}
+
 .home-editorial .ds-ava-letter {
   width: 48px;
   height: 48px;

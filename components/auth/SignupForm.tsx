@@ -6,6 +6,8 @@ import { useState, FormEvent } from "react";
 import { getAuthCallbackUrl } from "@/lib/auth/redirect";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
+type AccountRole = "client" | "professional";
+
 function ptError(message: string): string {
   const m = message.toLowerCase();
   if (m.includes("already registered")) return "Este e-mail já está cadastrado. Entre ou use outro e-mail.";
@@ -20,6 +22,7 @@ export function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+  const [accountRole, setAccountRole] = useState<AccountRole>("client");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,13 +43,15 @@ export function SignupForm() {
 
     try {
       const supabase = getSupabaseBrowserClient();
+      const nextAfterEmailConfirm = encodeURIComponent("/dashboard?conta=ativada");
       const { data, error: signError } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
-          emailRedirectTo: `${getAuthCallbackUrl()}?next=/dashboard`,
+          emailRedirectTo: `${getAuthCallbackUrl()}?next=${nextAfterEmailConfirm}`,
           data: {
             full_name: fullName.trim() || undefined,
+            role: accountRole,
           },
         },
       });
@@ -73,6 +78,34 @@ export function SignupForm() {
 
   return (
     <form className="auth-form" onSubmit={onSubmit}>
+      <div className="auth-field">
+        <span className="auth-label">Tipo de conta</span>
+        <div className="auth-role-row" role="radiogroup" aria-label="Tipo de conta">
+          <label className={`auth-role-opt${accountRole === "client" ? " auth-role-opt--on" : ""}`}>
+            <input
+              type="radio"
+              name="accountRole"
+              value="client"
+              checked={accountRole === "client"}
+              onChange={() => setAccountRole("client")}
+            />
+            <span className="auth-role-title">Cliente</span>
+            <span className="auth-role-hint">Buscar e agendar serviços</span>
+          </label>
+          <label className={`auth-role-opt${accountRole === "professional" ? " auth-role-opt--on" : ""}`}>
+            <input
+              type="radio"
+              name="accountRole"
+              value="professional"
+              checked={accountRole === "professional"}
+              onChange={() => setAccountRole("professional")}
+            />
+            <span className="auth-role-title">Profissional</span>
+            <span className="auth-role-hint">Pedidos, ganhos e perfil público</span>
+          </label>
+        </div>
+      </div>
+
       <label className="auth-field">
         <span className="auth-label">Nome completo</span>
         <input

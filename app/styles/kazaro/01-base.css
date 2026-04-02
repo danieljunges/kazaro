@@ -1,17 +1,34 @@
-﻿/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    RESET & BASE
 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: auto; font-size: 16px; }
+html {
+  scroll-behavior: auto;
+  font-size: 16px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
 body {
   font-family: 'Satoshi', system-ui, sans-serif;
   background: var(--paper);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* Barra inferior (gesto) no iOS — sem cortar CTAs no fundo */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 img { display: block; max-width: 100%; }
+
+/* Evita arrastar a página horizontalmente em qualquer rota */
+.public-page,
+.home-editorial {
+  max-width: 100%;
+  overflow-x: clip;
+}
 button { cursor: pointer; font-family: inherit; }
 a { text-decoration: none; color: inherit; }
 
@@ -61,7 +78,7 @@ a { text-decoration: none; color: inherit; }
   --success-bg: #E6F4EC;
 
   --gap: clamp(16px, 2vw, 24px);
-  --page-x: clamp(24px, 6vw, 80px);
+  --page-x: clamp(16px, 5vw, 80px);
 
   --r-sm: 10px;
   --r-md: 16px;

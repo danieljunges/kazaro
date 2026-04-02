@@ -33,7 +33,7 @@ export default async function AdminServicosPage() {
           {!pending?.length ? (
             <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14 }}>Nada pendente no momento.</p>
           ) : (
-            <div style={{ overflowX: "auto" }}>
+            <div className="kz-table-scroll">
               <table className="orders-table">
                 <thead>
                   <tr>

@@ -11,12 +11,13 @@ function initialFromEmail(email: string | null): string {
 
 export function DashboardUserMenu({
   initialEmail,
-  initialRole,
   initialAvatarUrl,
+  showProLinks,
 }: {
   initialEmail: string | null;
-  initialRole: "client" | "professional";
   initialAvatarUrl: string | null;
+  /** Serviços e ganhos — contas profissional/admin */
+  showProLinks: boolean;
 }) {
   const [email, setEmail] = useState<string | null>(initialEmail);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(initialAvatarUrl);
@@ -67,19 +68,23 @@ export function DashboardUserMenu({
       {open ? (
         <div className="kz-dash-user-pop" role="menu">
           <div className="kz-dash-user-email">{email ?? "—"}</div>
-          <Link className="kz-dash-user-link" role="menuitem" href="/dashboard/servicos">
-            Meus serviços
-          </Link>
+          {showProLinks ? (
+            <Link className="kz-dash-user-link" role="menuitem" href="/dashboard/servicos">
+              Meus serviços
+            </Link>
+          ) : null}
           <Link className="kz-dash-user-link" role="menuitem" href="/dashboard/mensagens">
             Mensagens
           </Link>
-          <Link className="kz-dash-user-link" role="menuitem" href="/dashboard/ganhos">
-            Ganhos
-          </Link>
+          {showProLinks ? (
+            <Link className="kz-dash-user-link" role="menuitem" href="/dashboard/ganhos">
+              Ganhos
+            </Link>
+          ) : null}
           <Link className="kz-dash-user-link" role="menuitem" href="/dashboard/configuracoes">
             Configurações
           </Link>
-          {initialRole !== "professional" ? (
+          {!showProLinks ? (
             <Link className="kz-dash-user-link" role="menuitem" href="/para-profissionais">
               Virar prestador →
             </Link>

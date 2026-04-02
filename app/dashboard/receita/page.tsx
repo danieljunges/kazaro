@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { CompactNav } from "@/components/kazaro/CompactNav";
+import { requireProfessionalTools } from "@/lib/auth/require-pro-tools";
 
-export default function DashboardReceitaPage() {
+export default async function DashboardReceitaPage() {
+  await requireProfessionalTools("/dashboard/receita");
   // Mantido por compatibilidade: "Receita" agora aponta para Ganhos (dados reais).
   // (Página simples, sem depender de gráfico ainda.)
   return (

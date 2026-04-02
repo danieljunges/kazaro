@@ -48,7 +48,12 @@ export function LoginForm() {
     <form className="auth-form" onSubmit={onSubmit}>
       {searchParams.get("cadastro") === "ok" ? (
         <p className="auth-banner auth-banner--ok">
-          Conta criada. Se o Kazaro pedir confirmação, confirme seu e-mail e depois entre.
+          Conta criada. Enviamos um link para o seu e-mail: abra a mensagem, confirme e depois entre com e-mail e senha.
+        </p>
+      ) : null}
+      {searchParams.get("conta") === "ativada" ? (
+        <p className="auth-banner auth-banner--ok">
+          Conta ativada. Entre com e-mail e senha para continuar.
         </p>
       ) : null}
       {searchParams.get("erro") === "callback" ? (

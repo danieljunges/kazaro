@@ -1,5 +1,5 @@
-﻿import { Suspense } from "react";
-import type { Metadata } from "next";
+import { Suspense } from "react";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { RouteScrollTop } from "@/components/common/RouteScrollTop";
 import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
@@ -30,6 +30,13 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#F6F5F2",
 };
 
 export default function RootLayout({

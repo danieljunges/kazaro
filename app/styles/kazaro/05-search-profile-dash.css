@@ -4,13 +4,15 @@
 .sp-topbar {
   background: var(--white);
   border-bottom: 1px solid var(--border);
-  padding: 18px var(--page-x);
+  padding: 18px max(var(--page-x), env(safe-area-inset-right, 0px)) 18px max(var(--page-x), env(safe-area-inset-left, 0px));
 }
 .sp-search-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   max-width: 780px;
   margin: 0 auto 16px;
+  min-width: 0;
 }
 .sp-input {
   flex: 1;
@@ -80,8 +82,11 @@ button.chip { -webkit-appearance: none; appearance: none; }
   display: flex;
   gap: 36px;
   padding: 32px var(--page-x);
+  padding-left: max(var(--page-x), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--page-x), env(safe-area-inset-right, 0px));
   max-width: calc(1180px + var(--page-x) * 2);
   margin: 0 auto;
+  min-width: 0;
 }
 .sp-sidebar { width: 218px; flex-shrink: 0; }
 .sp-sidebar-title {
@@ -120,7 +125,7 @@ button.chip { -webkit-appearance: none; appearance: none; }
 .sp-opt:hover { background: var(--cream); color: var(--ink); }
 .sp-opt.sel { background: var(--cream); color: var(--ink); font-weight: 700; }
 
-.sp-results { flex: 1; }
+.sp-results { flex: 1; min-width: 0; }
 .sp-toolbar {
   display: flex;
   align-items: center;
@@ -157,7 +162,11 @@ button.chip { -webkit-appearance: none; appearance: none; }
 .sp-item:hover {
   border-color: var(--border2);
   box-shadow: var(--shadow-md);
-  transform: translateX(5px);
+}
+@media (hover: hover) and (pointer: fine) {
+  .sp-item:hover {
+    transform: translateX(5px);
+  }
 }
 .sp-item img {
   width: 70px;
@@ -472,7 +481,13 @@ a.btn-book-now:visited {
 /* ─────────────────────────────────────────
    DASHBOARD
 ───────────────────────────────────────── */
-.dash { display: flex; min-height: 100vh; background: var(--cream); }
+.dash {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--cream);
+  max-width: 100%;
+}
 
 .dash-sidebar {
   width: 232px;
@@ -481,9 +496,12 @@ a.btn-book-now:visited {
   display: flex;
   flex-direction: column;
   padding: 18px;
+  padding-bottom: max(18px, env(safe-area-inset-bottom, 0px));
   position: fixed;
   height: 100vh;
+  height: 100dvh;
   top: 0;
+  left: 0;
   z-index: 50;
 }
 .ds-logo { display: flex; align-items: center; gap: 9px; margin-bottom: 22px; padding: 3px 2px; }
@@ -519,6 +537,24 @@ a.btn-book-now:visited {
 .ds-profile img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; }
 .ds-pname { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -.01em; }
 .ds-prole { font-size: 11px; color: var(--ink60); margin-top: 1px; font-weight: 500; }
+.ds-role-pill {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--cream2);
+  color: var(--ink60);
+  border: 1px solid var(--border);
+}
+.ds-role-pill--pro {
+  background: rgba(168, 208, 32, 0.15);
+  color: var(--ink);
+  border-color: rgba(168, 208, 32, 0.4);
+}
 
 .ds-nav-group { margin-bottom: 4px; }
 .ds-nav-label {
@@ -577,7 +613,7 @@ a.btn-book-now:visited {
 .dash-topbar {
   background: var(--white);
   border-bottom: 1px solid var(--border);
-  padding: 15px 26px;
+  padding: 15px max(26px, env(safe-area-inset-right, 0px)) 15px max(26px, env(safe-area-inset-left, 0px));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -586,6 +622,7 @@ a.btn-book-now:visited {
   top: 0;
   z-index: 40;
   flex-wrap: wrap;
+  min-width: 0;
 }
 .dash-topbar-lead {
   display: flex;
@@ -640,13 +677,16 @@ a.btn-book-now:visited {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100%;
-  width: min(360px, 92vw);
+  height: 100vh;
+  height: 100dvh;
+  width: min(360px, calc(100vw - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+  max-width: 92vw;
   background: var(--white);
   z-index: 121;
   box-shadow: 12px 0 40px rgba(10, 10, 10, 0.12);
-  padding: 16px 16px 28px;
+  padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(28px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -721,7 +761,14 @@ a.btn-book-now:visited {
 
 .dt-title { font-size: 17px; font-weight: 900; color: var(--ink); letter-spacing: -.03em; }
 .dt-sub { font-size: 12px; color: var(--ink60); font-weight: 500; margin-top: 1px; }
-.dt-right { display: flex; align-items: center; gap: 10px; }
+.dt-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 0;
+}
 .notif-btn {
   width: 36px;
   height: 36px;
@@ -785,8 +832,10 @@ a.btn-book-now:visited {
 .kz-dash-user-pop {
   position: absolute;
   top: calc(100% + 10px);
-  right: 0;
-  min-width: 240px;
+  right: env(safe-area-inset-right, 0px);
+  width: min(260px, calc(100vw - 20px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+  min-width: 0;
+  box-sizing: border-box;
   background: var(--white);
   border: 1.5px solid var(--border);
   border-radius: 14px;
@@ -906,17 +955,17 @@ a.btn-book-now:visited {
 }
 
 .dash-content {
-  padding: 24px 26px;
+  padding: 24px max(26px, env(safe-area-inset-right, 0px)) 24px max(26px, env(safe-area-inset-left, 0px));
   min-width: 0;
   box-sizing: border-box;
   width: 100%;
 }
 @media (max-width: 640px) {
   .dash-content {
-    padding: 16px 14px;
+    padding: 16px max(14px, env(safe-area-inset-right, 0px)) 16px max(14px, env(safe-area-inset-left, 0px));
   }
   .dash-topbar {
-    padding: 12px 14px;
+    padding: 12px max(14px, env(safe-area-inset-right, 0px)) 12px max(14px, env(safe-area-inset-left, 0px));
   }
 }
 
@@ -974,6 +1023,8 @@ a.btn-book-now:visited {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .dc-link {
   font-size: 12px;
@@ -1521,7 +1572,11 @@ a.btn-book-now:visited {
   }
 }
 
-.orders-table { width: 100%; border-collapse: collapse; }
+.orders-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+}
 .orders-table th {
   text-align: left;
   font-size: 10.5px;

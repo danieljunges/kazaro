@@ -30,7 +30,7 @@ export default async function AdminAgendamentosPage() {
           {!data?.length ? (
             <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14 }}>Sem agendamentos.</p>
           ) : (
-            <div style={{ overflowX: "auto" }}>
+            <div className="kz-table-scroll">
               <table className="orders-table">
                 <thead>
                   <tr>

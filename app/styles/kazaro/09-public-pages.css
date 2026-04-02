@@ -1,13 +1,15 @@
 /* Páginas públicas — alinhamento com a home (Dia 1) */
 .public-page {
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--paper);
 }
 
 .public-page__intro {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 28px var(--page-x) 0;
+  padding: 28px max(var(--page-x), env(safe-area-inset-right, 0px)) 0 max(var(--page-x), env(safe-area-inset-left, 0px));
+  min-width: 0;
 }
 .public-page__eyebrow {
   font-size: 11px;

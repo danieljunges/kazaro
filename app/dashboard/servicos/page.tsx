@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { CompactNav } from "@/components/kazaro/CompactNav";
 import { CreateServiceForm } from "@/components/services/CreateServiceForm";
+import { requireProfessionalTools } from "@/lib/auth/require-pro-tools";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function formatPriceBRL(cents: number | null): string {
@@ -12,11 +12,8 @@ function formatPriceBRL(cents: number | null): string {
 }
 
 export default async function DashboardServicosPage() {
+  const { user } = await requireProfessionalTools("/dashboard/servicos");
   const supabase = await getSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user?.id) redirect("/entrar?next=/dashboard/servicos");
 
   const { data: pro } = await supabase.from("professionals").select("id, slug, display_name").eq("id", user.id).maybeSingle();
   const isPro = !!pro?.id;
