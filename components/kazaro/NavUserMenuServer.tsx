@@ -1,5 +1,6 @@
 import { NavUserMenu } from "@/components/kazaro/NavUserMenu";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { fetchMyProfile } from "@/lib/supabase/profile-data";
 
 export async function NavUserMenuServer() {
   const supabase = await getSupabaseServerClient();
@@ -7,6 +8,7 @@ export async function NavUserMenuServer() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  return <NavUserMenu initialEmail={user?.email ?? null} />;
+  const profile = user?.id ? await fetchMyProfile(user.id) : null;
+  return <NavUserMenu initialEmail={user?.email ?? null} initialAvatarUrl={profile?.avatar_url ?? null} />;
 }
 

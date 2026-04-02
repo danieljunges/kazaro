@@ -25,7 +25,7 @@ export function MarketingNav() {
         <div className="nav-right">
           <NavUserMenuServer />
           <Link href="/search" className="btn-cta">
-            Agendar agora →
+            Agendar serviço →
           </Link>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DashboardSidebar } from "@/components/kazaro/DashboardSidebar";
 import { BookingStatusButtons } from "@/components/dashboard/BookingStatusButtons";
+import { DashboardUserMenu } from "@/components/dashboard/DashboardUserMenu";
 import {
   countActiveIncomingBookings,
   fetchIncomingBookingsForPro,
@@ -8,6 +9,7 @@ import {
 } from "@/lib/supabase/bookings";
 import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { fetchMyProfile } from "@/lib/supabase/profile-data";
 
 function formatTodayPtBR() {
   return new Intl.DateTimeFormat("pt-BR", {
@@ -76,6 +78,7 @@ export default async function DashboardPage() {
       ])
     : ["client", [], [], 0];
   const isPro = role === "professional";
+  const profile = uid ? await fetchMyProfile(uid) : null;
 
   return (
     <div className="home-editorial">
@@ -96,8 +99,11 @@ export default async function DashboardPage() {
                 <path d="M13.73 21a2 2 0 0 1-3.46 0" />
               </svg>
             </button>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="https://i.pravatar.cc/80?img=11" alt="Carlos" className="dash-avatar" />
+            <DashboardUserMenu
+              initialEmail={user?.email ?? null}
+              initialRole={isPro ? "professional" : "client"}
+              initialAvatarUrl={profile?.avatar_url ?? null}
+            />
           </div>
         </div>
         <div className="dash-content">

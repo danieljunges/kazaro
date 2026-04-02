@@ -11,6 +11,18 @@ export type BookingPageContext = {
   unavailableReason?: string;
 };
 
+export async function fetchServicePriceCents(serviceId: string): Promise<number | null> {
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data, error } = await supabase.from("pro_services").select("price_cents").eq("id", serviceId).maybeSingle();
+    if (error) return null;
+    const v = data?.price_cents as number | null | undefined;
+    return typeof v === "number" ? v : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchBookingPageContext(slug: string): Promise<BookingPageContext | null> {
   try {
     const supabase = await getSupabaseServerClient();
@@ -49,6 +61,8 @@ export type IncomingBookingRow = {
   service_name_snapshot: string | null;
   client_note: string | null;
   client_id: string;
+  service_price_cents_snapshot?: number | null;
+  final_price_cents?: number | null;
 };
 
 export async function fetchIncomingBookingsForPro(
@@ -60,7 +74,7 @@ export async function fetchIncomingBookingsForPro(
     const { data, error } = await supabase
       .from("bookings")
       .select(
-        "id, scheduled_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note",
+        "id, scheduled_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, service_price_cents_snapshot, final_price_cents",
       )
       .eq("professional_id", professionalId)
       .order("scheduled_at", { ascending: false })

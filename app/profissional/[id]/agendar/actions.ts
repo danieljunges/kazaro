@@ -55,19 +55,27 @@ export async function submitBookingRequest(
   }
 
   let serviceNameSnapshot: string | null = null;
+  let servicePriceSnapshot: number | null = null;
   let proServiceId: string | null = input.proServiceId?.trim() || null;
 
   if (proServiceId) {
     const { data: svc, error: sErr } = await supabase
       .from("pro_services")
-      .select("id, name, professional_id")
+      .select("id, name, professional_id, price_cents, status")
       .eq("id", proServiceId)
       .maybeSingle();
 
-    if (sErr || !svc || (svc.professional_id as string) !== input.professionalId) {
+    if (
+      sErr ||
+      !svc ||
+      (svc.professional_id as string) !== input.professionalId ||
+      ((svc.status as string | null) && svc.status !== "approved")
+    ) {
       return { ok: false, message: "Serviço inválido para este profissional." };
     }
     serviceNameSnapshot = svc.name as string;
+    const cents = svc.price_cents as number | null | undefined;
+    servicePriceSnapshot = typeof cents === "number" ? cents : null;
   }
 
   const { data: profile, error: pErr } = await supabase
@@ -91,6 +99,7 @@ export async function submitBookingRequest(
     client_id: user.id,
     pro_service_id: proServiceId,
     service_name_snapshot: serviceNameSnapshot,
+    service_price_cents_snapshot: servicePriceSnapshot,
     scheduled_at: scheduledIso,
     client_note: note || null,
     client_name_snapshot: clientName,

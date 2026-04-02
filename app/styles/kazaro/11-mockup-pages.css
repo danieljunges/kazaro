@@ -1,9 +1,10 @@
-﻿/* Mockups: busca, perfil, como funciona / para profissionais â€” escopo por pÃ¡gina */
+/* Mockups: busca, perfil, como funciona / para profissionais â€” escopo por pÃ¡gina */
 
 /* â”€â”€â”€ BUSCA â”€â”€â”€ */
 .home-editorial.kz-busca .kz-search-header {
   background: var(--ink);
-  padding: 48px 44px 0;
+  /* baixa o bloco de busca pra ficar mais central */
+  padding: 84px 44px 0;
 }
 .home-editorial.kz-busca .kz-sh-inner {
   max-width: var(--max);
@@ -24,7 +25,7 @@
   line-height: 0.92;
   letter-spacing: -1.5px;
   color: #fff;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 .home-editorial.kz-busca .kz-sh-title em {
   font-style: italic;
@@ -92,9 +93,7 @@
 .home-editorial.kz-busca .kz-filters-bar {
   background: var(--white);
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 64px;
-  z-index: 50;
+  position: static;
 }
 .home-editorial.kz-busca .kz-fb-inner {
   max-width: var(--max);

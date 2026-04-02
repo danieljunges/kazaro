@@ -2,6 +2,8 @@ import Link from "next/link";
 import { CompactNav } from "@/components/kazaro/CompactNav";
 
 export default function DashboardReceitaPage() {
+  // Mantido por compatibilidade: "Receita" agora aponta para Ganhos (dados reais).
+  // (Página simples, sem depender de gráfico ainda.)
   return (
     <div className="home-editorial public-page">
       <CompactNav backHref="/dashboard" backLabel="← Dashboard" />
@@ -12,10 +14,11 @@ export default function DashboardReceitaPage() {
             Receita detalhada
           </h1>
           <p className="sec-sub" style={{ marginBottom: 18 }}>
-            Visão mensal, comparação por período e composição por serviço serão integradas com dados reais no backend.
+            A visão detalhada (gráficos e composição) vem depois. Por enquanto, veja os ganhos calculados a partir dos
+            serviços concluídos.
           </p>
-          <Link href="/dashboard" className="btn-cta">
-            Voltar para visão geral →
+          <Link href="/dashboard/ganhos" className="btn-cta">
+            Ver ganhos →
           </Link>
         </div>
       </div>

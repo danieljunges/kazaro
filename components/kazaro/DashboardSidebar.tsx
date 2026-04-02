@@ -1,16 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { LogoIcon } from "./Brand";
 
 const NAV = [
-  { label: "Visão geral", icon: "grid" as const },
-  { label: "Meus serviços", icon: "wrench" as const },
-  { label: "Mensagens", icon: "msg" as const, badge: "3" },
-  { label: "Ganhos", icon: "money" as const },
-];
+  { label: "Visão geral", href: "/dashboard", icon: "grid" as const },
+  { label: "Meus serviços", href: "/dashboard/servicos", icon: "wrench" as const },
+  { label: "Mensagens", href: "/dashboard/mensagens", icon: "msg" as const },
+  { label: "Ganhos", href: "/dashboard/ganhos", icon: "money" as const },
+] as const;
 
 function Icon({ name }: { name: (typeof NAV)[number]["icon"] }) {
   if (name === "grid") {
@@ -46,16 +46,16 @@ function Icon({ name }: { name: (typeof NAV)[number]["icon"] }) {
 }
 
 export function DashboardSidebar({ userEmail }: { userEmail: string | null }) {
-  const [active, setActive] = useState(0);
+  const pathname = usePathname();
 
   return (
     <aside className="dash-sidebar">
-      <div className="ds-logo">
+      <Link href="/dashboard" className="ds-logo" aria-label="Kazaro — Dashboard">
         <div className="ds-logo-icon">
           <LogoIcon />
         </div>
         <span className="ds-logo-name">Kazaro</span>
-      </div>
+      </Link>
       <div className="ds-profile">
         {userEmail ? (
           <>
@@ -85,17 +85,16 @@ export function DashboardSidebar({ userEmail }: { userEmail: string | null }) {
         )}
       </div>
       <span className="ds-nav-label">Menu</span>
-      {NAV.map((item, i) => (
-        <button
-          key={item.label}
-          type="button"
-          className={`ds-link${i === active ? " on" : ""}`}
-          onClick={() => setActive(i)}
+      {NAV.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          className={`ds-link${pathname === item.href ? " on" : ""}`}
+          aria-current={pathname === item.href ? "page" : undefined}
         >
           <Icon name={item.icon} />
           {item.label}
-          {item.badge ? <span className="ds-badge">{item.badge}</span> : null}
-        </button>
+        </Link>
       ))}
       <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--border)" }}>
         {userEmail ? <SignOutButton /> : null}

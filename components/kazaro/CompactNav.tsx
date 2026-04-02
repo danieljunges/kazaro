@@ -22,7 +22,7 @@ export function CompactNav({ backHref, backLabel }: Props) {
           </Link>
           <NavUserMenuServer />
           <Link href="/search" className="btn-cta">
-            Agendar agora →
+            Agendar serviço →
           </Link>
         </div>
       </div>

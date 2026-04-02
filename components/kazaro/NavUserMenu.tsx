@@ -4,18 +4,25 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
-type SessionUser = { email: string | null };
+type SessionUser = { email: string | null; avatarUrl: string | null };
 
 function initialFromEmail(email: string | null): string {
   const c = (email?.trim()?.[0] ?? "?").toUpperCase();
   return /[A-Z0-9]/.test(c) ? c : "?";
 }
 
-export function NavUserMenu({ initialEmail }: { initialEmail?: string | null }) {
+export function NavUserMenu({
+  initialEmail,
+  initialAvatarUrl,
+}: {
+  initialEmail?: string | null;
+  initialAvatarUrl?: string | null;
+}) {
   const [checked, setChecked] = useState(initialEmail !== undefined);
-  const [user, setUser] = useState<SessionUser | null>(
-    initialEmail !== undefined ? { email: initialEmail ?? null } : null,
-  );
+  const [user, setUser] = useState<SessionUser | null>(() => {
+    if (initialEmail === undefined) return null;
+    return { email: initialEmail ?? null, avatarUrl: initialAvatarUrl ?? null };
+  });
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -27,13 +34,17 @@ export function NavUserMenu({ initialEmail }: { initialEmail?: string | null }) 
     void (async () => {
       const { data } = await supabase.auth.getSession();
       if (!cancelled) {
-        setUser(data.session?.user ? { email: data.session.user.email ?? null } : null);
+        setUser(
+          data.session?.user
+            ? { email: data.session.user.email ?? null, avatarUrl: initialAvatarUrl ?? null }
+            : null,
+        );
         setChecked(true);
       }
     })();
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ? { email: session.user.email ?? null } : null);
+      setUser(session?.user ? { email: session.user.email ?? null, avatarUrl: initialAvatarUrl ?? null } : null);
       setChecked(true);
       setOpen(false);
     });
@@ -80,7 +91,12 @@ export function NavUserMenu({ initialEmail }: { initialEmail?: string | null }) 
         aria-expanded={open}
       >
         <span className="nav-user-ava" aria-hidden>
-          {initialFromEmail(email)}
+          {user.avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={user.avatarUrl} alt="" />
+          ) : (
+            initialFromEmail(email)
+          )}
         </span>
         <span className="nav-user-name">{label}</span>
         <span className="nav-user-caret" aria-hidden>

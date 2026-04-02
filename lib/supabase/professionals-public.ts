@@ -129,12 +129,12 @@ export async function fetchProfessionalDetailFromDb(slug: string): Promise<Profe
     const row = pro as ProRow;
     const { data: svc } = await supabase
       .from("pro_services")
-      .select("name, description, price_cents")
+      .select("name, description, price_cents, status")
       .eq("professional_id", row.id)
       .order("sort_order", { ascending: true });
 
-    const services: ServiceRow[] = (svc as ServiceDbRow[] | null)?.length
-      ? (svc as ServiceDbRow[]).map((s) => ({
+    const services: ServiceRow[] = (svc as (ServiceDbRow & { status?: string | null })[] | null)?.length
+      ? (svc as (ServiceDbRow & { status?: string | null })[]).filter((s) => (s.status ?? "approved") === "approved").map((s) => ({
           name: s.name,
           desc: s.description?.trim() || "",
           price: formatPriceBRL(s.price_cents),
