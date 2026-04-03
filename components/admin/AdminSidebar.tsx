@@ -22,10 +22,7 @@ export function AdminSidebar({ email }: { email: string | null }) {
   return (
     <aside className="dash-sidebar">
       <Link href="/admin" className="ds-logo" aria-label="Kazaro — Admin">
-        <div className="ds-logo-icon">
-          <span style={{ color: "var(--lime)", fontWeight: 900, fontSize: 14 }}>K</span>
-        </div>
-        <span className="ds-logo-name">Admin</span>
+        <span className="ds-logo-name">Kazaro</span>
       </Link>
 
       <div className="ds-profile">

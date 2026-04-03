@@ -1,4 +1,4 @@
-/* Home editorial — Cormorant + DM Sans, cream + lima (#C8F135) — escopo isolado */
+/* Home editorial — Fraunces nos títulos de vitrine; Plus Jakarta no resto */
 .home-editorial {
   --cream: #f0ede4;
   --cream-alt: #e8e4d9;
@@ -12,8 +12,9 @@
   --lime-deep: #a8d020;
   --border: rgba(22, 22, 14, 0.09);
   --border-md: rgba(22, 22, 14, 0.16);
-  --serif: "Cormorant Garamond", Georgia, serif;
-  --sans: "DM Sans", system-ui, sans-serif;
+  --sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --display: "Fraunces", ui-serif, Georgia, serif;
+  --serif: var(--sans);
   --max: 1140px;
   background: var(--cream);
   color: var(--ink);
@@ -42,7 +43,7 @@
   gap: 8px;
 }
 .home-editorial .logo {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.4px;
@@ -50,23 +51,6 @@
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-.home-editorial .logo-k {
-  width: 30px;
-  height: 30px;
-  background: var(--ink);
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.home-editorial .logo-k span {
-  font-family: var(--serif);
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--lime);
-  line-height: 1;
 }
 .home-editorial .nav-links {
   display: flex;
@@ -410,21 +394,22 @@
   color: var(--ink50);
 }
 .home-editorial .hero-headline {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(52px, 7vw, 86px);
   font-weight: 700;
-  line-height: 0.88;
-  letter-spacing: -3px;
+  line-height: 0.92;
+  letter-spacing: -0.028em;
   color: var(--ink);
   margin-bottom: 26px;
 }
 .home-editorial .hero-headline em {
   font-style: italic;
-  color: var(--ink);
+  font-weight: 700;
+  color: var(--lime-deep);
 }
 .home-editorial .hero-sub {
   font-size: 15.5px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.68;
   color: var(--ink50);
   max-width: 400px;
@@ -751,20 +736,22 @@
   margin-bottom: 14px;
 }
 .home-editorial .sec-title {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: clamp(36px, 4.5vw, 52px);
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: -1.5px;
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
   color: var(--ink);
   margin-bottom: 16px;
 }
 .home-editorial .sec-title em {
-  font-style: italic;
+  font-style: normal;
+  font-weight: 800;
+  color: var(--lime-deep);
 }
 .home-editorial .sec-sub {
   font-size: 15px;
-  font-weight: 300;
+  font-weight: 500;
   line-height: 1.68;
   color: var(--ink50);
   max-width: 440px;
@@ -778,7 +765,7 @@
 }
 .home-editorial .link-arrow {
   font-size: 13.5px;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--ink50);
   text-decoration: none;
   white-space: nowrap;
@@ -822,7 +809,7 @@
   padding-right: 20px;
 }
 .home-editorial .rail-idx {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 400;
   color: var(--ink30);
@@ -876,13 +863,13 @@
   margin-top: 64px;
 }
 .home-editorial .how-num {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 72px;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
   color: var(--ink10);
   margin-bottom: 20px;
-  letter-spacing: -2px;
+  letter-spacing: -0.04em;
 }
 .home-editorial .how-title {
   font-size: 18px;
@@ -892,7 +879,7 @@
 }
 .home-editorial .how-desc {
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.7;
   color: var(--ink50);
 }
@@ -922,7 +909,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 52px;
   font-weight: 700;
   color: var(--ink50);
@@ -1068,7 +1055,7 @@
 }
 .home-editorial .stat-label {
   font-size: 13px;
-  font-weight: 300;
+  font-weight: 400;
   color: rgba(255, 255, 255, 0.45);
   line-height: 1.5;
 }
@@ -1093,11 +1080,11 @@
   background: radial-gradient(ellipse at 70% 30%, rgba(200, 241, 53, 0.12) 0%, transparent 60%);
 }
 .home-editorial .why-quote {
-  font-family: var(--serif);
-  font-size: 32px;
+  font-family: var(--display);
+  font-size: clamp(26px, 3.2vw, 32px);
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.5px;
+  line-height: 1.28;
+  letter-spacing: -0.018em;
   color: var(--white);
   position: relative;
   z-index: 1;
@@ -1105,6 +1092,7 @@
 }
 .home-editorial .why-quote em {
   font-style: italic;
+  font-weight: 600;
   color: var(--lime);
 }
 .home-editorial .why-attrib {
@@ -1148,7 +1136,7 @@
 }
 .home-editorial .wi-desc {
   font-size: 13.5px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.65;
   color: var(--ink50);
 }
@@ -1173,13 +1161,13 @@
   letter-spacing: 0.02em;
 }
 .home-editorial .tc-text {
-  font-family: var(--serif);
-  font-size: 19px;
+  font-family: var(--sans);
+  font-size: 17px;
   font-weight: 500;
-  line-height: 1.45;
+  line-height: 1.55;
   color: var(--ink);
   margin-bottom: 22px;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.01em;
 }
 .home-editorial .tc-author {
   display: flex;
@@ -1194,7 +1182,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 17px;
   font-weight: 700;
   color: var(--ink70);
@@ -1249,21 +1237,22 @@
   z-index: 1;
 }
 .home-editorial .pb-heading {
-  font-family: var(--serif);
+  font-family: var(--display);
   font-size: clamp(40px, 4.5vw, 62px);
   font-weight: 700;
-  line-height: 0.92;
-  letter-spacing: -2px;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
   color: var(--white);
   margin-bottom: 22px;
 }
 .home-editorial .pb-heading em {
   font-style: italic;
+  font-weight: 700;
   color: var(--lime);
 }
 .home-editorial .pb-sub {
   font-size: 15px;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.65;
   color: rgba(255, 255, 255, 0.45);
   max-width: 420px;
@@ -1283,7 +1272,7 @@
   align-items: center;
   gap: 12px;
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.7);
 }
 .home-editorial .pb-check {
@@ -1333,7 +1322,7 @@
   margin-bottom: 52px;
 }
 .home-editorial .footer-logo {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-size: 20px;
   font-weight: 700;
   color: var(--ink);
@@ -1343,7 +1332,7 @@
 }
 .home-editorial .footer-tagline {
   font-size: 13.5px;
-  font-weight: 300;
+  font-weight: 500;
   color: var(--ink50);
   line-height: 1.6;
   max-width: 240px;

@@ -1,6 +1,6 @@
-/* Tipografia: Fraunces só no hero; seções em Satoshi — menos “template de IA” */
+/* Tipografia: Jakarta na UI; títulos de seção usam .sec-title (Fraunces no 03) */
 .sec-title.sec-title--sans {
-  font-family: 'Satoshi', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: clamp(22px, 2.5vw, 32px);
   font-weight: 600;
   letter-spacing: -0.028em;
@@ -60,7 +60,7 @@
   min-width: 0;
 }
 .services-rail__name {
-  font-family: 'Satoshi', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 17px;
   font-weight: 700;
   color: var(--ink);
@@ -89,7 +89,7 @@
   margin-bottom: 2px;
 }
 .services-rail__val {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-sans);
   font-size: 21px;
   font-weight: 700;
   color: var(--ink);
@@ -142,7 +142,7 @@
   margin-bottom: 8px;
 }
 .how-timeline__title {
-  font-family: 'Satoshi', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;

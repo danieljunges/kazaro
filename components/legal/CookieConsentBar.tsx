@@ -31,7 +31,13 @@ export function CookieConsentBar() {
   if (!visible) return null;
 
   return (
-    <div className="kz-cookie-bar" role="dialog" aria-modal="false" aria-labelledby="kz-cookie-bar-title">
+    <div
+      className="kz-cookie-bar"
+      data-kz-motion-skip
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby="kz-cookie-bar-title"
+    >
       <div className="kz-cookie-bar-inner">
         <div className="kz-cookie-bar-text">
           <div id="kz-cookie-bar-title" className="kz-cookie-bar-title">

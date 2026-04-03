@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/auth/SignOutButton";
-import { LogoIcon } from "./Brand";
 
 type NavIcon = "grid" | "wrench" | "msg" | "money" | "search" | "help" | "list";
 
@@ -108,9 +107,6 @@ export function DashboardSidebar({
   return (
     <aside className="dash-sidebar">
       <Link href="/dashboard" className="ds-logo" aria-label="Kazaro — Dashboard">
-        <div className="ds-logo-icon">
-          <LogoIcon />
-        </div>
         <span className="ds-logo-name">Kazaro</span>
       </Link>
       <div className="ds-profile">

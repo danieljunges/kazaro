@@ -504,19 +504,9 @@ a.btn-book-now:visited {
   left: 0;
   z-index: 50;
 }
-.ds-logo { display: flex; align-items: center; gap: 9px; margin-bottom: 22px; padding: 3px 2px; }
+.ds-logo { display: flex; align-items: center; margin-bottom: 22px; padding: 3px 2px; }
 .ds-logo { text-decoration: none; color: inherit; }
 .ds-logo:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 10px; }
-.ds-logo-icon {
-  width: 30px;
-  height: 30px;
-  background: var(--ink);
-  border-radius: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
 .ds-logo-name {
   font-family: var(--serif);
   font-size: 18px;

@@ -10,7 +10,8 @@ html {
   overflow-x: clip;
 }
 body {
-  font-family: 'Satoshi', system-ui, sans-serif;
+  font-family: var(--font-sans);
+  font-weight: 400;
   background: var(--paper);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -37,6 +38,11 @@ a { text-decoration: none; color: inherit; }
    cream quente Â· preto forte Â· lima/chartreuse Â· cantos generosos
 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
+  /* UI: Jakarta · Display: Fraunces (só títulos grandes — mais suave que Cormorant) */
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+  --serif: var(--font-sans);
+
   --paper:   #F6F5F2;
   --cream:   #EEEDE8;
   --cream2:  #E4DFD4;

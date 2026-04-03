@@ -18,20 +18,11 @@
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 9px;
-}
-.nav-logo-icon {
-  width: 32px;
-  height: 32px;
-  background: var(--ink);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  text-decoration: none;
+  color: inherit;
 }
 .nav-logo-name {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 800;
   color: var(--ink);
@@ -142,11 +133,11 @@
 }
 
 .hero-headline {
-  font-family: 'Fraunces', serif;
+  font-family: var(--font-display);
   font-size: clamp(40px, 4.8vw, 60px);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.06;
-  letter-spacing: -.038em;
+  letter-spacing: -0.025em;
   color: var(--ink);
   margin-bottom: 20px;
 }
@@ -194,7 +185,7 @@
   flex: 1;
   border: none;
   outline: none;
-  font-family: 'Satoshi', sans-serif;
+  font-family: var(--font-sans);
   font-size: 14.5px;
   color: var(--ink);
   background: transparent;
@@ -222,7 +213,7 @@
   border: none;
   padding: 10px 20px;
   border-radius: var(--r-md);
-  font-family: 'Satoshi', sans-serif;
+  font-family: var(--font-sans);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -347,7 +338,7 @@
   margin-bottom: 13px;
 }
 .pcf-from { font-size: 12px; color: var(--ink60); font-weight: 400; }
-.pcf-val { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 800; color: var(--ink); letter-spacing: -.04em; }
+.pcf-val { font-family: var(--font-sans); font-size: 26px; font-weight: 800; color: var(--ink); letter-spacing: -.04em; }
 .pcf-btn {
   width: 100%;
   background: var(--ink);
@@ -355,7 +346,7 @@
   border: none;
   padding: 11px;
   border-radius: 10px;
-  font-family: 'Satoshi', sans-serif;
+  font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: -.01em;
