@@ -1,3 +1,4 @@
+import { adminPath } from "@/lib/admin/panel-path";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { ServiceReviewButtons } from "@/components/admin/ServiceReviewButtons";
@@ -10,7 +11,7 @@ function formatBRLFromCents(cents: number | null): string {
 }
 
 export default async function AdminServicosPage() {
-  await requireAdmin("/admin/servicos");
+  await requireAdmin(adminPath("/servicos"));
   const supabase = await getSupabaseServerClient();
   const { data: pending } = await supabase
     .from("pro_services")

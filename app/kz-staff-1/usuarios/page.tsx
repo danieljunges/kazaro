@@ -1,9 +1,10 @@
+import { adminPath } from "@/lib/admin/panel-path";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { UserRolePicker } from "@/components/admin/UserRolePicker";
 
 export default async function AdminUsuariosPage() {
-  await requireAdmin("/admin/usuarios");
+  await requireAdmin(adminPath("/usuarios"));
   const supabase = await getSupabaseServerClient();
   const { data } = await supabase
     .from("profiles")

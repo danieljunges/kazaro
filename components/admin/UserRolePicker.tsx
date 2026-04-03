@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { setUserRole } from "@/app/admin/usuarios/actions";
+import { setUserRole } from "@/app/kz-staff-1/usuarios/actions";
 import type { ProfileRole } from "@/lib/supabase/profile";
 
 export function UserRolePicker({ userId, role }: { userId: string; role: ProfileRole }) {

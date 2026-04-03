@@ -9,7 +9,15 @@ export const metadata: Metadata = {
   alternates: { canonical: `${getSiteUrl()}/criar-conta` },
 };
 
-export default function CriarContaPage() {
+export default async function CriarContaPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tipo?: string }>;
+}) {
+  const sp = await searchParams;
+  const tipo = (sp.tipo ?? "").toLowerCase();
+  const defaultRole = tipo === "prestador" || tipo === "profissional" ? ("professional" as const) : ("client" as const);
+
   return (
     <div className="home-editorial public-page">
       <CompactNav backHref="/" backLabel="← Início" />
@@ -19,7 +27,7 @@ export default function CriarContaPage() {
           <h1 className="sec-title" style={{ fontSize: "clamp(32px,4vw,42px)", marginBottom: 16 }}>
             Criar conta
           </h1>
-          <SignupForm />
+          <SignupForm defaultRole={defaultRole} />
         </div>
       </div>
     </div>

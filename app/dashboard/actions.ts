@@ -7,6 +7,7 @@ import {
   isBookingWorkflowStatus,
 } from "@/lib/booking/workflow";
 import { notifyClientOfBookingStatusChange } from "@/lib/email/bookingStatusNotify";
+import { adminPath } from "@/lib/admin/panel-path";
 import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -74,7 +75,7 @@ export async function setBookingStatus(
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/historico");
-  revalidatePath("/admin/agendamentos");
+  revalidatePath(adminPath("/agendamentos"));
 
   const clientId = row.client_id as string;
   const { data: profile } = await supabase.from("profiles").select("email").eq("id", clientId).maybeSingle();

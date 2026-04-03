@@ -17,7 +17,7 @@ type Props = {
   userEmail: string;
   /** Conta com login e-mail/senha (pode trocar senha). */
   hasEmailPasswordProvider: boolean;
-  /** `SUPABASE_SERVICE_ROLE_KEY` configurada no servidor. */
+  /** Exclusão automática da conta disponível no servidor. */
   accountDeletionConfigured: boolean;
 };
 
@@ -189,8 +189,8 @@ export function AccountSecuritySection({
 
         {!accountDeletionConfigured ? (
           <p className="auth-banner auth-banner--err" style={{ margin: 0 }}>
-            A exclusão automática precisa da chave <code>SUPABASE_SERVICE_ROLE_KEY</code> no servidor. Enquanto isso,
-            peça exclusão pelo suporte informando seu e-mail.
+            A exclusão automática pela página ainda não está disponível. Para encerrar sua conta, fale com o suporte do
+            Kazaro e informe o e-mail da conta — a equipe orienta o próximo passo.
           </p>
         ) : (
           <form onSubmit={onDeleteAccount}>

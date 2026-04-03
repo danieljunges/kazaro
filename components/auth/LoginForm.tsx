@@ -7,6 +7,12 @@ import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { AuthSpinner } from "@/components/auth/AuthSpinner";
 
+function safeInternalPath(raw: string): string {
+  const t = raw.trim();
+  if (!t.startsWith("/") || t.startsWith("//") || t.includes("://")) return "/dashboard";
+  return t;
+}
+
 function ptError(message: string): string {
   const m = message.toLowerCase();
   if (m.includes("invalid login credentials")) return "E-mail ou senha incorretos.";
@@ -18,7 +24,7 @@ function ptError(message: string): string {
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") ?? "/dashboard";
+  const next = safeInternalPath(searchParams.get("next") ?? "/dashboard");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,7 +47,7 @@ export function LoginForm() {
       }
       await ensureMinElapsedSince(t0);
       navigated = true;
-      router.push(next.startsWith("/") ? next : `/${next}`);
+      router.push(next);
       router.refresh();
     } catch {
       setError("Falha na conexão. Tente de novo.");

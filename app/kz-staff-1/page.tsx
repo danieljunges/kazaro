@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { adminPath } from "@/lib/admin/panel-path";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { bookingStatusLabelShort } from "@/lib/booking/workflow";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
@@ -19,7 +20,7 @@ function statusPt(status: string): string {
 }
 
 export default async function AdminHome() {
-  await requireAdmin("/admin");
+  await requireAdmin();
   const supabase = await getSupabaseServerClient();
 
   const [
@@ -64,10 +65,10 @@ export default async function AdminHome() {
           <div className="dt-sub">Visão geral da plataforma — filas, números e acesso a todos os módulos</div>
         </div>
         <div className="dt-right" style={{ flexWrap: "wrap", gap: 10 }}>
-          <Link href="/admin/servicos" className="btn-cta" style={{ textDecoration: "none" }}>
+          <Link href={adminPath("/servicos")} className="btn-cta" style={{ textDecoration: "none" }}>
             Fila de serviços →
           </Link>
-          <Link href="/admin/suporte" className="btn-ghost" style={{ textDecoration: "none" }}>
+          <Link href={adminPath("/suporte")} className="btn-ghost" style={{ textDecoration: "none" }}>
             Suporte →
           </Link>
         </div>
@@ -80,7 +81,7 @@ export default async function AdminHome() {
             {(pendingServices ?? 0) > 0 ? (
               <span>
                 {" "}
-                <Link href="/admin/servicos" className="dc-link">
+                <Link href={adminPath("/servicos")} className="dc-link">
                   {pendingServices} serviço(s) aguardando aprovação
                 </Link>
               </span>
@@ -88,7 +89,7 @@ export default async function AdminHome() {
             {(ticketsOpen ?? 0) > 0 ? (
               <span>
                 {(pendingServices ?? 0) > 0 ? " · " : " "}
-                <Link href="/admin/suporte" className="dc-link">
+                <Link href={adminPath("/suporte")} className="dc-link">
                   {ticketsOpen} chamado(s) de suporte aberto(s)
                 </Link>
               </span>
@@ -96,7 +97,7 @@ export default async function AdminHome() {
             {(bookingsPending ?? 0) > 0 ? (
               <span>
                 {(pendingServices ?? 0) > 0 || (ticketsOpen ?? 0) > 0 ? " · " : " "}
-                <Link href="/admin/agendamentos" className="dc-link">
+                <Link href={adminPath("/agendamentos")} className="dc-link">
                   {bookingsPending} agendamento(s) pendente(s)
                 </Link>
               </span>
@@ -105,7 +106,7 @@ export default async function AdminHome() {
         ) : null}
 
         <div className="kpi-grid">
-          <Link href="/admin/servicos" className="kpi-card" style={{ textDecoration: "none", color: "inherit" }}>
+          <Link href={adminPath("/servicos")} className="kpi-card" style={{ textDecoration: "none", color: "inherit" }}>
             <div className="kpi-top">
               <span className={`kpi-pill ${(pendingServices ?? 0) > 0 ? "pill-warn" : "pill-up"}`}>
                 {(pendingServices ?? 0) > 0 ? "fila" : "ok"}
@@ -114,7 +115,7 @@ export default async function AdminHome() {
             <div className="kpi-val">{pendingServices ?? 0}</div>
             <div className="kpi-label">Serviços pendentes</div>
           </Link>
-          <Link href="/admin/suporte" className="kpi-card" style={{ textDecoration: "none", color: "inherit" }}>
+          <Link href={adminPath("/suporte")} className="kpi-card" style={{ textDecoration: "none", color: "inherit" }}>
             <div className="kpi-top">
               <span className={`kpi-pill ${(ticketsOpen ?? 0) > 0 ? "pill-warn" : "pill-up"}`}>
                 {(ticketsOpen ?? 0) > 0 ? "abertos" : "zerado"}
@@ -123,7 +124,7 @@ export default async function AdminHome() {
             <div className="kpi-val">{ticketsOpen ?? 0}</div>
             <div className="kpi-label">Chamados suporte</div>
           </Link>
-          <Link href="/admin/agendamentos" className="kpi-card" style={{ textDecoration: "none", color: "inherit" }}>
+          <Link href={adminPath("/agendamentos")} className="kpi-card" style={{ textDecoration: "none", color: "inherit" }}>
             <div className="kpi-top">
               <span className={`kpi-pill ${(bookingsPending ?? 0) > 0 ? "pill-warn" : "pill-up"}`}>
                 na fila
@@ -132,7 +133,7 @@ export default async function AdminHome() {
             <div className="kpi-val">{bookingsPending ?? 0}</div>
             <div className="kpi-label">Agend. pendentes</div>
           </Link>
-          <Link href="/admin/usuarios" className="kpi-card" style={{ textDecoration: "none", color: "inherit" }}>
+          <Link href={adminPath("/usuarios")} className="kpi-card" style={{ textDecoration: "none", color: "inherit" }}>
             <div className="kpi-top">
               <span className="kpi-pill pill-up">base</span>
             </div>
@@ -152,7 +153,7 @@ export default async function AdminHome() {
         </div>
 
         <div className="admin-hub-grid">
-          <Link href="/admin/servicos" className="admin-hub-card admin-hub-card--servicos">
+          <Link href={adminPath("/servicos")} className="admin-hub-card admin-hub-card--servicos">
             <div className="admin-hub-card-title">Serviços</div>
             <p className="admin-hub-card-desc">Aprovar ou rejeitar o que prestadores cadastraram antes de ir ao ar.</p>
             <span
@@ -166,7 +167,7 @@ export default async function AdminHome() {
               →
             </span>
           </Link>
-          <Link href="/admin/usuarios" className="admin-hub-card admin-hub-card--usuarios">
+          <Link href={adminPath("/usuarios")} className="admin-hub-card admin-hub-card--usuarios">
             <div className="admin-hub-card-title">Usuários</div>
             <p className="admin-hub-card-desc">Perfis, papéis (cliente / prestador / admin) e suporte à conta.</p>
             <span className="admin-hub-card-meta">{users ?? 0} cadastrados</span>
@@ -174,7 +175,7 @@ export default async function AdminHome() {
               →
             </span>
           </Link>
-          <Link href="/admin/agendamentos" className="admin-hub-card admin-hub-card--agenda">
+          <Link href={adminPath("/agendamentos")} className="admin-hub-card admin-hub-card--agenda">
             <div className="admin-hub-card-title">Agendamentos</div>
             <p className="admin-hub-card-desc">Auditar pedidos, status e ajudar em conflitos entre cliente e profissional.</p>
             <span className={`admin-hub-card-meta ${(bookingsPending ?? 0) > 0 ? "admin-hub-card-meta--warn" : ""}`}>
@@ -186,7 +187,7 @@ export default async function AdminHome() {
               →
             </span>
           </Link>
-          <Link href="/admin/suporte" className="admin-hub-card admin-hub-card--suporte">
+          <Link href={adminPath("/suporte")} className="admin-hub-card admin-hub-card--suporte">
             <div className="admin-hub-card-title">Suporte</div>
             <p className="admin-hub-card-desc">Tickets abertos pelos usuários; respostas também por e-mail (Resend).</p>
             <span className={`admin-hub-card-meta ${(ticketsOpen ?? 0) > 0 ? "admin-hub-card-meta--warn" : ""}`}>
@@ -196,7 +197,7 @@ export default async function AdminHome() {
               →
             </span>
           </Link>
-          <Link href="/admin/relatorios" className="admin-hub-card admin-hub-card--relatorios">
+          <Link href={adminPath("/relatorios")} className="admin-hub-card admin-hub-card--relatorios">
             <div className="admin-hub-card-title">Relatórios</div>
             <p className="admin-hub-card-desc">Indicadores e exportações para acompanhar a operação.</p>
             <span className="admin-hub-card-meta">Visão consolidada</span>
@@ -210,7 +211,7 @@ export default async function AdminHome() {
           <div className="dash-card" style={{ margin: 0 }}>
             <div className="dc-head">
               Últimos agendamentos
-              <Link className="dc-link" href="/admin/agendamentos" style={{ marginLeft: "auto" }}>
+              <Link className="dc-link" href={adminPath("/agendamentos")} style={{ marginLeft: "auto" }}>
                 Ver todos →
               </Link>
             </div>
@@ -246,7 +247,7 @@ export default async function AdminHome() {
           <div className="dash-card" style={{ margin: 0 }}>
             <div className="dc-head">
               Chamados abertos
-              <Link className="dc-link" href="/admin/suporte" style={{ marginLeft: "auto" }}>
+              <Link className="dc-link" href={adminPath("/suporte")} style={{ marginLeft: "auto" }}>
                 Ir ao suporte →
               </Link>
             </div>
@@ -262,7 +263,7 @@ export default async function AdminHome() {
                       borderBottom: "1px solid var(--border)",
                     }}
                   >
-                    <Link href={`/admin/suporte/${t.id}`} style={{ fontWeight: 600, fontSize: 14 }}>
+                    <Link href={adminPath(`/suporte/${t.id}`)} style={{ fontWeight: 600, fontSize: 14 }}>
                       {t.subject}
                     </Link>
                     <div style={{ fontSize: 12, color: "var(--ink50)", marginTop: 4 }}>

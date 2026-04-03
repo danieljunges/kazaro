@@ -1,8 +1,13 @@
 import { type NextRequest } from "next/server";
+import { blockLegacyAdminPaths, enforceAdminPanelOnEdge } from "@/lib/admin/middleware-admin";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
-  return updateSession(request);
+  const legacy = blockLegacyAdminPaths(request);
+  if (legacy) return legacy;
+
+  const sessionResponse = await updateSession(request);
+  return enforceAdminPanelOnEdge(request, sessionResponse);
 }
 
 export const config = {

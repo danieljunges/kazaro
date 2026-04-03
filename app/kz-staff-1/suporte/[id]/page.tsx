@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { adminPath } from "@/lib/admin/panel-path";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { fetchSupportMessages, fetchSupportTicketByIdAdmin } from "@/lib/supabase/support";
 import { adminCloseSupportTicket, adminReplySupportTicket } from "../actions";
@@ -36,7 +37,7 @@ export default async function AdminSuporteTicketPage({ params, searchParams }: P
   return (
     <div className="dash-content" style={{ padding: "24px 28px 48px" }}>
       <div style={{ marginBottom: 16 }}>
-        <Link href="/admin/suporte" className="dc-link">
+        <Link href={adminPath("/suporte")} className="dc-link">
           ← Todos os chamados
         </Link>
       </div>

@@ -1,3 +1,4 @@
+import { adminPath } from "@/lib/admin/panel-path";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { BookingStatusButtons } from "@/components/dashboard/BookingStatusButtons";
 import { bookingStatusLabelShort } from "@/lib/booking/workflow";
@@ -14,7 +15,7 @@ function statusPt(status: string): string {
 }
 
 export default async function AdminAgendamentosPage() {
-  await requireAdmin("/admin/agendamentos");
+  await requireAdmin(adminPath("/agendamentos"));
   const supabase = await getSupabaseServerClient();
   const { data } = await supabase
     .from("bookings")

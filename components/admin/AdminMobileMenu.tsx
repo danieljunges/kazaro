@@ -2,25 +2,28 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-
-const ITEMS = [
-  { label: "Visão geral", href: "/admin" },
-  { label: "Serviços", href: "/admin/servicos" },
-  { label: "Usuários", href: "/admin/usuarios" },
-  { label: "Agendamentos", href: "/admin/agendamentos" },
-  { label: "Suporte", href: "/admin/suporte" },
-  { label: "Relatórios", href: "/admin/relatorios" },
-] as const;
+import { useEffect, useMemo, useState } from "react";
 
 function adminNavActive(pathname: string, href: string): boolean {
-  if (href === "/admin") return pathname === "/admin";
-  return pathname === href || pathname.startsWith(`${href}/`);
+  if (pathname === href) return true;
+  return pathname.startsWith(`${href}/`);
 }
 
-export function AdminMobileMenu() {
+export function AdminMobileMenu({ adminBase }: { adminBase: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  const items = useMemo(
+    () => [
+      { label: "Visão geral", href: adminBase },
+      { label: "Serviços", href: `${adminBase}/servicos` },
+      { label: "Usuários", href: `${adminBase}/usuarios` },
+      { label: "Agendamentos", href: `${adminBase}/agendamentos` },
+      { label: "Suporte", href: `${adminBase}/suporte` },
+      { label: "Relatórios", href: `${adminBase}/relatorios` },
+    ],
+    [adminBase],
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -59,7 +62,7 @@ export function AdminMobileMenu() {
                 ×
               </button>
             </div>
-            {ITEMS.map((i) => (
+            {items.map((i) => (
               <Link
                 key={i.href}
                 href={i.href}

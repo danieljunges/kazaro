@@ -1,8 +1,9 @@
+import { adminPath } from "@/lib/admin/panel-path";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export default async function AdminRelatoriosPage() {
-  await requireAdmin("/admin/relatorios");
+  await requireAdmin(adminPath("/relatorios"));
   const supabase = await getSupabaseServerClient();
 
   const [{ count: completed }, { count: pendingServices }] = await Promise.all([

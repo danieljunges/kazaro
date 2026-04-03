@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { adminPath } from "@/lib/admin/panel-path";
 import { fetchAllSupportTicketsForAdmin } from "@/lib/supabase/support";
 
 function fmt(iso: string): string {
@@ -44,7 +45,7 @@ export default async function AdminSuportePage() {
               {tickets.map((t) => (
                 <tr key={t.id}>
                   <td>
-                    <Link href={`/admin/suporte/${t.id}`} style={{ fontWeight: 600 }}>
+                    <Link href={adminPath(`/suporte/${t.id}`)} style={{ fontWeight: 600 }}>
                       {t.subject}
                     </Link>
                   </td>

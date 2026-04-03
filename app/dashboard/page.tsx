@@ -125,9 +125,21 @@ export default async function DashboardPage({
     redirect(sp.conta === "ativada" ? "/search?conta=ativada" : "/search");
   }
 
+  const proRowRes = await supabase
+    .from("professionals")
+    .select("id, slug, pro_until, rating_avg, reviews_count")
+    .eq("id", uid)
+    .maybeSingle();
+
+  if (role === "professional" && !proRowRes.data) {
+    const qs = new URLSearchParams();
+    if (sp.conta === "ativada") qs.set("conta", "ativada");
+    const tail = qs.toString();
+    redirect(`/dashboard/ativar-perfil${tail ? `?${tail}` : ""}`);
+  }
+
   const [
     profile,
-    proRowRes,
     earnings,
     incomingBookings,
     activeOrdersCount,
@@ -135,7 +147,6 @@ export default async function DashboardPage({
     servicesRes,
   ] = await Promise.all([
     fetchMyProfile(uid),
-    supabase.from("professionals").select("id, slug, pro_until, rating_avg, reviews_count").eq("id", uid).maybeSingle(),
     fetchEarningsThisMonth(uid),
     fetchIncomingBookingsForPro(uid, 12),
     countActiveIncomingBookings(uid),
@@ -197,9 +208,13 @@ export default async function DashboardPage({
           </div>
           <div className="dash-content">
             {showAccountActivated ? (
-              <p className="auth-banner auth-banner--ok" style={{ marginBottom: 18 }}>
-                E-mail confirmado.
-              </p>
+              <div
+                className="auth-banner auth-banner--ok"
+                style={{ marginBottom: 18, textAlign: "left", lineHeight: 1.55 }}
+              >
+                <strong>Tudo certo: sua conta está ativa.</strong> Seu e-mail foi confirmado — você já pode usar o
+                painel com calma. Se ainda faltava algum passo no cadastro, siga as sugestões abaixo.
+              </div>
             ) : null}
             {showAdminDenied ? (
               <p className="auth-banner auth-banner--err" style={{ marginBottom: 18 }}>

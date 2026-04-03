@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CompactNav } from "@/components/kazaro/CompactNav";
+import { fetchMyProfileRole } from "@/lib/supabase/profile";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -29,7 +31,23 @@ const STEPS = [
   { title: "Comece a receber", desc: "Aceite pedidos, converse no chat e construa reputação." },
 ];
 
-export default function ParaProfissionaisPage() {
+export default async function ParaProfissionaisPage() {
+  const supabase = await getSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let createProfileHref = "/criar-conta?tipo=prestador";
+  if (user?.id) {
+    const role = await fetchMyProfileRole(user.id);
+    if (role === "admin") {
+      createProfileHref = "/dashboard";
+    } else if (role === "professional") {
+      const { data: pro } = await supabase.from("professionals").select("id").eq("id", user.id).maybeSingle();
+      createProfileHref = pro ? "/dashboard" : "/dashboard/ativar-perfil";
+    }
+  }
+
   return (
     <div className="home-editorial public-page">
       <CompactNav backHref="/" backLabel="← Início" />
@@ -46,7 +64,7 @@ export default function ParaProfissionaisPage() {
             serviço e a plataforma ajuda com exposição, organização e reputação.
           </p>
           <div className="pro-page-hero__actions">
-            <Link href="/dashboard" className="btn-cta">
+            <Link href={createProfileHref} className="btn-cta">
               Criar meu perfil →
             </Link>
             <Link href="/pro" className="btn-ghost">

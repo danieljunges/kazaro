@@ -38,8 +38,8 @@ export default async function DashboardServicosPage() {
                 Ver perfil →
               </Link>
             ) : (
-              <Link className="dc-link" href="/para-profissionais">
-                Ativar prestador →
+              <Link className="dc-link" href="/dashboard/ativar-perfil">
+                Ativar perfil →
               </Link>
             )}
           </div>

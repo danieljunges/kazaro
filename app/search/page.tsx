@@ -117,9 +117,10 @@ export default async function SearchPage({ searchParams }: PageProps) {
 
       {sp.conta === "ativada" ? (
         <div className="kz-sh-inner" style={{ paddingBottom: 0 }}>
-          <p className="auth-banner auth-banner--ok" style={{ margin: "0 0 16px" }}>
-            E-mail confirmado. Você já pode buscar profissionais e agendar serviços.
-          </p>
+          <div className="auth-banner auth-banner--ok" style={{ margin: "0 0 16px", textAlign: "left", lineHeight: 1.55 }}>
+            <strong>Conta confirmada.</strong> Tudo certo com seu e-mail — já pode buscar profissionais e agendar com
+            tranquilidade.
+          </div>
         </div>
       ) : null}
 

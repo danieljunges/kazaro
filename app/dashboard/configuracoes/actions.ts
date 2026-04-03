@@ -52,7 +52,7 @@ export async function deleteMyAccount(input: {
       ok: false,
       code: "NO_SERVICE_ROLE",
       message:
-        "Exclusão automática não está ativa no servidor. Defina SUPABASE_SERVICE_ROLE_KEY nas variáveis de ambiente ou fale com o suporte.",
+        "Não foi possível concluir a exclusão agora. Entre em contato com o suporte do Kazaro informando que deseja encerrar a conta e o e-mail cadastrado.",
     };
   }
 

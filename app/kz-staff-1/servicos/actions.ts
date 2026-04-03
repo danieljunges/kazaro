@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { adminPath } from "@/lib/admin/panel-path";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { sendTextEmail } from "@/lib/email/resend";
@@ -10,7 +11,7 @@ export async function reviewService(input: {
   status: "approved" | "rejected";
   note: string;
 }): Promise<{ ok: true } | { ok: false; message: string }> {
-  await requireAdmin("/admin/servicos");
+  await requireAdmin(adminPath("/servicos"));
 
   const id = input.serviceId.trim();
   const status = input.status;
@@ -67,7 +68,7 @@ export async function reviewService(input: {
     // Não bloqueia a aprovação se o e-mail falhar
   }
 
-  revalidatePath("/admin/servicos");
+  revalidatePath(adminPath("/servicos"));
   revalidatePath("/dashboard/servicos");
   revalidatePath("/search");
   return { ok: true };

@@ -2,26 +2,30 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const NAV = [
-  { label: "Visão geral", href: "/admin" },
-  { label: "Serviços", href: "/admin/servicos" },
-  { label: "Usuários", href: "/admin/usuarios" },
-  { label: "Agendamentos", href: "/admin/agendamentos" },
-  { label: "Suporte", href: "/admin/suporte" },
-  { label: "Relatórios", href: "/admin/relatorios" },
-] as const;
+import { useMemo } from "react";
 
 function adminNavActive(pathname: string, href: string): boolean {
-  if (href === "/admin") return pathname === "/admin";
-  return pathname === href || pathname.startsWith(`${href}/`);
+  if (pathname === href) return true;
+  return pathname.startsWith(`${href}/`);
 }
 
-export function AdminSidebar({ email }: { email: string | null }) {
+export function AdminSidebar({ email, adminBase }: { email: string | null; adminBase: string }) {
   const pathname = usePathname();
+  const nav = useMemo(
+    () => [
+      { label: "Visão geral", href: adminBase },
+      { label: "Serviços", href: `${adminBase}/servicos` },
+      { label: "Usuários", href: `${adminBase}/usuarios` },
+      { label: "Agendamentos", href: `${adminBase}/agendamentos` },
+      { label: "Suporte", href: `${adminBase}/suporte` },
+      { label: "Relatórios", href: `${adminBase}/relatorios` },
+    ],
+    [adminBase],
+  );
+
   return (
     <aside className="dash-sidebar">
-      <Link href="/admin" className="ds-logo" aria-label="Kazaro — Admin">
+      <Link href={adminBase} className="ds-logo" aria-label="Kazaro — Admin">
         <span className="ds-logo-name">Kazaro</span>
       </Link>
 
@@ -38,7 +42,7 @@ export function AdminSidebar({ email }: { email: string | null }) {
       </div>
 
       <span className="ds-nav-label">Admin</span>
-      {NAV.map((i) => (
+      {nav.map((i) => (
         <Link key={i.href} href={i.href} className={`ds-link${adminNavActive(pathname, i.href) ? " on" : ""}`}>
           {i.label}
         </Link>
@@ -52,4 +56,3 @@ export function AdminSidebar({ email }: { email: string | null }) {
     </aside>
   );
 }
-

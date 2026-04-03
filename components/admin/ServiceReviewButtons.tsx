@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { reviewService } from "@/app/admin/servicos/actions";
+import { reviewService } from "@/app/kz-staff-1/servicos/actions";
 
 export function ServiceReviewButtons({ serviceId }: { serviceId: string }) {
   const [note, setNote] = useState("");

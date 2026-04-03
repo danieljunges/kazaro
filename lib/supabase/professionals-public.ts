@@ -12,6 +12,7 @@ type ProRow = {
   bio: string | null;
   city: string | null;
   neighborhood: string | null;
+  service_region: string | null;
   is_verified: boolean;
   availability_hint: string;
   rating_avg: number | string | null;
@@ -77,6 +78,8 @@ function availFromDb(h: string): AvailTag {
 
 function roleLineFromRow(row: ProRow): string {
   if (row.headline?.trim()) return row.headline.trim();
+  const reg = row.service_region?.trim();
+  if (reg) return reg;
   const nb = row.neighborhood?.trim();
   const city = row.city?.trim() || "Florianópolis";
   if (nb) return `${nb} · ${city}`;
@@ -122,7 +125,7 @@ export async function fetchProfessionalsForSearch(): Promise<ProfessionalCard[] 
     const { data, error } = await supabase
       .from("professionals")
       .select(
-        "id, slug, display_name, headline, city, neighborhood, is_verified, availability_hint, rating_avg, reviews_count, price_from_cents",
+        "id, slug, display_name, headline, city, neighborhood, service_region, is_verified, availability_hint, rating_avg, reviews_count, price_from_cents",
       )
       .order("created_at", { ascending: true });
 
@@ -140,7 +143,7 @@ export async function fetchProfessionalDetailFromDb(slug: string): Promise<Profe
     const { data: pro, error: pErr } = await supabase
       .from("professionals")
       .select(
-        "id, slug, display_name, headline, bio, city, neighborhood, is_verified, availability_hint, rating_avg, reviews_count, price_from_cents",
+        "id, slug, display_name, headline, bio, city, neighborhood, service_region, is_verified, availability_hint, rating_avg, reviews_count, price_from_cents",
       )
       .eq("slug", slug)
       .maybeSingle();

@@ -29,13 +29,13 @@ function ptError(message: string): string {
   return message;
 }
 
-export function SignupForm() {
+export function SignupForm({ defaultRole = "client" as AccountRole }: { defaultRole?: AccountRole }) {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
-  const [accountRole, setAccountRole] = useState<AccountRole>("client");
+  const [accountRole, setAccountRole] = useState<AccountRole>(defaultRole);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -86,7 +86,7 @@ export function SignupForm() {
       if (data.session) {
         await ensureMinElapsedSince(t0);
         navigated = true;
-        router.push("/dashboard");
+        router.push(accountRole === "professional" ? "/dashboard/ativar-perfil" : "/dashboard");
         router.refresh();
         return;
       }

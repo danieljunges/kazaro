@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { CompactNav } from "@/components/kazaro/CompactNav";
+import { getAdminPanelBasePath, isSafeAdminNextRedirect } from "@/lib/admin/panel-path";
 import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
@@ -38,8 +39,8 @@ export default async function EntrarPage({
       const role = await fetchMyProfileRole(user.id);
       if (role === "admin") {
         const next = sp.next?.trim();
-        if (next && next.startsWith("/")) redirect(next);
-        redirect("/admin");
+        if (next && isSafeAdminNextRedirect(next)) redirect(next);
+        redirect(getAdminPanelBasePath());
       }
       redirect("/dashboard?admin=negado");
     }

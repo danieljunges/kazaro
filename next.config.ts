@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { attachSecurityHeadersToConfig } from "@/lib/security/http-security-headers";
 
 const nextConfig: NextConfig = {
   images: {
@@ -8,4 +9,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default attachSecurityHeadersToConfig(nextConfig);
