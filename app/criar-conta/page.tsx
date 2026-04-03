@@ -16,12 +16,9 @@ export default function CriarContaPage() {
       <div className="section">
         <div className="pro-page-card" style={{ maxWidth: 480, margin: "0 auto" }}>
           <span className="sec-eyebrow">Conta</span>
-          <h1 className="sec-title" style={{ fontSize: "clamp(32px,4vw,42px)", marginBottom: 8 }}>
+          <h1 className="sec-title" style={{ fontSize: "clamp(32px,4vw,42px)", marginBottom: 16 }}>
             Criar conta
           </h1>
-          <p className="sec-sub" style={{ marginBottom: 8 }}>
-            Em segundos você começa. Depois é só agendar ou acompanhar seus pedidos.
-          </p>
           <SignupForm />
         </div>
       </div>

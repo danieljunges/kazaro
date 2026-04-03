@@ -5,12 +5,13 @@ import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { LogoIcon } from "./Brand";
 
-type NavIcon = "grid" | "wrench" | "msg" | "money" | "search";
+type NavIcon = "grid" | "wrench" | "msg" | "money" | "search" | "help";
 
 const NAV_PRO = [
   { label: "Visão geral", href: "/dashboard", icon: "grid" as const },
   { label: "Meus serviços", href: "/dashboard/servicos", icon: "wrench" as const },
   { label: "Mensagens", href: "/dashboard/mensagens", icon: "msg" as const },
+  { label: "Suporte", href: "/dashboard/suporte", icon: "help" as const },
   { label: "Ganhos", href: "/dashboard/ganhos", icon: "money" as const },
 ] as const;
 
@@ -18,6 +19,7 @@ const NAV_CLIENT = [
   { label: "Visão geral", href: "/dashboard", icon: "grid" as const },
   { label: "Buscar profissionais", href: "/search", icon: "search" as const },
   { label: "Mensagens", href: "/dashboard/mensagens", icon: "msg" as const },
+  { label: "Suporte", href: "/dashboard/suporte", icon: "help" as const },
 ] as const;
 
 function Icon({ name }: { name: NavIcon }) {
@@ -53,6 +55,15 @@ function Icon({ name }: { name: NavIcon }) {
       </svg>
     );
   }
+  if (name === "help") {
+    return (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+    );
+  }
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
       <line x1="12" y1="1" x2="12" y2="23" />
@@ -64,6 +75,7 @@ function Icon({ name }: { name: NavIcon }) {
 function navLinkActive(pathname: string, href: string): boolean {
   if (href === "/search") return pathname === "/search";
   if (href === "/dashboard/mensagens") return pathname.startsWith("/dashboard/mensagens");
+  if (href === "/dashboard/suporte") return pathname.startsWith("/dashboard/suporte");
   return pathname === href;
 }
 

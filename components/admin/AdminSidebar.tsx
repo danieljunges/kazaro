@@ -8,8 +8,14 @@ const NAV = [
   { label: "Serviços", href: "/admin/servicos" },
   { label: "Usuários", href: "/admin/usuarios" },
   { label: "Agendamentos", href: "/admin/agendamentos" },
+  { label: "Suporte", href: "/admin/suporte" },
   { label: "Relatórios", href: "/admin/relatorios" },
 ] as const;
+
+function adminNavActive(pathname: string, href: string): boolean {
+  if (href === "/admin") return pathname === "/admin";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function AdminSidebar({ email }: { email: string | null }) {
   const pathname = usePathname();
@@ -36,14 +42,14 @@ export function AdminSidebar({ email }: { email: string | null }) {
 
       <span className="ds-nav-label">Admin</span>
       {NAV.map((i) => (
-        <Link key={i.href} href={i.href} className={`ds-link${pathname === i.href ? " on" : ""}`}>
+        <Link key={i.href} href={i.href} className={`ds-link${adminNavActive(pathname, i.href) ? " on" : ""}`}>
           {i.label}
         </Link>
       ))}
 
       <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--border)" }}>
         <Link href="/dashboard" className="ds-link" style={{ fontSize: "12.5px" }}>
-          Voltar ao dashboard →
+          ← Voltar ao dashboard
         </Link>
       </div>
     </aside>

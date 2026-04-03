@@ -65,10 +65,11 @@ function statusStyle(status: string): { background: string; color: string } {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ conta?: string }>;
+  searchParams: Promise<{ conta?: string; admin?: string }>;
 }) {
   const sp = await searchParams;
   const showAccountActivated = sp.conta === "ativada";
+  const showAdminDenied = sp.admin === "negado";
   const subtitle = formatTodayPtBR();
   const supabase = await getSupabaseServerClient();
   const {
@@ -119,7 +120,12 @@ export default async function DashboardPage({
         <div className="dash-content">
           {showAccountActivated ? (
             <p className="auth-banner auth-banner--ok" style={{ marginBottom: 18 }}>
-              Conta ativada com sucesso. Bem-vindo(a) ao Kazaro!
+              E-mail confirmado.
+            </p>
+          ) : null}
+          {showAdminDenied ? (
+            <p className="auth-banner auth-banner--err" style={{ marginBottom: 18 }}>
+              Esta área é exclusiva de administradores. Use o menu para navegar no seu painel.
             </p>
           ) : null}
           <div className="kpi-grid">

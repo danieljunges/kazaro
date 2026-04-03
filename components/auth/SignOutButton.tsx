@@ -10,9 +10,15 @@ export function SignOutButton() {
 
   async function onSignOut() {
     setLoading(true);
-    await getSupabaseBrowserClient().auth.signOut();
-    router.push("/");
-    router.refresh();
+    let navigated = false;
+    try {
+      await getSupabaseBrowserClient().auth.signOut();
+      navigated = true;
+      router.push("/");
+      router.refresh();
+    } finally {
+      if (!navigated) setLoading(false);
+    }
   }
 
   return (

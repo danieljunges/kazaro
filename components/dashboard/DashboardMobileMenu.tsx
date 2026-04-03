@@ -8,6 +8,7 @@ const ITEMS_PRO = [
   { label: "Visão geral", href: "/dashboard" },
   { label: "Meus serviços", href: "/dashboard/servicos" },
   { label: "Mensagens", href: "/dashboard/mensagens" },
+  { label: "Suporte", href: "/dashboard/suporte" },
   { label: "Ganhos", href: "/dashboard/ganhos" },
   { label: "Configurações", href: "/dashboard/configuracoes" },
 ] as const;
@@ -16,12 +17,14 @@ const ITEMS_CLIENT = [
   { label: "Visão geral", href: "/dashboard" },
   { label: "Buscar profissionais", href: "/search" },
   { label: "Mensagens", href: "/dashboard/mensagens" },
+  { label: "Suporte", href: "/dashboard/suporte" },
   { label: "Configurações", href: "/dashboard/configuracoes" },
 ] as const;
 
 function itemActive(pathname: string, href: string): boolean {
   if (href === "/search") return pathname === "/search";
   if (href === "/dashboard/mensagens") return pathname.startsWith("/dashboard/mensagens");
+  if (href === "/dashboard/suporte") return pathname.startsWith("/dashboard/suporte");
   return pathname === href;
 }
 

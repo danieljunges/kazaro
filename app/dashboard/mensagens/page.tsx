@@ -27,7 +27,7 @@ export default async function DashboardMensagensPage() {
           <div className="dc-head" style={{ marginBottom: 12 }}>
             Caixa de mensagens
             <Link href="/dashboard" className="dc-link">
-              Voltar →
+              ← Dashboard
             </Link>
           </div>
 

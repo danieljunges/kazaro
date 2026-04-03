@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { CompactNav } from "@/components/kazaro/CompactNav";
+import { fetchMyProfileRole } from "@/lib/supabase/profile";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -12,13 +15,36 @@ export const metadata: Metadata = {
 
 function LoginFallback() {
   return (
-    <p className="sec-sub" style={{ margin: 0 }}>
-      Carregando formulário…
-    </p>
+    <div className="auth-skeleton" aria-busy="true" aria-label="Carregando">
+      <div className="auth-skel-line" />
+      <div className="auth-skel-line" />
+      <div className="auth-skel-btn" />
+    </div>
   );
 }
 
-export default function EntrarPage() {
+export default async function EntrarPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string; requer?: string }>;
+}) {
+  const sp = await searchParams;
+  if (sp.requer === "admin") {
+    const supabase = await getSupabaseServerClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user?.id) {
+      const role = await fetchMyProfileRole(user.id);
+      if (role === "admin") {
+        const next = sp.next?.trim();
+        if (next && next.startsWith("/")) redirect(next);
+        redirect("/admin");
+      }
+      redirect("/dashboard?admin=negado");
+    }
+  }
+
   return (
     <div className="home-editorial public-page">
       <CompactNav backHref="/" backLabel="← Início" />
@@ -29,7 +55,7 @@ export default function EntrarPage() {
             Entrar no Kazaro
           </h1>
           <p className="sec-sub" style={{ marginBottom: 8 }}>
-            Use o mesmo e-mail e senha do cadastro para acessar sua conta.
+            Acesso com e-mail e senha.
           </p>
           <Suspense fallback={<LoginFallback />}>
             <LoginForm />

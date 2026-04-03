@@ -1,8 +1,84 @@
+@keyframes auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.home-editorial .auth-spinner {
+  flex-shrink: 0;
+  animation: auth-spin 0.7s linear infinite;
+}
+
+.home-editorial .auth-form-shell {
+  position: relative;
+}
+
+.home-editorial .auth-form-shell--busy {
+  pointer-events: none;
+}
+
+.home-editorial .auth-form-shell--busy::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: -8px;
+  border-radius: 14px;
+  background: rgba(250, 248, 243, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 2;
+  pointer-events: none;
+}
+
 .home-editorial .auth-form {
   display: flex;
   flex-direction: column;
   gap: 18px;
   margin-top: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.home-editorial .auth-submit-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.home-editorial .auth-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 8px;
+  min-height: 220px;
+}
+
+.home-editorial .auth-skel-line {
+  height: 44px;
+  border-radius: 9px;
+  background: linear-gradient(90deg, var(--cream2) 0%, var(--cream-alt, #e8e4d9) 50%, var(--cream2) 100%);
+  background-size: 200% 100%;
+  animation: auth-shimmer 1.2s ease-in-out infinite;
+}
+
+.home-editorial .auth-skel-btn {
+  height: 46px;
+  border-radius: 999px;
+  margin-top: 4px;
+  max-width: 100%;
+  background: linear-gradient(90deg, var(--cream2) 0%, var(--cream-alt, #e8e4d9) 50%, var(--cream2) 100%);
+  background-size: 200% 100%;
+  animation: auth-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes auth-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
 }
 
 .home-editorial .auth-field {
@@ -76,8 +152,12 @@
 }
 
 .home-editorial .auth-submit:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+  opacity: 1;
+  cursor: wait;
+}
+
+.home-editorial .auth-submit:disabled .auth-spinner {
+  opacity: 0.95;
 }
 
 .home-editorial .auth-foot {

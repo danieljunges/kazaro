@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { CompactNav } from "@/components/kazaro/CompactNav";
 import { BookingRequestForm } from "@/components/booking/BookingRequestForm";
 import { resolveProfessionalDetail } from "@/lib/professionals";
 import { fetchBookingPageContext } from "@/lib/supabase/bookings";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -27,6 +28,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AgendarPage({ params, searchParams }: Props) {
   const { id: slug } = await params;
   const sp = await searchParams;
+
+  const supabase = await getSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const nextPath = (() => {
+    const qs = new URLSearchParams();
+    if (sp.servico != null && sp.servico !== "") qs.set("servico", String(sp.servico));
+    const base = `/profissional/${slug}/agendar`;
+    const q = qs.toString();
+    return q ? `${base}?${q}` : base;
+  })();
+  if (!user) redirect(`/entrar?next=${encodeURIComponent(nextPath)}`);
+
   const fromDb = await fetchBookingPageContext(slug);
   const ctx =
     fromDb ??

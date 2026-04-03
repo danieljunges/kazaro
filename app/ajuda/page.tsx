@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { InfoPage } from "@/components/kazaro/InfoPage";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
 
@@ -23,7 +24,17 @@ export default function AjudaPage() {
           heading: "Conta e reputação",
           body: "Saiba como avaliações funcionam e como resolver divergências com mediação da equipe Kazaro.",
         },
+        {
+          heading: "Falar com o time",
+          body: "Dúvidas ou problemas com a plataforma: com login, use Suporte no dashboard para abrir um chamado.",
+        },
       ]}
-    />
+    >
+      <p style={{ margin: 0, color: "var(--ink50)", lineHeight: 1.7 }}>
+        <Link href="/entrar?next=/dashboard/suporte" className="auth-link">
+          Entrar e abrir suporte
+        </Link>
+      </p>
+    </InfoPage>
   );
 }

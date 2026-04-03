@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent } from "react";
 import { BOOKING_TIME_OPTIONS } from "@/lib/booking/constants";
 import type { BookingPageContext } from "@/lib/supabase/bookings";
 import { submitBookingRequest } from "@/app/profissional/[id]/agendar/actions";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 type Props = {
   context: BookingPageContext;
@@ -42,26 +41,6 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     note: string;
   } | null>(null);
 
-  const loginNext = `/profissional/${context.slug}/agendar`;
-
-  const [sessionChecked, setSessionChecked] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    void (async () => {
-      const supabase = getSupabaseBrowserClient();
-      const { data } = await supabase.auth.getSession();
-      if (!cancelled) {
-        setLoggedIn(!!data.session);
-        setSessionChecked(true);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
@@ -90,33 +69,6 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     } finally {
       setLoading(false);
     }
-  }
-
-  if (!sessionChecked) {
-    return (
-      <p className="sec-sub booking-muted" style={{ margin: 0 }}>
-        Carregando…
-      </p>
-    );
-  }
-
-  if (!loggedIn) {
-    return (
-      <div className="booking-guest">
-        <p className="sec-sub" style={{ margin: "0 0 16px" }}>
-          Para enviar um pedido de agendamento para <strong>{context.displayName}</strong>, entre na sua conta (ou crie
-          uma em poucos segundos).
-        </p>
-        <div className="booking-guest-actions">
-          <Link href={`/entrar?next=${encodeURIComponent(loginNext)}`} className="btn-cta">
-            Entrar
-          </Link>
-          <Link href="/criar-conta" className="btn-ghost">
-            Criar conta
-          </Link>
-        </div>
-      </div>
-    );
   }
 
   if (!context.isBookable || !context.professionalId) {

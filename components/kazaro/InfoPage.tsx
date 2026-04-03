@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { CompactNav } from "@/components/kazaro/CompactNav";
 
@@ -6,9 +7,10 @@ type InfoPageProps = {
   title: string;
   subtitle: string;
   sections: Array<{ heading: string; body: string }>;
+  children?: ReactNode;
 };
 
-export function InfoPage({ eyebrow, title, subtitle, sections }: InfoPageProps) {
+export function InfoPage({ eyebrow, title, subtitle, sections, children }: InfoPageProps) {
   return (
     <div className="home-editorial public-page">
       <CompactNav backHref="/" backLabel="← Início" />
@@ -29,6 +31,7 @@ export function InfoPage({ eyebrow, title, subtitle, sections }: InfoPageProps) 
               <p style={{ margin: 0, color: "var(--ink50)", lineHeight: 1.7 }}>{section.body}</p>
             </div>
           ))}
+          {children ? <div style={{ marginBottom: 22 }}>{children}</div> : null}
           <Link href="/search" className="btn-cta">
             Buscar profissionais →
           </Link>

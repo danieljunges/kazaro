@@ -76,6 +76,9 @@ export function DashboardUserMenu({
           <Link className="kz-dash-user-link" role="menuitem" href="/dashboard/mensagens">
             Mensagens
           </Link>
+          <Link className="kz-dash-user-link" role="menuitem" href="/dashboard/suporte">
+            Suporte
+          </Link>
           {showProLinks ? (
             <Link className="kz-dash-user-link" role="menuitem" href="/dashboard/ganhos">
               Ganhos

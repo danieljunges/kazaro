@@ -24,7 +24,7 @@ export default async function DashboardGanhosPage() {
           <div className="dc-head" style={{ marginBottom: 12 }}>
             Ganhos
             <Link href="/dashboard" className="dc-link">
-              Voltar →
+              ← Dashboard
             </Link>
           </div>
 

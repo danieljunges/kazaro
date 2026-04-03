@@ -10,7 +10,9 @@ export async function requireAdmin(nextPath = "/admin") {
   if (!user?.id) redirect(`/entrar?next=${encodeURIComponent(nextPath)}`);
 
   const role = await fetchMyProfileRole(user.id);
-  if (role !== "admin") redirect("/dashboard");
+  if (role !== "admin") {
+    redirect(`/entrar?next=${encodeURIComponent(nextPath)}&requer=admin`);
+  }
 
   return { userId: user.id, email: user.email ?? null };
 }

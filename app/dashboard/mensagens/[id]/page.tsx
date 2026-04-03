@@ -33,8 +33,8 @@ export default async function ConversationPage({ params }: { params: Promise<{ i
         <div className="pro-page-card" style={{ maxWidth: 980 }}>
           <div className="dc-head" style={{ marginBottom: 12 }}>
             {otherName}
-            <Link href="/dashboard" className="dc-link">
-              Dashboard →
+            <Link href="/dashboard/mensagens" className="dc-link">
+              ← Mensagens
             </Link>
           </div>
 

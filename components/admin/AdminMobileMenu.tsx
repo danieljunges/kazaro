@@ -9,8 +9,14 @@ const ITEMS = [
   { label: "Serviços", href: "/admin/servicos" },
   { label: "Usuários", href: "/admin/usuarios" },
   { label: "Agendamentos", href: "/admin/agendamentos" },
+  { label: "Suporte", href: "/admin/suporte" },
   { label: "Relatórios", href: "/admin/relatorios" },
 ] as const;
+
+function adminNavActive(pathname: string, href: string): boolean {
+  if (href === "/admin") return pathname === "/admin";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function AdminMobileMenu() {
   const pathname = usePathname();
@@ -57,15 +63,15 @@ export function AdminMobileMenu() {
               <Link
                 key={i.href}
                 href={i.href}
-                className={`dash-mnav-link${pathname === i.href ? " on" : ""}`}
-                aria-current={pathname === i.href ? "page" : undefined}
+                className={`dash-mnav-link${adminNavActive(pathname, i.href) ? " on" : ""}`}
+                aria-current={adminNavActive(pathname, i.href) ? "page" : undefined}
                 onClick={() => setOpen(false)}
               >
                 {i.label}
               </Link>
             ))}
             <Link href="/dashboard" className="dash-mnav-link dash-mnav-link--muted" onClick={() => setOpen(false)}>
-              Voltar ao dashboard
+              ← Voltar ao dashboard
             </Link>
           </div>
         </>
