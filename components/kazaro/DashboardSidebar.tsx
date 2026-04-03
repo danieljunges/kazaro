@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { LogoIcon } from "./Brand";
 
-type NavIcon = "grid" | "wrench" | "msg" | "money" | "search" | "help";
+type NavIcon = "grid" | "wrench" | "msg" | "money" | "search" | "help" | "list";
 
 const NAV_PRO = [
   { label: "Visão geral", href: "/dashboard", icon: "grid" as const },
@@ -18,6 +18,7 @@ const NAV_PRO = [
 const NAV_CLIENT = [
   { label: "Visão geral", href: "/dashboard", icon: "grid" as const },
   { label: "Buscar profissionais", href: "/search", icon: "search" as const },
+  { label: "Histórico de serviços", href: "/dashboard/historico", icon: "list" as const },
   { label: "Mensagens", href: "/dashboard/mensagens", icon: "msg" as const },
   { label: "Suporte", href: "/dashboard/suporte", icon: "help" as const },
 ] as const;
@@ -64,6 +65,18 @@ function Icon({ name }: { name: NavIcon }) {
       </svg>
     );
   }
+  if (name === "list") {
+    return (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+        <line x1="8" y1="6" x2="21" y2="6" />
+        <line x1="8" y1="12" x2="21" y2="12" />
+        <line x1="8" y1="18" x2="21" y2="18" />
+        <line x1="3" y1="6" x2="3.01" y2="6" />
+        <line x1="3" y1="12" x2="3.01" y2="12" />
+        <line x1="3" y1="18" x2="3.01" y2="18" />
+      </svg>
+    );
+  }
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
       <line x1="12" y1="1" x2="12" y2="23" />
@@ -76,6 +89,7 @@ function navLinkActive(pathname: string, href: string): boolean {
   if (href === "/search") return pathname === "/search";
   if (href === "/dashboard/mensagens") return pathname.startsWith("/dashboard/mensagens");
   if (href === "/dashboard/suporte") return pathname.startsWith("/dashboard/suporte");
+  if (href === "/dashboard/historico") return pathname.startsWith("/dashboard/historico");
   return pathname === href;
 }
 
@@ -141,6 +155,15 @@ export function DashboardSidebar({
         </Link>
       ))}
       <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--border)" }}>
+        {userEmail ? (
+          <Link href="/dashboard/configuracoes" className="ds-link" style={{ fontSize: "12.5px" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+            </svg>
+            Configurações
+          </Link>
+        ) : null}
         {userEmail ? <SignOutButton /> : null}
         {isProfessional ? (
           <Link href="/pro" className="ds-link" style={{ fontSize: "12.5px" }}>

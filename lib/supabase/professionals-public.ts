@@ -1,5 +1,6 @@
-import type { ProfessionalCard, ProfessionalDetail, ServiceRow, AvailTag } from "@/lib/professionals";
+import type { ProfessionalCard, ProfessionalDetail, ReviewRow, ServiceRow, AvailTag } from "@/lib/professionals";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { fetchPublicReviewsForProfessional, type BookingReviewPublic } from "@/lib/supabase/reviews";
 
 const PH_ROTATION = ["ph-1", "ph-2", "ph-3", "ph-4", "ph-5", "ph-6"] as const;
 
@@ -47,6 +48,26 @@ function formatRating(v: number | string | null): string {
   const n = typeof v === "string" ? parseFloat(v) : v;
   if (Number.isNaN(n)) return "—";
   return n.toFixed(1).replace(".", ",");
+}
+
+function formatReviewStarsLine(stars: number): string {
+  return `${stars.toFixed(1).replace(".", ",")}/5`;
+}
+
+function formatReviewWhen(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "short", year: "numeric" }).format(d);
+}
+
+function mapDbReviewsToRows(rows: BookingReviewPublic[]): ReviewRow[] {
+  return rows.map((r) => ({
+    id: r.id,
+    score: formatReviewStarsLine(r.stars),
+    text: (r.comment?.trim() || "Sem comentário.").trim(),
+    author: r.author_public_name,
+    info: formatReviewWhen(r.created_at),
+  }));
 }
 
 function availFromDb(h: string): AvailTag {
@@ -144,6 +165,7 @@ export async function fetchProfessionalDetailFromDb(slug: string): Promise<Profe
     const { line1, line2 } = splitDisplayName(row.display_name);
     const ratingAvg = typeof row.rating_avg === "string" ? parseFloat(row.rating_avg) : row.rating_avg;
     const card = mapProRowToCard(row, 0);
+    const reviewRows = mapDbReviewsToRows(await fetchPublicReviewsForProfessional(row.id));
 
     return {
       ...card,
@@ -155,7 +177,7 @@ export async function fetchProfessionalDetailFromDb(slug: string): Promise<Profe
         row.bio?.trim() ||
         "Este profissional ainda não preencheu a descrição completa. Entre em contato pelo Kazaro para saber mais.",
       services,
-      reviews: [],
+      reviews: reviewRows,
       statRow: [
         { val: String(row.reviews_count ?? 0), label: "Avaliações" },
         { val: formatRating(ratingAvg), label: "Nota média" },

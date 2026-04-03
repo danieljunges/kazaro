@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { RouteScrollTop } from "@/components/common/RouteScrollTop";
+import { CookieConsentBar } from "@/components/legal/CookieConsentBar";
 import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -65,6 +66,7 @@ export default function RootLayout({
           <RouteScrollTop />
         </Suspense>
         {children}
+        <CookieConsentBar />
       </body>
     </html>
   );

@@ -1304,6 +1304,14 @@ a.btn-book-now:visited {
   gap: 10px;
   align-items: center;
 }
+.kz-chat-policy {
+  grid-column: 1 / -1;
+  margin: 0 0 4px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink50);
+  font-weight: 600;
+}
 .kz-chat-input {
   border: 1.5px solid var(--border2);
   border-radius: 12px;
@@ -1820,5 +1828,129 @@ a.btn-book-now:visited {
   font-size: 12.5px;
   color: var(--ink60);
   line-height: 1.5;
+}
+
+/* Cliente — histórico de serviços (pedidos) */
+.kz-hist-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.kz-hist-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  background: var(--white);
+}
+.kz-hist-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.kz-hist-title {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.kz-hist-pro {
+  font-size: 14px;
+  color: var(--ink60);
+}
+.kz-hist-meta {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink50);
+  font-variant-numeric: tabular-nums;
+}
+.kz-hist-note {
+  margin: 12px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink60);
+}
+.kz-hist-note strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.kz-hist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.kz-hist-pill {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--cream);
+  color: var(--ink60);
+}
+.kz-hist-pill--wait {
+  background: var(--coral-bg);
+  color: var(--coral);
+}
+.kz-hist-pill--ok {
+  background: var(--success-bg);
+  color: var(--success);
+}
+.kz-hist-pill--bad {
+  background: var(--ember-bg);
+  color: var(--ember);
+}
+.kz-hist-pill--done {
+  background: var(--cream);
+  color: var(--ink50);
+}
+
+.kz-hist-review {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border2);
+}
+.kz-hist-review-title {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--ink);
+}
+.kz-review-form {
+  margin-top: 10px;
+}
+.kz-review-stars {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.kz-review-star {
+  border: none;
+  background: transparent;
+  padding: 0 2px;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--border2);
+  transition: color 0.12s, transform 0.12s;
+}
+.kz-review-star.on {
+  color: var(--gold);
+}
+.kz-review-star:hover {
+  transform: scale(1.08);
+}
+.kz-review-star-hint {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink60);
+  margin-left: 6px;
 }
 

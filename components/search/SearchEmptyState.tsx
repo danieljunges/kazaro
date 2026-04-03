@@ -1,8 +1,37 @@
 import Link from "next/link";
 
-type Variant = "qa" | "database-empty";
+type Variant = "qa" | "database-empty" | "no-match";
 
-export function SearchEmptyState({ variant = "qa" }: { variant?: Variant }) {
+export function SearchEmptyState({
+  variant = "qa",
+  query,
+}: {
+  variant?: Variant;
+  /** Termo buscado (variante no-match). */
+  query?: string;
+}) {
+  if (variant === "no-match") {
+    const q = query?.trim();
+    return (
+      <div className="search-empty">
+        <p className="search-empty__title">
+          {q ? `Nenhum resultado para “${q}”` : "Nenhum profissional encontrado"}
+        </p>
+        <p className="search-empty__text">
+          Tente outro termo ou use os atalhos de categoria acima. Você também pode voltar à lista completa.
+        </p>
+        <div className="search-empty__actions">
+          <Link href="/search" className="search-empty__btn">
+            Ver todos
+          </Link>
+          <Link href="/" className="search-empty__link">
+            Início
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (variant === "database-empty") {
     return (
       <div className="search-empty">

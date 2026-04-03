@@ -15,7 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/garantia`, lastModified, changeFrequency: "monthly", priority: 0.5 },
     { url: `${base}/entrar`, lastModified, changeFrequency: "monthly", priority: 0.45 },
     { url: `${base}/criar-conta`, lastModified, changeFrequency: "monthly", priority: 0.45 },
-    { url: `${base}/privacidade`, lastModified, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${base}/termos`, lastModified, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/privacidade`, lastModified, changeFrequency: "yearly", priority: 0.35 },
+    { url: `${base}/cookies`, lastModified, changeFrequency: "yearly", priority: 0.35 },
+    { url: `${base}/termos`, lastModified, changeFrequency: "yearly", priority: 0.35 },
   ];
 }

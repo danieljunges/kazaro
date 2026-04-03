@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { setBookingStatus } from "@/app/dashboard/actions";
 
@@ -15,6 +16,7 @@ const ACTIONS: { to: "confirmed" | "cancelled" | "completed"; label: string }[] 
 ];
 
 export function BookingStatusButtons({ bookingId, currentStatus }: Props) {
+  const router = useRouter();
   const [loadingTo, setLoadingTo] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
@@ -39,6 +41,7 @@ export function BookingStatusButtons({ bookingId, currentStatus }: Props) {
               try {
                 const res = await setBookingStatus(bookingId, a.to);
                 if (!res.ok) setErr(res.message);
+                else router.refresh();
               } finally {
                 setLoadingTo(null);
               }

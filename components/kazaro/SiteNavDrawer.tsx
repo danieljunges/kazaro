@@ -2,14 +2,17 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import type { ProfileRole } from "@/lib/supabase/profile";
 
 type Props = {
   variant: "marketing" | "compact";
   backHref?: string;
   backLabel?: string;
+  /** null = visitante (não logado) */
+  accountKind: ProfileRole | null;
 };
 
-export function SiteNavDrawer({ variant, backHref, backLabel }: Props) {
+export function SiteNavDrawer({ variant, backHref, backLabel, accountKind }: Props) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
@@ -39,6 +42,8 @@ export function SiteNavDrawer({ variant, backHref, backLabel }: Props) {
     if (open) document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
   }, [open]);
+
+  const isProNav = accountKind === "professional" || accountKind === "admin";
 
   return (
     <div className="kz-site-drawer-root" ref={rootRef}>
@@ -87,20 +92,65 @@ export function SiteNavDrawer({ variant, backHref, backLabel }: Props) {
             </Link>
 
             <div className="kz-site-drawer-section">Conta</div>
-            <Link href="/dashboard" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-              Dashboard
+            {accountKind == null ? (
+              <>
+                <Link href="/entrar" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Entrar
+                </Link>
+                <Link href="/criar-conta" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Criar conta
+                </Link>
+              </>
+            ) : isProNav ? (
+              <>
+                <Link href="/dashboard" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Dashboard
+                </Link>
+                <Link href="/dashboard/servicos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Meus serviços
+                </Link>
+                <Link href="/dashboard/mensagens" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Mensagens
+                </Link>
+                <Link href="/dashboard/suporte" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Suporte
+                </Link>
+                <Link href="/dashboard/ganhos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Ganhos
+                </Link>
+                <Link href="/dashboard/configuracoes" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Configurações
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/dashboard/historico" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Histórico de serviços
+                </Link>
+                <Link href="/dashboard/mensagens" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Mensagens
+                </Link>
+                <Link href="/dashboard/suporte" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Suporte
+                </Link>
+                <Link href="/dashboard" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Visão geral
+                </Link>
+                <Link href="/dashboard/configuracoes" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Configurações
+                </Link>
+              </>
+            )}
+
+            <div className="kz-site-drawer-section">Legal</div>
+            <Link href="/privacidade" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+              Política de privacidade
             </Link>
-            <Link href="/dashboard/servicos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-              Meus serviços
+            <Link href="/cookies" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+              Política de cookies
             </Link>
-            <Link href="/dashboard/mensagens" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-              Mensagens
-            </Link>
-            <Link href="/dashboard/ganhos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-              Ganhos
-            </Link>
-            <Link href="/dashboard/configuracoes" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-              Configurações
+            <Link href="/termos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+              Termos de uso
             </Link>
           </div>
         </>

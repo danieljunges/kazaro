@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import type { ProfileRole } from "@/lib/supabase/profile";
 
 type SessionUser = { email: string | null; avatarUrl: string | null };
 
@@ -14,9 +15,12 @@ function initialFromEmail(email: string | null): string {
 export function NavUserMenu({
   initialEmail,
   initialAvatarUrl,
+  accountKind,
 }: {
   initialEmail?: string | null;
   initialAvatarUrl?: string | null;
+  /** Papel da conta (servidor); só usado quando há sessão */
+  accountKind?: ProfileRole | null;
 }) {
   const [checked, setChecked] = useState(initialEmail !== undefined);
   const [user, setUser] = useState<SessionUser | null>(() => {
@@ -80,6 +84,7 @@ export function NavUserMenu({
 
   const email = user.email;
   const label = email ? email.split("@")[0] : "Minha conta";
+  const isProNav = accountKind === "professional" || accountKind === "admin";
 
   return (
     <div className="nav-user" ref={rootRef}>
@@ -107,11 +112,23 @@ export function NavUserMenu({
       {open ? (
         <div className="nav-user-pop" role="menu" aria-label="Conta">
           <div className="nav-user-email">{email ?? "—"}</div>
-          <Link className="nav-user-link" role="menuitem" href="/dashboard">
-            Dashboard
-          </Link>
+          {isProNav ? (
+            <Link className="nav-user-link" role="menuitem" href="/dashboard">
+              Dashboard
+            </Link>
+          ) : (
+            <Link className="nav-user-link" role="menuitem" href="/dashboard/historico">
+              Histórico de serviços
+            </Link>
+          )}
           <Link className="nav-user-link" role="menuitem" href="/dashboard/mensagens">
             Mensagens
+          </Link>
+          <Link className="nav-user-link" role="menuitem" href="/dashboard/suporte">
+            Suporte
+          </Link>
+          <Link className="nav-user-link" role="menuitem" href="/dashboard/configuracoes">
+            Configurações
           </Link>
           <button
             type="button"

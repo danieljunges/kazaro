@@ -92,7 +92,8 @@ export type MyBookingRow = {
   scheduled_at: string;
   status: string;
   service_name_snapshot: string | null;
-  professionals: { display_name: string; slug: string } | null;
+  client_note: string | null;
+  professionals: { id: string; display_name: string; slug: string } | null;
 };
 
 export async function fetchMyBookingsAsClient(userId: string, limit = 15): Promise<MyBookingRow[]> {
@@ -106,7 +107,9 @@ export async function fetchMyBookingsAsClient(userId: string, limit = 15): Promi
         scheduled_at,
         status,
         service_name_snapshot,
+        client_note,
         professionals (
+          id,
           display_name,
           slug
         )

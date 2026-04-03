@@ -41,6 +41,7 @@
 }
 .home-editorial.kz-busca .kz-sh-input {
   flex: 1;
+  min-width: 0;
   border: none;
   background: transparent;
   outline: none;
@@ -118,6 +119,11 @@
   white-space: nowrap;
   transition: all 0.15s;
   flex-shrink: 0;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 .home-editorial.kz-busca .kz-filter-chip:hover {
   border-color: var(--ink50);
@@ -147,6 +153,10 @@
   gap: 5px;
   flex-shrink: 0;
   font-family: var(--sans);
+}
+.home-editorial.kz-busca .kz-filter-sort:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .home-editorial.kz-busca .kz-busca-main {
@@ -488,42 +498,15 @@
   border-color: var(--ink30);
   color: var(--ink);
 }
+.home-editorial.kz-busca .kz-page-btn--disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: default;
+}
 .home-editorial.kz-busca .kz-page-btn.active {
   background: var(--ink);
   color: var(--lime);
   border-color: var(--ink);
-}
-
-@keyframes kz-fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.home-editorial.kz-busca .kz-grid-card {
-  animation: kz-fadeUp 0.5s ease both;
-}
-.home-editorial.kz-busca .kz-results-grid .kz-grid-card:nth-child(1) {
-  animation-delay: 0.04s;
-}
-.home-editorial.kz-busca .kz-results-grid .kz-grid-card:nth-child(2) {
-  animation-delay: 0.1s;
-}
-.home-editorial.kz-busca .kz-results-grid .kz-grid-card:nth-child(3) {
-  animation-delay: 0.16s;
-}
-.home-editorial.kz-busca .kz-results-grid .kz-grid-card:nth-child(4) {
-  animation-delay: 0.22s;
-}
-.home-editorial.kz-busca .kz-results-grid .kz-grid-card:nth-child(5) {
-  animation-delay: 0.28s;
-}
-.home-editorial.kz-busca .kz-results-grid .kz-grid-card:nth-child(6) {
-  animation-delay: 0.34s;
 }
 
 @media (max-width: 1024px) {
@@ -548,13 +531,35 @@
     flex-wrap: wrap;
     border-radius: 12px;
     max-width: 100%;
+    align-items: stretch;
   }
-  .home-editorial.kz-busca .kz-sh-title {
-    font-size: clamp(28px, 9vw, 44px);
+  .home-editorial.kz-busca .kz-sh-sep {
+    display: none;
+  }
+  .home-editorial.kz-busca .kz-sh-loc {
+    width: 100%;
+    order: 3;
+    white-space: normal;
+    margin: 4px 0 0;
+    padding-left: 26px;
   }
   .home-editorial.kz-busca .kz-sh-btn {
     width: 100%;
     margin-top: 8px;
+    order: 4;
   }
+  .home-editorial.kz-busca .kz-sh-title {
+    font-size: clamp(28px, 9vw, 44px);
+  }
+}
+
+.home-editorial.kz-busca .kz-sidebar-soon {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink40);
+  margin-bottom: 20px;
+  padding: 10px 12px;
+  background: var(--cream);
+  border-radius: 8px;
 }
 

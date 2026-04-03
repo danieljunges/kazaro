@@ -70,6 +70,7 @@ export function SiteFooter() {
           <span className="footer-copy">© {new Date().getFullYear()} Kazaro. Florianópolis, SC.</span>
           <div className="footer-legal">
             <Link href="/privacidade">Privacidade</Link>
+            <Link href="/cookies">Cookies</Link>
             <Link href="/termos">Termos</Link>
           </div>
         </div>

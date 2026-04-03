@@ -16,6 +16,7 @@ const ITEMS_PRO = [
 const ITEMS_CLIENT = [
   { label: "Visão geral", href: "/dashboard" },
   { label: "Buscar profissionais", href: "/search" },
+  { label: "Histórico de serviços", href: "/dashboard/historico" },
   { label: "Mensagens", href: "/dashboard/mensagens" },
   { label: "Suporte", href: "/dashboard/suporte" },
   { label: "Configurações", href: "/dashboard/configuracoes" },
@@ -25,6 +26,7 @@ function itemActive(pathname: string, href: string): boolean {
   if (href === "/search") return pathname === "/search";
   if (href === "/dashboard/mensagens") return pathname.startsWith("/dashboard/mensagens");
   if (href === "/dashboard/suporte") return pathname.startsWith("/dashboard/suporte");
+  if (href === "/dashboard/historico") return pathname.startsWith("/dashboard/historico");
   return pathname === href;
 }
 

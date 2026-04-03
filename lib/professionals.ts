@@ -15,7 +15,7 @@ export type ProfessionalCard = {
 
 export type ServiceRow = { name: string; desc: string; price: string };
 
-export type ReviewRow = { score: string; text: string; author: string; info: string };
+export type ReviewRow = { id: string; score: string; text: string; author: string; info: string };
 
 export type ProfessionalDetail = ProfessionalCard & {
   nameLine1: string;
@@ -136,24 +136,28 @@ const DETAIL: Record<string, Omit<ProfessionalDetail, keyof ProfessionalCard> & 
     ],
     reviews: [
       {
+        id: "demo-r1",
         score: "Vazamento · 5/5",
         text: "Chegou no horário, resolveu rápido e o valor foi exato o combinado. Recomendo.",
         author: "Mariana S.",
         info: "Trindade · há 3 dias",
       },
       {
+        id: "demo-r2",
         score: "Troca de torneira · 5/5",
         text: "Pontual, educado e deixou tudo limpo. Já agendei para o próximo mês.",
         author: "Pedro M.",
         info: "Campeche · há 1 semana",
       },
       {
+        id: "demo-r3",
         score: "Desentupimento · 5/5",
         text: "Resolveu em 20 minutos um problema que tinha há semanas. Profissional de verdade.",
         author: "Renata B.",
         info: "Lagoa · há 2 semanas",
       },
       {
+        id: "demo-r4",
         score: "Instalação · 4/5",
         text: "Ótimo serviço. Só demorou um pouco mais do previsto, mas resultado impecável.",
         author: "Lucas F.",

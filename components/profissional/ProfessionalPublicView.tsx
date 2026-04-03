@@ -121,7 +121,7 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {detail.reviews.map((r) => (
-              <div key={`${r.author}-${r.score}`} className="testim-card" style={{ margin: 0 }}>
+              <div key={r.id} className="testim-card" style={{ margin: 0 }}>
                 <div className="tc-score">{r.score}</div>
                 <p className="tc-text">{r.text}</p>
                 <div className="tc-author">
@@ -135,7 +135,16 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
             ))}
           </div>
         </div>
-      ) : null}
+      ) : (
+        <div style={{ marginTop: 32 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", color: "var(--ink40)", marginBottom: 8 }}>
+            AVALIAÇÕES
+          </div>
+          <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14 }}>
+            Ainda não há avaliações publicadas para este profissional.
+          </p>
+        </div>
+      )}
 
       <p style={{ fontSize: 13, color: "var(--ink40)", marginTop: 24 }}>
         <Link href="/search">← Voltar para a busca</Link>

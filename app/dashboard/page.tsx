@@ -293,7 +293,14 @@ export default async function DashboardPage({
           </div>
           {myBookingsAsClient.length > 0 ? (
             <div className="dash-card" style={{ marginBottom: 18 }}>
-              <div className="dc-head">Meus agendamentos</div>
+              <div className="dc-head">
+                Meus agendamentos
+                {!isPro ? (
+                  <Link className="dc-link" href="/dashboard/historico">
+                    Histórico completo →
+                  </Link>
+                ) : null}
+              </div>
               <p style={{ margin: "0 0 14px", color: "var(--ink60)", fontSize: 14 }}>
                 Pedidos que você enviou a profissionais pelo Kazaro.
               </p>

@@ -26,11 +26,15 @@ export function MessageComposer({ conversationId }: { conversationId: string }) 
 
   return (
     <form className="kz-chat-compose" onSubmit={onSubmit}>
+      <p className="kz-chat-policy" role="note">
+        Combine horário, endereço e chegada por aqui. Por segurança e mediação, evite passar telefone ou dados fora do
+        Kazaro — o time pode monitorar conversas para proteger clientes e profissionais.
+      </p>
       <input
         className="kz-chat-input"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Digite sua mensagem…"
+        placeholder="Ex.: estou chegando, estou na portaria…"
         maxLength={2000}
       />
       <button type="submit" className="kz-chat-send" disabled={loading}>

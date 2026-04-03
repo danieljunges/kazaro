@@ -1,34 +1,46 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
-/** Always starts each route at page top. */
+/**
+ * Rola para o topo em navegações “novas” (links internos).
+ * Não força topo em voltar/avançar do navegador — preserva posição de leitura.
+ */
 export function RouteScrollTop() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const skipNextScroll = useRef(false);
+  const key = `${pathname}?${searchParams.toString()}`;
+
+  useEffect(() => {
+    const onPopState = () => {
+      skipNextScroll.current = true;
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // Force top even when user navigates back/forward (Next may try to restore scroll).
+
     try {
-      window.history.scrollRestoration = "manual";
+      window.history.scrollRestoration = "auto";
     } catch {
       // ignore
     }
 
+    if (skipNextScroll.current) {
+      skipNextScroll.current = false;
+      return;
+    }
+
     const scrollTop = () => {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      // double-tap to win race with automatic restoration
       requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
     };
-
     scrollTop();
-
-    const onPopState = () => scrollTop();
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
-  }, [pathname, searchParams]);
+  }, [key]);
 
   return null;
 }
