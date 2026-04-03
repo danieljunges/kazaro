@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { LogoutFlashToast } from "@/components/auth/LogoutFlashToast";
 import { RouteScrollTop } from "@/components/common/RouteScrollTop";
 import { CookieConsentBar } from "@/components/legal/CookieConsentBar";
 import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
@@ -64,6 +65,9 @@ export default function RootLayout({
       <body>
         <Suspense fallback={null}>
           <RouteScrollTop />
+        </Suspense>
+        <Suspense fallback={null}>
+          <LogoutFlashToast />
         </Suspense>
         {children}
         <CookieConsentBar />

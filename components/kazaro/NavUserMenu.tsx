@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { ProfileRole } from "@/lib/supabase/profile";
@@ -30,6 +31,7 @@ export function NavUserMenu({
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     let cancelled = false;
@@ -140,6 +142,8 @@ export function NavUserMenu({
               try {
                 const supabase = getSupabaseBrowserClient();
                 await supabase.auth.signOut();
+                router.replace("/?saiu=1");
+                router.refresh();
               } finally {
                 setBusy(false);
               }

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
@@ -24,6 +25,7 @@ export function DashboardUserMenu({
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -106,6 +108,8 @@ export function DashboardUserMenu({
               setBusy(true);
               try {
                 await getSupabaseBrowserClient().auth.signOut();
+                router.replace("/?saiu=1");
+                router.refresh();
               } finally {
                 setBusy(false);
               }

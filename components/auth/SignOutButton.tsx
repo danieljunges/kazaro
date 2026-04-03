@@ -14,7 +14,7 @@ export function SignOutButton() {
     try {
       await getSupabaseBrowserClient().auth.signOut();
       navigated = true;
-      router.push("/");
+      router.replace("/?saiu=1");
       router.refresh();
     } finally {
       if (!navigated) setLoading(false);
