@@ -4,6 +4,8 @@ import { dashboardHomeHref } from "@/lib/dashboard/home-href";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { fetchMyProfile } from "@/lib/supabase/profile-data";
 import { fetchMyProfileRole } from "@/lib/supabase/profile";
+import { isAccountDeletionConfigured } from "@/lib/supabase/admin";
+import { AccountSecuritySection } from "@/components/settings/AccountSecuritySection";
 import { ProfileSettingsForm } from "@/components/settings/ProfileSettingsForm";
 
 export default async function DashboardConfiguracoesPage() {
@@ -16,6 +18,10 @@ export default async function DashboardConfiguracoesPage() {
   const [profile, role] = await Promise.all([fetchMyProfile(user.id), fetchMyProfileRole(user.id)]);
   const home = dashboardHomeHref(role);
 
+  const userEmail = user.email?.trim() ?? "";
+  const hasEmailPasswordProvider = (user.identities ?? []).some((i) => i.provider === "email");
+  const accountDeletionConfigured = isAccountDeletionConfigured();
+
   return (
     <div className="home-editorial public-page">
       <CompactNav backHref={home} backLabel={role === "client" ? "← Início" : "← Dashboard"} />
@@ -26,7 +32,7 @@ export default async function DashboardConfiguracoesPage() {
             Configurações
           </h1>
           <p className="sec-sub" style={{ marginBottom: 18 }}>
-            Atualize seus dados e personalize sua conta.
+            Perfil público, segurança da conta e exclusão de dados.
           </p>
 
           <ProfileSettingsForm
@@ -34,6 +40,12 @@ export default async function DashboardConfiguracoesPage() {
             initialFullName={profile?.full_name ?? null}
             initialPhone={profile?.phone ?? null}
             initialAvatarUrl={profile?.avatar_url ?? null}
+          />
+
+          <AccountSecuritySection
+            userEmail={userEmail}
+            hasEmailPasswordProvider={hasEmailPasswordProvider}
+            accountDeletionConfigured={accountDeletionConfigured}
           />
         </div>
       </div>

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LogoutFlashToast } from "@/components/auth/LogoutFlashToast";
+import { NavigationProgress } from "@/components/common/NavigationProgress";
 import { RouteScrollTop } from "@/components/common/RouteScrollTop";
 import { KzSaasMotion } from "@/components/motion/KzSaasMotion";
 import { CookieConsentBar } from "@/components/legal/CookieConsentBar";
@@ -60,6 +61,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <NavigationProgress />
         <Suspense fallback={null}>
           <RouteScrollTop />
         </Suspense>

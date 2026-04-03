@@ -7,26 +7,31 @@ import { useEffect, useState } from "react";
 const FLASH_MS = 2400;
 
 /**
- * Mostra aviso após logout quando a URL traz `?saiu=1`.
- * Remove o parâmetro após o tempo de leitura (scroll preservado).
+ * Toasts curtos após logout (`?saiu=1`) ou exclusão de conta (`?conta=excluida`).
+ * Remove o parâmetro após o tempo de leitura.
  */
 export function LogoutFlashToast() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [visible, setVisible] = useState(false);
+  const [text, setText] = useState("");
 
   const qs = searchParams.toString();
 
   useEffect(() => {
     const p = new URLSearchParams(qs);
-    if (p.get("saiu") !== "1") return;
+    const saiu = p.get("saiu") === "1";
+    const excluida = p.get("conta") === "excluida";
+    if (!saiu && !excluida) return;
 
+    setText(saiu ? "Você foi desconectado." : "Sua conta foi excluída. Até logo.");
     setVisible(true);
 
     const t = setTimeout(() => {
       setVisible(false);
-      p.delete("saiu");
+      if (saiu) p.delete("saiu");
+      if (excluida) p.delete("conta");
       const next = p.toString();
       router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
     }, FLASH_MS);
@@ -38,7 +43,7 @@ export function LogoutFlashToast() {
 
   return (
     <div className="kz-logout-flash" role="status" aria-live="polite" aria-atomic="true">
-      Você foi desconectado.
+      {text}
     </div>
   );
 }
