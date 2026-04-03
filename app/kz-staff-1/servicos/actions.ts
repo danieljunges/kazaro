@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { adminPath } from "@/lib/admin/panel-path";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
-import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { sendTextEmail } from "@/lib/email/resend";
+import { getSiteUrl } from "@/lib/site";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function reviewService(input: {
   serviceId: string;
@@ -45,6 +46,7 @@ export async function reviewService(input: {
         const serviceName = ((svc?.name as string | null) ?? "").trim() || "seu serviço";
         const subject =
           status === "approved" ? "Seu serviço foi aprovado no Kazaro" : "Seu serviço foi revisado no Kazaro";
+        const dashUrl = `${getSiteUrl()}/dashboard/servicos`;
         const text = [
           `${who},`,
           "",
@@ -55,7 +57,7 @@ export async function reviewService(input: {
           note ? `Nota do admin: ${note}` : "",
           "",
           "Abra o dashboard para ver os detalhes:",
-          "https://kazaro.app/dashboard/servicos",
+          dashUrl,
           "",
           "— Kazaro",
         ]
