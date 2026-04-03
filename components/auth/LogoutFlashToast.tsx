@@ -3,7 +3,8 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const FLASH_MS = 5000;
+/** Tempo legível sem parecer que “travou” na tela. */
+const FLASH_MS = 2400;
 
 /**
  * Mostra aviso após logout quando a URL traz `?saiu=1`.

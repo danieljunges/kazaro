@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import { CompactNav } from "@/components/kazaro/CompactNav";
+import { dashboardHomeHref } from "@/lib/dashboard/home-href";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { fetchMyProfile } from "@/lib/supabase/profile-data";
+import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { ProfileSettingsForm } from "@/components/settings/ProfileSettingsForm";
 
 export default async function DashboardConfiguracoesPage() {
@@ -11,11 +13,12 @@ export default async function DashboardConfiguracoesPage() {
   } = await supabase.auth.getUser();
   if (!user?.id) redirect("/entrar?next=/dashboard/configuracoes");
 
-  const profile = await fetchMyProfile(user.id);
+  const [profile, role] = await Promise.all([fetchMyProfile(user.id), fetchMyProfileRole(user.id)]);
+  const home = dashboardHomeHref(role);
 
   return (
     <div className="home-editorial public-page">
-      <CompactNav backHref="/dashboard" backLabel="← Dashboard" />
+      <CompactNav backHref={home} backLabel={role === "client" ? "← Início" : "← Dashboard"} />
       <div className="section">
         <div className="pro-page-card" style={{ maxWidth: 860 }}>
           <span className="sec-eyebrow">Conta</span>

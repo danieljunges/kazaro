@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { ProfileRole } from "@/lib/supabase/profile";
 
@@ -34,23 +35,31 @@ export function NavUserMenu({
   const router = useRouter();
 
   useEffect(() => {
-    let cancelled = false;
+    if (initialEmail === undefined) return;
+    setChecked(true);
+    if (!initialEmail) {
+      setUser(null);
+    } else {
+      setUser({ email: initialEmail, avatarUrl: initialAvatarUrl ?? null });
+    }
+  }, [initialEmail, initialAvatarUrl]);
+
+  useEffect(() => {
     const supabase = getSupabaseBrowserClient();
+    const serverHadUser = Boolean(initialEmail);
 
-    void (async () => {
-      const { data } = await supabase.auth.getSession();
-      if (!cancelled) {
-        setUser(
-          data.session?.user
-            ? { email: data.session.user.email ?? null, avatarUrl: initialAvatarUrl ?? null }
-            : null,
-        );
-        setChecked(true);
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "INITIAL_SESSION" && !session?.user && serverHadUser) {
+        return;
       }
-    })();
-
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ? { email: session.user.email ?? null, avatarUrl: initialAvatarUrl ?? null } : null);
+      if (session?.user) {
+        setUser({
+          email: session.user.email ?? null,
+          avatarUrl: initialAvatarUrl ?? null,
+        });
+      } else {
+        setUser(null);
+      }
       setChecked(true);
       setOpen(false);
     });
@@ -63,11 +72,10 @@ export function NavUserMenu({
     document.addEventListener("mousedown", onDoc);
 
     return () => {
-      cancelled = true;
       sub.subscription.unsubscribe();
       document.removeEventListener("mousedown", onDoc);
     };
-  }, []);
+  }, [initialAvatarUrl, initialEmail]);
 
   if (!checked) return null;
 
@@ -139,9 +147,11 @@ export function NavUserMenu({
             disabled={busy}
             onClick={async () => {
               setBusy(true);
+              const t0 = Date.now();
               try {
                 const supabase = getSupabaseBrowserClient();
                 await supabase.auth.signOut();
+                await ensureMinElapsedSince(t0);
                 router.replace("/?saiu=1");
                 router.refresh();
               } finally {

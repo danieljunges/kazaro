@@ -1,12 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import {
+  type BookingWorkflowStatus,
+  canProTransitionBooking,
+  isBookingWorkflowStatus,
+} from "@/lib/booking/workflow";
 import { notifyClientOfBookingStatusChange } from "@/lib/email/bookingStatusNotify";
 import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-
-const ALLOWED = ["pending", "confirmed", "cancelled", "completed"] as const;
-type BookingStatus = (typeof ALLOWED)[number];
 
 function formatBookingWhen(iso: string): string {
   const d = new Date(iso);
@@ -22,10 +24,10 @@ function formatBookingWhen(iso: string): string {
 
 export async function setBookingStatus(
   bookingId: string,
-  nextStatus: BookingStatus,
+  nextStatus: string,
 ): Promise<{ ok: true } | { ok: false; message: string }> {
   if (!bookingId?.trim()) return { ok: false, message: "Agendamento inválido." };
-  if (!ALLOWED.includes(nextStatus)) return { ok: false, message: "Status inválido." };
+  if (!isBookingWorkflowStatus(nextStatus)) return { ok: false, message: "Status inválido." };
 
   const supabase = await getSupabaseServerClient();
   const {
@@ -53,11 +55,21 @@ export async function setBookingStatus(
   }
 
   const prevStatus = String(row.status ?? "");
-  if (prevStatus === nextStatus) {
+  const to = nextStatus as BookingWorkflowStatus;
+  if (prevStatus === to) {
     return { ok: true };
   }
 
-  const { error: uErr } = await supabase.from("bookings").update({ status: nextStatus }).eq("id", bookingId);
+  if (!canProTransitionBooking(prevStatus, to)) {
+    return { ok: false, message: "Essa mudança de status não é permitida no momento." };
+  }
+
+  const patch: Record<string, unknown> = { status: to };
+  if (to === "in_progress" && prevStatus !== "in_progress") {
+    patch.service_started_at = new Date().toISOString();
+  }
+
+  const { error: uErr } = await supabase.from("bookings").update(patch).eq("id", bookingId);
   if (uErr) return { ok: false, message: uErr.message || "Não foi possível atualizar o status." };
 
   revalidatePath("/dashboard");
@@ -66,12 +78,12 @@ export async function setBookingStatus(
 
   const clientId = row.client_id as string;
   const { data: profile } = await supabase.from("profiles").select("email").eq("id", clientId).maybeSingle();
-  const to =
+  const emailTo =
     (typeof profile?.email === "string" && profile.email.trim()) ||
     (typeof row.client_email_snapshot === "string" && row.client_email_snapshot.trim()) ||
     "";
 
-  if (to) {
+  if (emailTo) {
     const { data: pro } = await supabase
       .from("professionals")
       .select("display_name")
@@ -81,8 +93,8 @@ export async function setBookingStatus(
     const serviceLabel = (row.service_name_snapshot as string | null)?.trim() || "Serviço a combinar";
 
     void notifyClientOfBookingStatusChange({
-      to,
-      status: nextStatus,
+      to: emailTo,
+      status: to,
       serviceLabel,
       whenLabel: formatBookingWhen(String(row.scheduled_at)),
       professionalName,
@@ -91,4 +103,3 @@ export async function setBookingStatus(
 
   return { ok: true };
 }
-

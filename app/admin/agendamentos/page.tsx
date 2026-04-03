@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { BookingStatusButtons } from "@/components/dashboard/BookingStatusButtons";
+import { bookingStatusLabelShort } from "@/lib/booking/workflow";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function fmt(iso: string) {
@@ -9,18 +10,7 @@ function fmt(iso: string) {
 }
 
 function statusPt(status: string): string {
-  switch (status) {
-    case "pending":
-      return "Pendente";
-    case "confirmed":
-      return "Confirmado";
-    case "cancelled":
-      return "Cancelado";
-    case "completed":
-      return "Concluído";
-    default:
-      return status;
-  }
+  return bookingStatusLabelShort(status);
 }
 
 export default async function AdminAgendamentosPage() {
@@ -44,8 +34,9 @@ export default async function AdminAgendamentosPage() {
         <div className="dash-card">
           <div className="dc-head">Últimos</div>
           <p style={{ margin: "0 0 14px", color: "var(--ink60)", fontSize: 14, lineHeight: 1.55 }}>
-            Pedidos criados pelos clientes aparecem como <strong>Pendente</strong> até o profissional (ou você) confirmar.
-            Ao mudar o status, o cliente recebe e-mail se o Resend estiver configurado.
+            Fluxo típico: <strong>Pendente</strong> → <strong>Confirmado</strong> → o prestador pode marcar{" "}
+            <strong>Em andamento</strong> quando iniciar o serviço → <strong>Concluído</strong>. Ao mudar o status, o
+            cliente recebe e-mail se o Resend estiver configurado.
           </p>
           {!data?.length ? (
             <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14 }}>Sem agendamentos.</p>

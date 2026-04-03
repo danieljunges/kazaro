@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CompactNav } from "@/components/kazaro/CompactNav";
+import { dashboardHomeHref } from "@/lib/dashboard/home-href";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { fetchMySupportTickets } from "@/lib/supabase/support";
 import { createSupportTicket } from "./actions";
 
@@ -28,17 +30,18 @@ export default async function DashboardSuportePage({
   } = await supabase.auth.getUser();
   if (!user?.id) redirect("/entrar?next=/dashboard/suporte");
 
-  const tickets = await fetchMySupportTickets(user.id);
+  const [tickets, role] = await Promise.all([fetchMySupportTickets(user.id), fetchMyProfileRole(user.id)]);
+  const home = dashboardHomeHref(role);
 
   return (
     <div className="home-editorial public-page">
-      <CompactNav backHref="/dashboard" backLabel="← Dashboard" />
+      <CompactNav backHref={home} backLabel={role === "client" ? "← Início" : "← Dashboard"} />
       <div className="section">
         <div className="pro-page-card" style={{ maxWidth: 720 }}>
           <div className="dc-head" style={{ marginBottom: 12 }}>
             Suporte
-            <Link href="/dashboard" className="dc-link">
-              ← Dashboard
+            <Link href={home} className="dc-link">
+              {role === "client" ? "← Início" : "← Dashboard"}
             </Link>
           </div>
           <p className="sec-sub" style={{ margin: "0 0 20px" }}>

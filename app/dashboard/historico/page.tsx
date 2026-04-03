@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CompactNav } from "@/components/kazaro/CompactNav";
+import { bookingStatusLabelShort } from "@/lib/booking/workflow";
+import { dashboardHomeHref } from "@/lib/dashboard/home-href";
 import { BookingReviewForm } from "@/components/reviews/BookingReviewForm";
 import { fetchMyBookingsAsClient, type MyBookingRow } from "@/lib/supabase/bookings";
 import { fetchReviewedBookingIdsForClient } from "@/lib/supabase/reviews";
+import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function statusLabelPt(status: string): string {
@@ -49,8 +52,20 @@ function formatWhen(iso: string): string {
   }).format(d);
 }
 
+function formatStartedPt(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(d);
+}
+
 function isActiveBooking(status: string): boolean {
-  return status === "pending" || status === "confirmed";
+  return status === "pending" || status === "confirmed" || status === "in_progress";
 }
 
 export default async function HistoricoServicosPage() {
@@ -60,22 +75,24 @@ export default async function HistoricoServicosPage() {
   } = await supabase.auth.getUser();
   if (!user?.id) redirect("/entrar?next=/dashboard/historico");
 
-  const [rows, reviewedIds] = await Promise.all([
+  const [rows, reviewedIds, role] = await Promise.all([
     fetchMyBookingsAsClient(user.id, 80),
     fetchReviewedBookingIdsForClient(user.id),
+    fetchMyProfileRole(user.id),
   ]);
+  const home = dashboardHomeHref(role);
   const active = rows.filter((r) => isActiveBooking(r.status));
   const past = rows.filter((r) => !isActiveBooking(r.status));
 
   return (
     <div className="home-editorial public-page">
-      <CompactNav backHref="/dashboard" backLabel="← Dashboard" />
+      <CompactNav backHref={home} backLabel={role === "client" ? "← Início" : "← Dashboard"} />
       <div className="section">
         <div className="pro-page-card" style={{ maxWidth: 900 }}>
           <div className="dc-head" style={{ marginBottom: 12 }}>
             Histórico de serviços
-            <Link href="/dashboard" className="dc-link">
-              ← Dashboard
+            <Link href={home} className="dc-link">
+              {role === "client" ? "← Início" : "← Dashboard"}
             </Link>
           </div>
           <p className="sec-sub" style={{ margin: "0 0 24px" }}>
@@ -148,6 +165,12 @@ function BookingCard({ row, hasReview }: { row: MyBookingRow; hasReview: boolean
       <div className="kz-hist-meta">
         <span>{formatWhen(row.scheduled_at)}</span>
       </div>
+      {row.status === "in_progress" && row.service_started_at ? (
+        <p className="sec-sub" style={{ margin: "10px 0 0", fontSize: 13, lineHeight: 1.5 }}>
+          O profissional marcou que <strong>iniciou o serviço</strong> em {formatStartedPt(row.service_started_at)}. Se
+          precisar alinhar algo, use o chat abaixo.
+        </p>
+      ) : null}
       {row.client_note?.trim() ? (
         <p className="kz-hist-note">
           <strong>Suas observações:</strong> {row.client_note.trim()}

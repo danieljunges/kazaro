@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export function SignOutButton() {
@@ -11,8 +12,10 @@ export function SignOutButton() {
   async function onSignOut() {
     setLoading(true);
     let navigated = false;
+    const t0 = Date.now();
     try {
       await getSupabaseBrowserClient().auth.signOut();
+      await ensureMinElapsedSince(t0);
       navigated = true;
       router.replace("/?saiu=1");
       router.refresh();

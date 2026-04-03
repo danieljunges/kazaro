@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CompactNav } from "@/components/kazaro/CompactNav";
+import { dashboardHomeHref } from "@/lib/dashboard/home-href";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { fetchMyConversations } from "@/lib/supabase/messages";
+import { fetchMyProfileRole } from "@/lib/supabase/profile";
 
 function timeShort(iso: string): string {
   const d = new Date(iso);
@@ -17,17 +19,18 @@ export default async function DashboardMensagensPage() {
   } = await supabase.auth.getUser();
   if (!user?.id) redirect("/entrar?next=/dashboard/mensagens");
 
-  const conv = await fetchMyConversations(user.id);
+  const [conv, role] = await Promise.all([fetchMyConversations(user.id), fetchMyProfileRole(user.id)]);
+  const home = dashboardHomeHref(role);
 
   return (
     <div className="home-editorial public-page">
-      <CompactNav backHref="/dashboard" backLabel="← Dashboard" />
+      <CompactNav backHref={home} backLabel={role === "client" ? "← Início" : "← Dashboard"} />
       <div className="section">
         <div className="pro-page-card" style={{ maxWidth: 980 }}>
           <div className="dc-head" style={{ marginBottom: 12 }}>
             Caixa de mensagens
-            <Link href="/dashboard" className="dc-link">
-              ← Dashboard
+            <Link href={home} className="dc-link">
+              {role === "client" ? "← Início" : "← Dashboard"}
             </Link>
           </div>
 

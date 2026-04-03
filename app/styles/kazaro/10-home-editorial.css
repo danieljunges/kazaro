@@ -8,8 +8,8 @@
   --ink50: #6a6a5c;
   --ink30: #a0a090;
   --ink10: #d8d8cc;
-  --lime: #c8f135;
-  --lime-deep: #a8d020;
+  --lime: #158c79;
+  --lime-deep: #0f6f61;
   --border: rgba(22, 22, 14, 0.09);
   --border-md: rgba(22, 22, 14, 0.16);
   --sans: "Plus Jakarta Sans", system-ui, sans-serif;
@@ -333,7 +333,7 @@
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 500;
-  color: var(--ink);
+  color: var(--on-lime, #fff);
   background: var(--lime);
   border: none;
   border-radius: 8px;
@@ -377,13 +377,13 @@
 }
 @keyframes ke-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(168, 208, 32, 0.5);
+    box-shadow: 0 0 0 0 rgba(21, 140, 121, 0.45);
   }
   60% {
-    box-shadow: 0 0 0 8px rgba(168, 208, 32, 0);
+    box-shadow: 0 0 0 8px rgba(21, 140, 121, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(168, 208, 32, 0);
+    box-shadow: 0 0 0 0 rgba(21, 140, 121, 0);
   }
 }
 .home-editorial .eyebrow-txt {
@@ -462,7 +462,7 @@
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 500;
-  color: var(--ink);
+  color: var(--on-lime, #fff);
   background: var(--lime);
   border: none;
   border-radius: 8px;
@@ -537,7 +537,7 @@
   font-size: 11px;
   font-weight: 500;
   background: var(--lime);
-  color: var(--ink);
+  color: var(--on-lime, #fff);
   padding: 4px 10px;
   border-radius: 20px;
 }
@@ -617,7 +617,7 @@
 .home-editorial .btn-ver {
   font-size: 13px;
   font-weight: 500;
-  color: var(--ink);
+  color: var(--on-lime, #fff);
   background: var(--lime);
   border: none;
   border-radius: 8px;
@@ -658,7 +658,7 @@
   width: 34px;
   height: 34px;
   border-radius: 8px;
-  background: rgba(200, 241, 53, 0.15);
+  background: rgba(21, 140, 121, 0.18);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -935,8 +935,8 @@
   backdrop-filter: blur(8px);
 }
 .home-editorial .avail-today {
-  background: rgba(200, 241, 53, 0.9);
-  color: var(--ink);
+  background: rgba(21, 140, 121, 0.92);
+  color: var(--on-lime, #fff);
 }
 .home-editorial .avail-tom {
   background: rgba(255, 255, 255, 0.85);
@@ -1077,7 +1077,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 70% 30%, rgba(200, 241, 53, 0.12) 0%, transparent 60%);
+  background: radial-gradient(ellipse at 70% 30%, rgba(21, 140, 121, 0.1) 0%, transparent 60%);
 }
 .home-editorial .why-quote {
   font-family: var(--display);
@@ -1279,7 +1279,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: rgba(200, 241, 53, 0.15);
+  background: rgba(21, 140, 121, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1289,7 +1289,7 @@
   font-family: var(--sans);
   font-size: 14px;
   font-weight: 500;
-  color: var(--ink);
+  color: var(--on-lime, #fff);
   background: var(--lime);
   border: none;
   border-radius: 10px;

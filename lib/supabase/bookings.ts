@@ -61,6 +61,7 @@ export type IncomingBookingRow = {
   service_name_snapshot: string | null;
   client_note: string | null;
   client_id: string;
+  service_started_at?: string | null;
   service_price_cents_snapshot?: number | null;
   final_price_cents?: number | null;
 };
@@ -74,7 +75,7 @@ export async function fetchIncomingBookingsForPro(
     const { data, error } = await supabase
       .from("bookings")
       .select(
-        "id, scheduled_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, service_price_cents_snapshot, final_price_cents",
+        "id, scheduled_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, service_started_at, service_price_cents_snapshot, final_price_cents",
       )
       .eq("professional_id", professionalId)
       .order("scheduled_at", { ascending: false })
@@ -93,6 +94,7 @@ export type MyBookingRow = {
   status: string;
   service_name_snapshot: string | null;
   client_note: string | null;
+  service_started_at: string | null;
   professionals: { id: string; display_name: string; slug: string } | null;
 };
 
@@ -108,6 +110,7 @@ export async function fetchMyBookingsAsClient(userId: string, limit = 15): Promi
         status,
         service_name_snapshot,
         client_note,
+        service_started_at,
         professionals (
           id,
           display_name,
@@ -150,7 +153,7 @@ export async function countActiveIncomingBookings(professionalId: string): Promi
       .from("bookings")
       .select("*", { count: "exact", head: true })
       .eq("professional_id", professionalId)
-      .in("status", ["pending", "confirmed"]);
+      .in("status", ["pending", "confirmed", "in_progress"]);
 
     if (error) return 0;
     return count ?? 0;

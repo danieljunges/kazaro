@@ -74,7 +74,13 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  searchParams: Promise<{ vazio?: string; empty?: string; q?: string | string[]; page?: string | string[] }>;
+  searchParams: Promise<{
+    vazio?: string;
+    empty?: string;
+    q?: string | string[];
+    page?: string | string[];
+    conta?: string;
+  }>;
 };
 
 export default async function SearchPage({ searchParams }: PageProps) {
@@ -108,6 +114,14 @@ export default async function SearchPage({ searchParams }: PageProps) {
   return (
     <div className="home-editorial kz-busca">
       <MarketingNav />
+
+      {sp.conta === "ativada" ? (
+        <div className="kz-sh-inner" style={{ paddingBottom: 0 }}>
+          <p className="auth-banner auth-banner--ok" style={{ margin: "0 0 16px" }}>
+            E-mail confirmado. Você já pode buscar profissionais e agendar serviços.
+          </p>
+        </div>
+      ) : null}
 
       <header className="kz-search-header">
         <div className="kz-sh-inner">

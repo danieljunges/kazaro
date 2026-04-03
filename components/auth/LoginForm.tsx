@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, FormEvent } from "react";
+import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { AuthSpinner } from "@/components/auth/AuthSpinner";
 
@@ -29,6 +30,7 @@ export function LoginForm() {
     setError(null);
     setLoading(true);
     let navigated = false;
+    const t0 = Date.now();
 
     try {
       const supabase = getSupabaseBrowserClient();
@@ -37,6 +39,7 @@ export function LoginForm() {
         setError(ptError(signError.message));
         return;
       }
+      await ensureMinElapsedSince(t0);
       navigated = true;
       router.push(next.startsWith("/") ? next : `/${next}`);
       router.refresh();

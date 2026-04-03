@@ -70,7 +70,7 @@
 }
 .btn-primary:hover {
   background: #141414;
-  box-shadow: var(--shadow-sm), 0 0 0 1px rgba(223, 255, 77, 0.45);
+  box-shadow: var(--shadow-sm), 0 0 0 1px rgba(21, 140, 121, 0.38);
 }
 .btn-primary:active { opacity: 0.96; }
 
@@ -209,7 +209,7 @@
 }
 .search-btn {
   background: var(--lime);
-  color: var(--ink);
+  color: var(--on-lime, #fff);
   border: none;
   padding: 10px 20px;
   border-radius: var(--r-md);
@@ -280,7 +280,7 @@
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(ellipse 70% 50% at 70% 20%, rgba(223, 255, 77, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 70% 20%, rgba(21, 140, 121, 0.1) 0%, transparent 55%),
     linear-gradient(165deg, #e4e8e2 0%, #c9d2c8 48%, #aeb9ae 100%);
 }
 
@@ -354,7 +354,7 @@
 }
 .pcf-btn:hover {
   background: var(--lime);
-  color: var(--ink);
+  color: var(--on-lime, #fff);
   box-shadow: 0 0 0 2px var(--ink);
 }
 

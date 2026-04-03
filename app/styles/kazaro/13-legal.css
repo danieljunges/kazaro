@@ -70,7 +70,7 @@ body:has(.kz-cookie-bar) {
   max-width: 720px;
 }
 .kz-cookie-bar-link {
-  color: var(--lime, #c8f135);
+  color: var(--lime, #158c79);
   text-decoration: underline;
   text-underline-offset: 2px;
   font-weight: 600;
@@ -100,8 +100,8 @@ body:has(.kz-cookie-bar) {
   white-space: nowrap;
 }
 .kz-cookie-bar-btn--primary {
-  background: var(--lime, #c8f135);
-  color: var(--ink, #16160e);
+  background: var(--lime, #158c79);
+  color: var(--on-lime, #fff);
 }
 .kz-cookie-bar-btn--primary:hover {
   filter: brightness(1.05);

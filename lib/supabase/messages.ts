@@ -88,6 +88,33 @@ export async function fetchConversationMessages(conversationId: string, limit = 
   }
 }
 
+export type ConversationDashboardRow = ConversationListRow & { awaitingMyReply: boolean };
+
+/** Conversas para a visão geral: indica se a última mensagem não é sua (fila de resposta). */
+export async function fetchConversationsForDashboard(
+  userId: string,
+  limit = 8,
+): Promise<ConversationDashboardRow[]> {
+  const base = await fetchMyConversations(userId, limit);
+  if (base.length === 0) return [];
+  const supabase = await getSupabaseServerClient();
+  const enriched = await Promise.all(
+    base.map(async (c) => {
+      const { data: msg } = await supabase
+        .from("messages")
+        .select("sender_id")
+        .eq("conversation_id", c.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      const sid = msg?.sender_id as string | undefined;
+      const awaitingMyReply = Boolean(sid && sid !== userId);
+      return { ...c, awaitingMyReply };
+    }),
+  );
+  return enriched;
+}
+
 export async function fetchConversationById(conversationId: string): Promise<{
   id: string;
   professional_id: string;

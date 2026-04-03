@@ -70,7 +70,7 @@ function PbCheck() {
       <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden>
         <polyline
           points="2,6 5,9 10,3"
-          stroke="#C8F135"
+          stroke="#158c79"
           strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -182,7 +182,7 @@ export function HomeView() {
                   height="16"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#C8F135"
+                  stroke="#158c79"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"

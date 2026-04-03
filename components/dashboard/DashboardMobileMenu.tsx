@@ -84,9 +84,6 @@ export function DashboardMobileMenu({ accountKind }: { accountKind: "client" | "
                 {i.label}
               </Link>
             ))}
-            <Link href="/" className="dash-mnav-link dash-mnav-link--muted" onClick={() => setOpen(false)}>
-              Ver site público
-            </Link>
           </div>
         </>
       ) : null}

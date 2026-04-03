@@ -87,7 +87,7 @@
 }
 .search-empty__btn:hover {
   background: var(--lime);
-  color: var(--ink);
+  color: var(--on-lime, #fff);
   box-shadow: 0 0 0 2px var(--ink);
 }
 .search-empty__link {

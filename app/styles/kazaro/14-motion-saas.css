@@ -219,8 +219,8 @@ button:not(:disabled):active,
 }
 
 .orders-table tbody tr:hover {
-  background: rgba(200, 241, 53, 0.06);
-  box-shadow: inset 3px 0 0 var(--lime, #c8f135);
+  background: rgba(21, 140, 121, 0.06);
+  box-shadow: inset 3px 0 0 var(--lime, #158c79);
 }
 
 .dash-sidebar .ds-link {
@@ -242,7 +242,7 @@ textarea:focus-visible,
 select:focus-visible,
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--lime, #c8f135);
+  outline: 2px solid var(--lime, #158c79);
   outline-offset: 2px;
 }
 

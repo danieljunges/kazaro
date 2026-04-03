@@ -96,7 +96,7 @@
 
 .home-editorial .auth-input:focus {
   border-color: var(--ink50);
-  box-shadow: 0 0 0 3px rgba(200, 241, 53, 0.25);
+  box-shadow: 0 0 0 3px rgba(21, 140, 121, 0.22);
 }
 
 .home-editorial .auth-input::placeholder {
@@ -119,9 +119,9 @@
 }
 
 .home-editorial .auth-banner--ok {
-  background: rgba(168, 208, 32, 0.12);
+  background: rgba(21, 140, 121, 0.1);
   color: var(--ink70);
-  border: 1px solid rgba(168, 208, 32, 0.35);
+  border: 1px solid rgba(21, 140, 121, 0.28);
 }
 
 .home-editorial .auth-banner--err {
@@ -237,8 +237,8 @@
 
 .home-editorial .auth-role-opt--on {
   border-color: var(--ink50);
-  box-shadow: 0 0 0 3px rgba(200, 241, 53, 0.22);
-  background: rgba(168, 208, 32, 0.06);
+  box-shadow: 0 0 0 3px rgba(21, 140, 121, 0.2);
+  background: rgba(21, 140, 121, 0.06);
 }
 
 .home-editorial .auth-role-title {

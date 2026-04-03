@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
+import { bookingStatusLabelShort } from "@/lib/booking/workflow";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function fmt(iso: string): string {
@@ -14,18 +15,7 @@ function fmt(iso: string): string {
 }
 
 function statusPt(status: string): string {
-  switch (status) {
-    case "pending":
-      return "Pendente";
-    case "confirmed":
-      return "Confirmado";
-    case "cancelled":
-      return "Cancelado";
-    case "completed":
-      return "Concluído";
-    default:
-      return status;
-  }
+  return bookingStatusLabelShort(status);
 }
 
 export default async function AdminHome() {

@@ -78,7 +78,7 @@
   font-family: var(--sans);
   font-size: 13.5px;
   font-weight: 500;
-  color: var(--ink);
+  color: var(--on-lime, #fff);
   background: var(--lime);
   border: none;
   border-radius: 8px;
@@ -249,7 +249,7 @@
 }
 .home-editorial.kz-busca .kz-avail-opt.selected {
   border-color: var(--lime-deep);
-  background: rgba(168, 208, 32, 0.08);
+  background: rgba(21, 140, 121, 0.07);
 }
 .home-editorial.kz-busca .kz-avail-dot {
   width: 8px;

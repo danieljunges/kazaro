@@ -1,34 +1,51 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { setBookingStatus } from "@/app/dashboard/actions";
+import type { BookingWorkflowStatus } from "@/lib/booking/workflow";
 
-type Props = {
-  bookingId: string;
-  currentStatus: string;
-};
+type Action = { to: BookingWorkflowStatus; label: string };
 
-const ACTIONS: { to: "confirmed" | "cancelled" | "completed"; label: string }[] = [
-  { to: "confirmed", label: "Confirmar" },
-  { to: "cancelled", label: "Cancelar" },
-  { to: "completed", label: "Concluir" },
-];
+function actionsFor(currentStatus: string): Action[] {
+  switch (currentStatus) {
+    case "pending":
+      return [
+        { to: "confirmed", label: "Confirmar" },
+        { to: "cancelled", label: "Cancelar" },
+      ];
+    case "confirmed":
+      return [
+        { to: "in_progress", label: "Iniciar serviço" },
+        { to: "completed", label: "Concluir" },
+        { to: "cancelled", label: "Cancelar" },
+      ];
+    case "in_progress":
+      return [
+        { to: "completed", label: "Concluir" },
+        { to: "cancelled", label: "Cancelar" },
+      ];
+    default:
+      return [];
+  }
+}
 
-export function BookingStatusButtons({ bookingId, currentStatus }: Props) {
+export function BookingStatusButtons({ bookingId, currentStatus }: { bookingId: string; currentStatus: string }) {
   const router = useRouter();
   const [loadingTo, setLoadingTo] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
+  const actions = useMemo(() => actionsFor(currentStatus), [currentStatus]);
+  const terminal = currentStatus === "cancelled" || currentStatus === "completed";
+
+  if (terminal || actions.length === 0) {
+    return null;
+  }
+
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "flex-end", flexWrap: "wrap" }}>
-      {ACTIONS.map((a) => {
-        const disabled =
-          loadingTo !== null ||
-          currentStatus === a.to ||
-          (currentStatus === "cancelled" && a.to !== "cancelled") ||
-          (currentStatus === "completed" && a.to !== "completed");
-
+      {actions.map((a) => {
+        const disabled = loadingTo !== null;
         return (
           <button
             key={a.to}
@@ -61,4 +78,3 @@ export function BookingStatusButtons({ bookingId, currentStatus }: Props) {
     </div>
   );
 }
-

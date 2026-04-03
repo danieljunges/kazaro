@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, FormEvent } from "react";
 import { checkSignupEmailAvailable } from "@/app/criar-conta/actions";
+import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
 import { getAuthCallbackUrl } from "@/lib/auth/redirect";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { AuthSpinner } from "@/components/auth/AuthSpinner";
@@ -53,6 +54,7 @@ export function SignupForm() {
 
     setLoading(true);
     let navigated = false;
+    const t0 = Date.now();
 
     try {
       const emailTrim = email.trim();
@@ -82,12 +84,14 @@ export function SignupForm() {
       }
 
       if (data.session) {
+        await ensureMinElapsedSince(t0);
         navigated = true;
         router.push("/dashboard");
         router.refresh();
         return;
       }
 
+      await ensureMinElapsedSince(t0);
       navigated = true;
       router.push("/entrar?cadastro=ok");
       router.refresh();

@@ -1,18 +1,21 @@
+import { bookingStatusLabelLong } from "@/lib/booking/workflow";
 import { sendTextEmail } from "@/lib/email/resend";
 import { getSiteUrl } from "@/lib/site";
 
-function statusLabelPt(status: string): string {
+function emailSubjectLead(status: string): string {
   switch (status) {
     case "pending":
       return "Aguardando confirmação";
     case "confirmed":
       return "Confirmado";
+    case "in_progress":
+      return "Serviço iniciado";
     case "cancelled":
       return "Cancelado";
     case "completed":
       return "Concluído";
     default:
-      return status;
+      return "Atualizado";
   }
 }
 
@@ -30,7 +33,17 @@ export async function notifyClientOfBookingStatusChange(input: {
 
   const base = getSiteUrl();
   const historico = `${base}/dashboard/historico`;
-  const statusPt = statusLabelPt(input.status);
+  const statusLong = bookingStatusLabelLong(input.status);
+  const subjectLead = emailSubjectLead(input.status);
+
+  const extra =
+    input.status === "in_progress"
+      ? [
+          "",
+          "O profissional marcou que já começou a execução do serviço (chegada no local ou início do trabalho).",
+          "Se algo não bater com o combinado, use o chat do Kazaro na mesma conversa do pedido.",
+        ]
+      : [""];
 
   const text = [
     `Atualização do seu pedido no Kazaro`,
@@ -39,15 +52,16 @@ export async function notifyClientOfBookingStatusChange(input: {
     `Profissional: ${input.professionalName}`,
     `Quando: ${input.whenLabel}`,
     "",
-    `Novo status: ${statusPt}`,
+    `Situação: ${statusLong}`,
+    ...extra,
     "",
-    `Acompanhe detalhes e converse pelo app (sem trocar telefone por aqui — use o chat do Kazaro):`,
+    `Acompanhe o status e converse pelo app:`,
     historico,
   ].join("\n");
 
   await sendTextEmail({
     to: input.to,
-    subject: `Pedido ${statusPt.toLowerCase()} — ${input.serviceLabel.slice(0, 40)}${input.serviceLabel.length > 40 ? "…" : ""}`,
+    subject: `${subjectLead} — ${input.serviceLabel.slice(0, 40)}${input.serviceLabel.length > 40 ? "…" : ""}`,
     text,
   });
 }

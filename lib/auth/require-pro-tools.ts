@@ -11,5 +11,6 @@ export async function requireProfessionalTools(nextPath: string) {
   if (!user?.id) redirect(`/entrar?next=${encodeURIComponent(nextPath)}`);
   const role = await fetchMyProfileRole(user.id);
   if (role === "professional" || role === "admin") return { user };
-  redirect("/dashboard");
+  redirect("/search");
 }
+

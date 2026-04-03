@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 function initialFromEmail(email: string | null): string {
@@ -29,7 +30,12 @@ export function DashboardUserMenu({
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    const serverHadUser = Boolean(initialEmail);
+
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "INITIAL_SESSION" && !session?.user && serverHadUser) {
+        return;
+      }
       setEmail(session?.user?.email ?? null);
       setOpen(false);
     });
@@ -45,7 +51,7 @@ export function DashboardUserMenu({
       sub.subscription.unsubscribe();
       document.removeEventListener("mousedown", onDoc);
     };
-  }, []);
+  }, [initialEmail]);
 
   return (
     <div className="kz-dash-user" ref={rootRef}>
@@ -106,8 +112,10 @@ export function DashboardUserMenu({
             disabled={busy}
             onClick={async () => {
               setBusy(true);
+              const t0 = Date.now();
               try {
                 await getSupabaseBrowserClient().auth.signOut();
+                await ensureMinElapsedSince(t0);
                 router.replace("/?saiu=1");
                 router.refresh();
               } finally {
