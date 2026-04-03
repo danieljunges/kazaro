@@ -521,6 +521,10 @@
 .home-editorial .hero-right {
   position: relative;
   padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
 }
 .home-editorial .hero-card-main {
   background: var(--white);
@@ -641,10 +645,11 @@
   background: var(--lime-deep);
 }
 
+/* No fluxo abaixo do card — absolute + bottom negativo cobria o preço no mobile/tablet */
 .home-editorial .float-badge {
-  position: absolute;
-  bottom: -18px;
-  left: -24px;
+  position: relative;
+  bottom: auto;
+  left: auto;
   background: var(--ink);
   color: var(--white);
   border-radius: 12px;
@@ -653,7 +658,16 @@
   align-items: center;
   gap: 12px;
   box-shadow: 0 8px 30px rgba(22, 22, 14, 0.18);
-  min-width: 200px;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+@media (min-width: 480px) {
+  .home-editorial .float-badge {
+    width: auto;
+    min-width: min(200px, 100%);
+  }
 }
 .home-editorial .fb-icon {
   width: 34px;
@@ -1544,12 +1558,6 @@
   }
   .home-editorial .stat-inner {
     grid-template-columns: 1fr;
-  }
-  .home-editorial .float-badge {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    margin-top: 16px;
   }
 }
 
