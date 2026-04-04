@@ -49,6 +49,8 @@ a { text-decoration: none; color: inherit; }
   --cream3:  #D8D2C6;
   --white:   #FFFFFF;
   --ink:     #0A0A0A;
+  /* Texto principal “suave” — menos contraste que --ink puro (leitura em fundos claros) */
+  --ink70:   #3e3e34;
   --ink60:   #5C5C56;
   --ink40:   #8A8A82;
   --ink20:   #C4C4BC;
