@@ -39,6 +39,7 @@ export default async function AdminServicosPage() {
               <table className="orders-table">
                 <thead>
                   <tr>
+                    <th>Área</th>
                     <th>Serviço</th>
                     <th>Preço</th>
                     <th>Descrição</th>
@@ -54,7 +55,7 @@ export default async function AdminServicosPage() {
                       <td className="o-client">{s.name}</td>
                       <td className="o-price">{formatBRLFromCents(s.price_cents ?? null)}</td>
                       <td style={{ maxWidth: 420, fontSize: 12 }}>{(s.description ?? "-").slice(0, 180)}</td>
-                      <td style={{ minWidth: 320 }}>
+                      <td className="kz-admin-actions-cell">
                         <ServiceReviewButtons serviceId={s.id} />
                       </td>
                     </tr>

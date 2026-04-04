@@ -40,6 +40,7 @@ export function validateBookingAddressParts(p: BookingAddressParts): string | nu
   const street = p.street.trim();
   const nb = p.neighborhood.trim();
   const city = p.city.trim();
+  const st = p.state.trim().toUpperCase();
   if (!street && !nb) return "Preencha o logradouro ou aguarde a busca pelo CEP.";
   if (!city) return "Informe a cidade.";
   if (!st || st.length !== 2) return "Informe a UF (2 letras), ex.: SC.";

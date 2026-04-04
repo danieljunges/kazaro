@@ -46,6 +46,11 @@
   }
   .pp-actions {
     margin-top: 12px;
+    width: 100%;
+  }
+  .pp-main {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
   }
   .trust-visual {
     display: none;
@@ -115,5 +120,75 @@
 .kz-table-scroll {
   -webkit-overflow-scrolling: touch;
   max-width: 100%;
+  width: 100%;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+/* ========== Refino mobile (todas as rotas: público, conta, admin) ========== */
+.admin-app {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+@media (max-width: 720px) {
+  .public-page__intro {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  .home-editorial .section {
+    padding-left: max(14px, env(safe-area-inset-left, 0px));
+    padding-right: max(14px, env(safe-area-inset-right, 0px));
+  }
+
+  /* Topbar do dashboard/admin: título e ações empilham, nada corta à direita */
+  .dash-topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .dash-topbar-lead {
+    width: 100%;
+  }
+
+  .dt-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .admin-app .admin-hub-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-app .admin-hub-card {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-editorial .nav-inner {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+
+  .btn-cta,
+  .btn-ghost {
+    padding-left: 12px;
+    padding-right: 12px;
+    font-size: 13px;
+  }
+}
+
+/* Formulários admin (aprovar serviço): uma coluna em telas estreitas */
+@media (max-width: 640px) {
+  .kz-admin-actions {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .kz-admin-actions > div {
+    justify-content: flex-start !important;
+  }
 }

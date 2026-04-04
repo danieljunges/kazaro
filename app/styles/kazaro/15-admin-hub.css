@@ -150,6 +150,13 @@
   text-align: left;
   border-bottom: 1px solid var(--border);
   vertical-align: top;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.admin-app .admin-hub-mini-table .kz-admin-nowrap {
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: nowrap;
 }
 
 .admin-app .admin-hub-mini-table th {

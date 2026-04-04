@@ -92,6 +92,10 @@
   padding: 11px 14px;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .home-editorial .auth-input:focus {

@@ -17,7 +17,7 @@ export default async function AdminSuportePage() {
   const tickets = await fetchAllSupportTicketsForAdmin();
 
   return (
-    <div className="dash-content" style={{ padding: "24px 28px 48px" }}>
+    <div className="dash-content">
       <div className="dt-title" style={{ marginBottom: 8 }}>
         Suporte
       </div>
@@ -31,7 +31,7 @@ export default async function AdminSuportePage() {
           Nenhum chamado ainda.
         </p>
       ) : (
-        <div className="kz-table-scroll" style={{ maxWidth: 1100 }}>
+        <div className="kz-table-scroll">
           <table className="orders-table">
             <thead>
               <tr>

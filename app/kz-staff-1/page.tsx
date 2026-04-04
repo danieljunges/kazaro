@@ -233,7 +233,7 @@ export default async function AdminHome() {
                         <div style={{ fontWeight: 600 }}>{b.client_name_snapshot}</div>
                         <div style={{ fontSize: 12, color: "var(--ink50)" }}>{b.service_name_snapshot ?? "-"}</div>
                       </td>
-                      <td style={{ whiteSpace: "nowrap", fontSize: 12, color: "var(--ink60)" }}>
+                      <td className="kz-admin-nowrap" style={{ fontSize: 12, color: "var(--ink60)" }}>
                         {fmt(b.scheduled_at)}
                       </td>
                       <td style={{ fontSize: 12, fontWeight: 600 }}>{statusPt(b.status)}</td>
