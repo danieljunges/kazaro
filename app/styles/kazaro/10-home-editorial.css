@@ -1557,6 +1557,130 @@
   }
 }
 
+/* Home em telas estreitas (ex.: iPhone 13 ~390px): busca do hero e blocos que estouravam com overflow-x clip */
+@media (max-width: 640px) {
+  .home-editorial .section {
+    padding-left: max(14px, env(safe-area-inset-left, 0px));
+    padding-right: max(14px, env(safe-area-inset-right, 0px));
+  }
+
+  .home-editorial .hero {
+    padding-top: 44px;
+    padding-bottom: 40px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    gap: 28px;
+  }
+
+  .home-editorial .hero-headline {
+    font-size: clamp(32px, 10.5vw, 48px);
+    line-height: 0.98;
+  }
+
+  /* Barra de busca: deixa de ser uma única linha (estourava a viewport) */
+  .home-editorial .search-wrap {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 12px;
+    align-items: center;
+    padding: 10px 12px;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .home-editorial .search-wrap > svg {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .home-editorial .search-wrap > input {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .home-editorial .search-sep {
+    display: none;
+  }
+
+  .home-editorial .search-loc {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin: 0;
+    white-space: normal;
+    font-size: 12px;
+  }
+
+  .home-editorial .search-btn {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    justify-self: stretch;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .home-editorial .rail-row:hover {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .home-editorial .rail-row {
+    flex-wrap: wrap;
+    gap: 12px 16px;
+  }
+
+  .home-editorial .rail-price {
+    text-align: left;
+    width: 100%;
+  }
+
+  .home-editorial .hcm-footer {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .home-editorial .btn-ver {
+    flex: 1 1 auto;
+    min-width: min(100%, 200px);
+    justify-content: center;
+  }
+
+  .home-editorial .sec-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+
+  .home-editorial .link-arrow {
+    white-space: normal;
+  }
+
+  .home-editorial .pro-banner {
+    padding-top: 52px;
+    padding-bottom: 52px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+}
+
+@media (max-width: 400px) {
+  .home-editorial .hcm-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-editorial .btn-ver {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
 /* Tipografia unificada no produto (conta, painel, admin): Jakarta + peso/cor coerentes */
 .home-editorial .dt-title {
   font-family: var(--sans);
