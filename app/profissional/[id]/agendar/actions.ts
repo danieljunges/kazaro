@@ -13,7 +13,7 @@ export type SubmitBookingInput = {
   time: string;
   proServiceId: string | null;
   clientNote: string;
-  /** Onde o serviço será realizado (bairro, endereço ou referência). */
+  /** Endereço completo (texto montado no formulário: CEP, logradouro, número, etc.). */
   clientLocation: string;
 };
 
@@ -95,11 +95,11 @@ export async function submitBookingRequest(
   const clientEmail = user.email ?? null;
 
   const note = input.clientNote.trim().slice(0, 2000);
-  const clientLocation = input.clientLocation.trim().slice(0, 500);
-  if (clientLocation.length < 5) {
+  const clientLocation = input.clientLocation.trim().slice(0, 1500);
+  if (clientLocation.length < 12) {
     return {
       ok: false,
-      message: "Informe onde o serviço será feito (bairro, endereço ou ponto de referência, mín. 5 caracteres).",
+      message: "Complete o endereço do serviço (CEP, logradouro, número e cidade).",
     };
   }
 

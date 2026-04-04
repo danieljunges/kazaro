@@ -3,9 +3,15 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, FormEvent } from "react";
-import { BOOKING_TIME_OPTIONS } from "@/lib/booking/constants";
-import type { BookingPageContext } from "@/lib/supabase/bookings";
 import { submitBookingRequest } from "@/app/profissional/[id]/agendar/actions";
+import { BOOKING_TIME_OPTIONS } from "@/lib/booking/constants";
+import {
+  composeBookingLocationSnapshot,
+  validateBookingAddressParts,
+  type BookingAddressParts,
+} from "@/lib/address/compose-booking-location";
+import { fetchViaCep, formatCepDisplay, onlyCepDigits } from "@/lib/address/viacep";
+import type { BookingPageContext } from "@/lib/supabase/bookings";
 
 type Props = {
   context: BookingPageContext;
@@ -31,7 +37,16 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     return context.services[i]?.id ?? "";
   });
   const [note, setNote] = useState("");
-  const [location, setLocation] = useState("");
+  const [cep, setCep] = useState("");
+  const [street, setStreet] = useState("");
+  const [number, setNumber] = useState("");
+  const [complement, setComplement] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [city, setCity] = useState("");
+  const [stateUf, setStateUf] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [cepLoading, setCepLoading] = useState(false);
+  const [cepHint, setCepHint] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -43,6 +58,41 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     location: string;
   } | null>(null);
 
+  const addressParts: BookingAddressParts = {
+    cepDigits: onlyCepDigits(cep),
+    street,
+    number,
+    complement,
+    neighborhood,
+    city,
+    state: stateUf,
+    contactPhone,
+  };
+
+  async function lookupCep() {
+    setCepHint(null);
+    const d = onlyCepDigits(cep);
+    if (d.length !== 8) {
+      setCepHint("Digite o CEP com 8 dígitos.");
+      return;
+    }
+    setCepLoading(true);
+    try {
+      const data = await fetchViaCep(d);
+      if (!data) {
+        setCepHint("CEP não encontrado. Confira os números ou preencha o endereço manualmente.");
+        return;
+      }
+      setStreet((data.logradouro ?? "").trim());
+      setNeighborhood((data.bairro ?? "").trim());
+      setCity((data.localidade ?? "").trim());
+      setStateUf((data.uf ?? "").trim().toUpperCase().slice(0, 2));
+      setCepHint("Endereço preenchido. Complete o número e, se quiser, complemento e telefone.");
+    } finally {
+      setCepLoading(false);
+    }
+  }
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
@@ -50,6 +100,13 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
       setError(context.unavailableReason ?? "Este perfil ainda não aceita agendamentos reais.");
       return;
     }
+    const addrErr = validateBookingAddressParts(addressParts);
+    if (addrErr) {
+      setError(addrErr);
+      return;
+    }
+    const composedLocation = composeBookingLocationSnapshot(addressParts);
+
     setLoading(true);
     try {
       const serviceLabel =
@@ -60,13 +117,13 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
         time,
         proServiceId: serviceId || null,
         clientNote: note,
-        clientLocation: location,
+        clientLocation: composedLocation,
       });
       if (!result.ok) {
         setError(result.message);
         return;
       }
-      setSubmitted({ date, time, serviceLabel, note: note.trim(), location: location.trim() });
+      setSubmitted({ date, time, serviceLabel, note: note.trim(), location: composedLocation });
       setDone(true);
       router.refresh();
     } finally {
@@ -194,19 +251,132 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
         </select>
       </label>
 
-      <label className="auth-field">
-        <span className="auth-label">Local do serviço</span>
-        <input
-          className="auth-input"
-          type="text"
-          required
-          minLength={5}
-          maxLength={500}
-          value={location}
-          onChange={(ev) => setLocation(ev.target.value)}
-          placeholder="Bairro, endereço ou referência (onde o profissional deve ir)"
-        />
-      </label>
+      <fieldset className="booking-address-fieldset">
+        <legend className="auth-label booking-address-legend">Endereço onde será o serviço</legend>
+        <p className="booking-address-hint">
+          Busque pelo CEP para preencher rua e cidade. O profissional usa estes dados para ir até você.
+        </p>
+
+        <div className="booking-address-row booking-address-row--cep">
+          <label className="auth-field" style={{ marginBottom: 0 }}>
+            <span className="auth-label">CEP</span>
+            <input
+              className="auth-input"
+              type="text"
+              inputMode="numeric"
+              autoComplete="postal-code"
+              maxLength={9}
+              value={formatCepDisplay(cep)}
+              onChange={(ev) => {
+                setCep(onlyCepDigits(ev.target.value));
+                setCepHint(null);
+              }}
+              onKeyDown={(ev) => {
+                if (ev.key === "Enter") {
+                  ev.preventDefault();
+                  void lookupCep();
+                }
+              }}
+              placeholder="00000-000"
+            />
+          </label>
+          <button
+            type="button"
+            className="btn-ghost booking-cep-btn"
+            disabled={cepLoading || onlyCepDigits(cep).length !== 8}
+            onClick={() => void lookupCep()}
+          >
+            {cepLoading ? "Buscando…" : "Buscar CEP"}
+          </button>
+        </div>
+        {cepHint ? <p className="booking-address-cep-msg">{cepHint}</p> : null}
+
+        <label className="auth-field">
+          <span className="auth-label">Logradouro</span>
+          <input
+            className="auth-input"
+            type="text"
+            autoComplete="street-address"
+            value={street}
+            onChange={(ev) => setStreet(ev.target.value)}
+            placeholder="Rua, avenida…"
+          />
+        </label>
+
+        <div className="booking-address-grid">
+          <label className="auth-field">
+            <span className="auth-label">Número</span>
+            <input
+              className="auth-input"
+              type="text"
+              inputMode="numeric"
+              autoComplete="address-line2"
+              value={number}
+              onChange={(ev) => setNumber(ev.target.value)}
+              placeholder="Ex: 120"
+            />
+          </label>
+          <label className="auth-field">
+            <span className="auth-label">Complemento</span>
+            <input
+              className="auth-input"
+              type="text"
+              value={complement}
+              onChange={(ev) => setComplement(ev.target.value)}
+              placeholder="Apto, bloco, casa…"
+            />
+          </label>
+        </div>
+
+        <label className="auth-field">
+          <span className="auth-label">Bairro</span>
+          <input
+            className="auth-input"
+            type="text"
+            value={neighborhood}
+            onChange={(ev) => setNeighborhood(ev.target.value)}
+            placeholder="Bairro"
+          />
+        </label>
+
+        <div className="booking-address-grid">
+          <label className="auth-field">
+            <span className="auth-label">Cidade</span>
+            <input
+              className="auth-input"
+              type="text"
+              autoComplete="address-level2"
+              value={city}
+              onChange={(ev) => setCity(ev.target.value)}
+              placeholder="Cidade"
+            />
+          </label>
+          <label className="auth-field">
+            <span className="auth-label">UF</span>
+            <input
+              className="auth-input"
+              type="text"
+              maxLength={2}
+              value={stateUf}
+              onChange={(ev) => setStateUf(ev.target.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 2))}
+              placeholder="SC"
+            />
+          </label>
+        </div>
+
+        <label className="auth-field">
+          <span className="auth-label">Telefone ou WhatsApp (opcional)</span>
+          <input
+            className="auth-input"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            value={contactPhone}
+            onChange={(ev) => setContactPhone(ev.target.value)}
+            placeholder="Para contato no dia do serviço"
+          />
+        </label>
+      </fieldset>
 
       <label className="auth-field">
         <span className="auth-label">Observações</span>

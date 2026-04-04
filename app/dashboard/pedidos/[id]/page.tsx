@@ -112,9 +112,9 @@ export default async function DashboardPedidoDetailPage({ params }: { params: Pr
                   <dt>E-mail</dt>
                   <dd>{row.client_email_snapshot ?? "-"}</dd>
                 </div>
-                <div>
+                <div className="kz-pedido-dl--wide">
                   <dt>Local do serviço</dt>
-                  <dd>{row.client_location_snapshot?.trim() || "-"}</dd>
+                  <dd style={{ whiteSpace: "pre-line" }}>{row.client_location_snapshot?.trim() || "-"}</dd>
                 </div>
                 <div>
                   <dt>Serviço</dt>

@@ -2544,19 +2544,29 @@ a.btn-book-now:visited {
 
 /* ─── Pedido de agendamento (/profissional/…/agendar) ─── */
 .home-editorial .booking-section {
-  padding: 48px var(--page-x, 24px) 80px;
+  padding: 18px var(--page-x, 24px) 72px;
 }
-.home-editorial .booking-card {
+.home-editorial .pro-page-card.booking-card {
   max-width: 520px;
   margin: 0 auto;
+  padding: clamp(14px, 3vw, 22px) clamp(14px, 3vw, 22px);
 }
-.home-editorial .booking-title {
-  font-size: clamp(28px, 4vw, 38px);
-  margin-bottom: 10px;
+.home-editorial .booking-card .sec-eyebrow {
+  margin-bottom: 6px;
+}
+.home-editorial .booking-title.sec-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(22px, 3.6vw, 30px);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  color: var(--ink70);
+  margin-bottom: 8px;
 }
 .home-editorial .booking-lead {
-  margin: 0 0 28px;
+  margin: 0 0 22px;
   line-height: 1.55;
+  max-width: none;
 }
 .home-editorial .booking-muted {
   color: var(--ink60);
@@ -2565,6 +2575,65 @@ a.btn-book-now:visited {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+.home-editorial .booking-address-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 8px;
+  min-width: 0;
+}
+.home-editorial .booking-address-legend {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 0;
+}
+.home-editorial .booking-address-hint {
+  font-size: 13px;
+  color: var(--ink50);
+  line-height: 1.5;
+  margin: 0 0 14px;
+  font-weight: 500;
+}
+.home-editorial .booking-address-row--cep {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+  margin-bottom: 4px;
+}
+.home-editorial .booking-address-row--cep .auth-field {
+  flex: 1 1 160px;
+  margin-bottom: 0;
+}
+.home-editorial .booking-cep-btn {
+  flex: 0 0 auto;
+  margin-bottom: 2px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.home-editorial .booking-address-cep-msg {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--lime-deep);
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+.home-editorial .booking-address-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 12px;
+}
+@media (max-width: 520px) {
+  .home-editorial .booking-address-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.home-editorial .booking-recap-v {
+  white-space: pre-line;
 }
 .home-editorial .booking-textarea {
   resize: vertical;
