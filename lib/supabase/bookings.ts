@@ -7,6 +7,8 @@ export type BookingPageContext = {
   professionalId: string | null;
   slug: string;
   displayName: string;
+  /** Preço “a partir de” no perfil (busca/card). Usado quando o serviço não tem `price_cents`. */
+  defaultPriceFromCents: number | null;
   services: BookingServiceOption[];
   isBookable: boolean;
   unavailableReason?: string;
@@ -29,22 +31,27 @@ export async function fetchBookingPageContext(slug: string): Promise<BookingPage
     const supabase = await getSupabaseServerClient();
     const { data: pro, error: pErr } = await supabase
       .from("professionals")
-      .select("id, slug, display_name")
+      .select("id, slug, display_name, price_from_cents")
       .eq("slug", slug)
       .maybeSingle();
 
     if (pErr || !pro?.id) return null;
 
+    const floorRaw = (pro as { price_from_cents?: number | null }).price_from_cents;
+    const defaultPriceFromCents = typeof floorRaw === "number" ? floorRaw : null;
+
     const { data: svc } = await supabase
       .from("pro_services")
       .select("id, name, price_cents")
       .eq("professional_id", pro.id)
+      .eq("status", "approved")
       .order("sort_order", { ascending: true });
 
     return {
       professionalId: pro.id as string,
       slug: pro.slug as string,
       displayName: pro.display_name as string,
+      defaultPriceFromCents,
       services: ((svc ?? []) as { id: string; name: string; price_cents: number | null }[]).map((s) => ({
         id: s.id,
         name: s.name,

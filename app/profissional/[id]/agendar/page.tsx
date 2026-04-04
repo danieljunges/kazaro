@@ -51,6 +51,7 @@ export default async function AgendarPage({ params, searchParams }: Props) {
         professionalId: null,
         slug: detail.slug,
         displayName: detail.name,
+        defaultPriceFromCents: null,
         services: detail.services.map((s, i) => ({ id: `demo-${i}`, name: s.name, price_cents: null })),
         isBookable: false,
         unavailableReason:

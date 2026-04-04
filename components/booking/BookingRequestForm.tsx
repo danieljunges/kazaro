@@ -11,6 +11,7 @@ import {
   type BookingAddressParts,
 } from "@/lib/address/compose-booking-location";
 import { fetchViaCep, formatCepDisplay, onlyCepDigits } from "@/lib/address/viacep";
+import { resolveStripeChargeCents, STRIPE_MIN_CHARGE_CENTS } from "@/lib/booking/payment-amount";
 import type { BookingPageContext } from "@/lib/supabase/bookings";
 
 type Props = {
@@ -68,9 +69,19 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   const [openingCheckout, setOpeningCheckout] = useState(false);
 
   const selectedService = context.services.find((s) => s.id === serviceId);
-  const selectedPriceCents =
+  const selectedSvcPrice =
     selectedService && typeof selectedService.price_cents === "number" ? selectedService.price_cents : null;
-  const willPayAfterSubmit = (selectedPriceCents ?? 0) >= 50;
+  /** Com serviço escolhido: usa preço do item; “A combinar” usa só o piso do perfil (`price_from_cents`). */
+  const serviceCentsForCharge = serviceId.trim() ? selectedSvcPrice : null;
+  const chargeCents = resolveStripeChargeCents(serviceCentsForCharge, context.defaultPriceFromCents);
+  const willPayAfterSubmit = chargeCents != null;
+
+  const canPayOnlineHint =
+    (typeof context.defaultPriceFromCents === "number" &&
+      context.defaultPriceFromCents >= STRIPE_MIN_CHARGE_CENTS) ||
+    context.services.some(
+      (s) => typeof s.price_cents === "number" && s.price_cents >= STRIPE_MIN_CHARGE_CENTS,
+    );
 
   const addressParts: BookingAddressParts = {
     cepDigits: onlyCepDigits(cep),
@@ -139,7 +150,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
         return;
       }
 
-      if (typeof result.priceCents === "number" && result.priceCents >= 50) {
+      if (typeof result.priceCents === "number" && result.priceCents >= STRIPE_MIN_CHARGE_CENTS) {
         setOpeningCheckout(true);
         let leavingToStripe = false;
         try {
@@ -220,7 +231,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     const canPayOnline =
       submitted != null &&
       typeof submitted.priceCents === "number" &&
-      submitted.priceCents >= 50;
+      submitted.priceCents >= STRIPE_MIN_CHARGE_CENTS;
 
     async function startStripeCheckout() {
       if (!submitted?.bookingId) return;
@@ -342,11 +353,16 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
           onChange={(ev) => setServiceId(ev.target.value)}
           disabled={context.services.length === 0}
         >
-          <option value="">A combinar com o profissional</option>
+          <option value="">
+            {typeof context.defaultPriceFromCents === "number" &&
+            context.defaultPriceFromCents >= STRIPE_MIN_CHARGE_CENTS
+              ? `A combinar (piso ${formatBrlCents(context.defaultPriceFromCents)})`
+              : "A combinar com o profissional"}
+          </option>
           {context.services.map((s) => {
             const pc = s.price_cents;
             const priceBit =
-              typeof pc === "number" && pc >= 50 ? ` · ${formatBrlCents(pc)}` : "";
+              typeof pc === "number" && pc >= STRIPE_MIN_CHARGE_CENTS ? ` · ${formatBrlCents(pc)}` : "";
             return (
               <option key={s.id} value={s.id}>
                 {s.name}
@@ -355,9 +371,10 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
             );
           })}
         </select>
-        {context.services.some((s) => typeof s.price_cents === "number" && (s.price_cents ?? 0) >= 50) ? (
+        {canPayOnlineHint ? (
           <p className="booking-service-pay-hint">
-            Serviço com valor: após enviar, abrimos o <strong>pagamento no cartão</strong> na hora.
+            Com <strong>preço no serviço</strong> ou com o valor “a partir de” do perfil, após enviar abrimos o{" "}
+            <strong>pagamento no cartão</strong> na hora.
           </p>
         ) : null}
       </label>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { StripePayButton } from "@/components/booking/StripePayButton";
 import { CompactNav } from "@/components/kazaro/CompactNav";
+import { STRIPE_MIN_CHARGE_CENTS } from "@/lib/booking/payment-amount";
 import { dashboardHomeHref } from "@/lib/dashboard/home-href";
 import { BookingReviewForm } from "@/components/reviews/BookingReviewForm";
 import { fetchMyBookingsAsClient, type MyBookingRow } from "@/lib/supabase/bookings";
@@ -178,7 +179,7 @@ function BookingCard({ row, hasReview }: { row: MyBookingRow; hasReview: boolean
   const showReviewForm = row.status === "completed" && !hasReview;
   const cents = row.service_price_cents_snapshot;
   const showStripePay =
-    row.payment_status === "unpaid" && typeof cents === "number" && cents >= 50;
+    row.payment_status === "unpaid" && typeof cents === "number" && cents >= STRIPE_MIN_CHARGE_CENTS;
 
   return (
     <li className="kz-hist-card">

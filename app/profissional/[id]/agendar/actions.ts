@@ -1,6 +1,7 @@
 "use server";
 
 import { BOOKING_TIME_OPTIONS } from "@/lib/booking/constants";
+import { resolveStripeChargeCents } from "@/lib/booking/payment-amount";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const SP = "-03:00";
@@ -82,6 +83,22 @@ export async function submitBookingRequest(
     servicePriceSnapshot = typeof cents === "number" ? cents : null;
   }
 
+  const { data: proRow, error: proFloorErr } = await supabase
+    .from("professionals")
+    .select("id, price_from_cents")
+    .eq("id", input.professionalId)
+    .maybeSingle();
+
+  if (proFloorErr || !proRow || (proRow.id as string) !== input.professionalId) {
+    return { ok: false, message: "Profissional não encontrado." };
+  }
+
+  const floorCentsRaw = proRow.price_from_cents as number | null | undefined;
+  const floorCents = typeof floorCentsRaw === "number" ? floorCentsRaw : null;
+
+  const serviceCentsForCharge = proServiceId ? servicePriceSnapshot : null;
+  const chargeCents = resolveStripeChargeCents(serviceCentsForCharge, floorCents);
+
   const { data: profile, error: pErr } = await supabase
     .from("profiles")
     .select("full_name")
@@ -144,5 +161,5 @@ export async function submitBookingRequest(
     return { ok: false, message: "Pedido salvo mas sem identificador. Tente de novo." };
   }
 
-  return { ok: true, bookingId, priceCents: servicePriceSnapshot };
+  return { ok: true, bookingId, priceCents: chargeCents };
 }

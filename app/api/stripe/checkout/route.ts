@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServiceRoleClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { STRIPE_MIN_CHARGE_CENTS } from "@/lib/booking/payment-amount";
 import { getSiteUrl } from "@/lib/site";
 import { getStripe, isStripeConfigured } from "@/lib/stripe/server";
 
@@ -48,7 +49,7 @@ export async function POST(req: Request) {
   }
 
   const cents = booking.service_price_cents_snapshot as number | null;
-  if (typeof cents !== "number" || cents < 50) {
+  if (typeof cents !== "number" || cents < STRIPE_MIN_CHARGE_CENTS) {
     return NextResponse.json({ error: "Valor inválido para pagamento." }, { status: 400 });
   }
 
