@@ -1,14 +1,18 @@
+import { STRIPE_MIN_CHARGE_CENTS } from "@/lib/booking/payment-amount";
 import { startEndExclusiveUtcForSaoPauloDay } from "@/lib/datetime/sao-paulo-calendar";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
-export type BookingServiceOption = { id: string; name: string; price_cents: number | null };
+export type BookingServiceOption = {
+  id: string;
+  name: string;
+  price_cents: number;
+  duration_minutes: number;
+};
 
 export type BookingPageContext = {
   professionalId: string | null;
   slug: string;
   displayName: string;
-  /** Preço “a partir de” no perfil (busca/card). Usado quando o serviço não tem `price_cents`. */
-  defaultPriceFromCents: number | null;
   services: BookingServiceOption[];
   isBookable: boolean;
   unavailableReason?: string;
@@ -31,32 +35,53 @@ export async function fetchBookingPageContext(slug: string): Promise<BookingPage
     const supabase = await getSupabaseServerClient();
     const { data: pro, error: pErr } = await supabase
       .from("professionals")
-      .select("id, slug, display_name, price_from_cents")
+      .select("id, slug, display_name")
       .eq("slug", slug)
       .maybeSingle();
 
     if (pErr || !pro?.id) return null;
 
-    const floorRaw = (pro as { price_from_cents?: number | null }).price_from_cents;
-    const defaultPriceFromCents = typeof floorRaw === "number" ? floorRaw : null;
-
     const { data: svc } = await supabase
       .from("pro_services")
-      .select("id, name, price_cents")
+      .select("id, name, price_cents, duration_minutes")
       .eq("professional_id", pro.id)
       .eq("status", "approved")
       .order("sort_order", { ascending: true });
+
+    const raw = (svc ?? []) as {
+      id: string;
+      name: string;
+      price_cents: number | null;
+      duration_minutes: number | null;
+    }[];
+
+    const services: BookingServiceOption[] = raw
+      .filter((s) => typeof s.price_cents === "number" && s.price_cents >= STRIPE_MIN_CHARGE_CENTS)
+      .map((s) => ({
+        id: s.id,
+        name: s.name,
+        price_cents: s.price_cents as number,
+        duration_minutes:
+          typeof s.duration_minutes === "number" && s.duration_minutes >= 15 ? s.duration_minutes : 120,
+      }));
+
+    if (services.length === 0) {
+      return {
+        professionalId: pro.id as string,
+        slug: pro.slug as string,
+        displayName: pro.display_name as string,
+        services: [],
+        isBookable: false,
+        unavailableReason:
+          "Este profissional ainda não tem serviço aprovado com preço fixo para agendamento. Tente mais tarde ou envie uma mensagem pelo perfil.",
+      };
+    }
 
     return {
       professionalId: pro.id as string,
       slug: pro.slug as string,
       displayName: pro.display_name as string,
-      defaultPriceFromCents,
-      services: ((svc ?? []) as { id: string; name: string; price_cents: number | null }[]).map((s) => ({
-        id: s.id,
-        name: s.name,
-        price_cents: typeof s.price_cents === "number" ? s.price_cents : null,
-      })),
+      services,
       isBookable: true,
     };
   } catch {

@@ -51,8 +51,12 @@ export default async function AgendarPage({ params, searchParams }: Props) {
         professionalId: null,
         slug: detail.slug,
         displayName: detail.name,
-        defaultPriceFromCents: null,
-        services: detail.services.map((s, i) => ({ id: `demo-${i}`, name: s.name, price_cents: null })),
+        services: detail.services.map((s, i) => ({
+          id: `demo-${i}`,
+          name: s.name,
+          price_cents: 12_000,
+          duration_minutes: 120,
+        })),
         isBookable: false,
         unavailableReason:
           "Este perfil ainda está em modo demonstração. Para testar envio real, use um profissional já cadastrado e ativo.",
@@ -74,9 +78,9 @@ export default async function AgendarPage({ params, searchParams }: Props) {
           <span className="sec-eyebrow">Agendamento</span>
           <h1 className="sec-title booking-title">Pedido para {ctx.displayName}</h1>
           <p className="sec-sub booking-lead">
-            Escolha data, horário e endereço. Se você selecionar um <strong>serviço com preço</strong> no menu, o
-            pagamento no cartão abre <strong>logo após enviar</strong> o pedido (Stripe). Em <strong>A combinar</strong>
-            , o valor é alinhado depois com o profissional — sem cobrança online neste fluxo.
+            Escolha o <strong>serviço</strong> (preço fixo do anúncio), a <strong>data</strong> e um{" "}
+            <strong>horário livre na agenda</strong> do profissional. O pagamento no cartão abre logo após enviar
+            (Stripe). O prestador define expediente e intervalos em Configurações.
           </p>
           <BookingRequestForm context={ctx} initialServiceIndex={initialServiceIndex} />
         </div>

@@ -29,6 +29,7 @@ type SvcRow = {
   name: string;
   description: string | null;
   price_cents: number | null;
+  duration_minutes: number | null;
   status: string;
   reviewer_note: string | null;
   created_at: string;
@@ -45,7 +46,9 @@ export default async function DashboardServicosPage() {
   const { data: svcRaw } = isPro
     ? await supabase
         .from("pro_services")
-        .select("id, name, description, price_cents, status, reviewed_at, reviewer_note, created_at, category_key")
+        .select(
+          "id, name, description, price_cents, duration_minutes, status, reviewed_at, reviewer_note, created_at, category_key",
+        )
         .eq("professional_id", user.id)
         .order("created_at", { ascending: false })
     : { data: [] as SvcRow[] };
@@ -88,9 +91,9 @@ export default async function DashboardServicosPage() {
           ) : (
             <>
               <p className="sec-sub" style={{ margin: "0 0 18px", maxWidth: 720 }}>
-                Cada serviço fica ligado a <strong>uma área</strong> (como na busca). Para atuar em mais de uma, crie um
-                serviço por área. Enquanto estiver <strong>em análise</strong>, só você vê aqui. Depois de aprovado,
-                aparece no perfil público e ajuda nas buscas por categoria.
+                Cada serviço fica ligado a <strong>uma área</strong> (como na busca). O <strong>preço é obrigatório</strong>{" "}
+                (valor fixo do anúncio) e a <strong>duração</strong> define quanto tempo o horário fica bloqueado na sua
+                agenda. Enquanto estiver <strong>em análise</strong>, só você vê aqui.
               </p>
               <CreateServiceForm occupiedCategoryKeys={occupiedCategoryKeys} />
             </>
@@ -125,7 +128,14 @@ export default async function DashboardServicosPage() {
                           </time>
                         </div>
                         <h3 className="kz-svc-preview-card__title">{s.name}</h3>
-                        <div className="kz-svc-preview-card__price">{formatPriceBRL(s.price_cents ?? null)}</div>
+                        <div className="kz-svc-preview-card__price">
+                          {formatPriceBRL(s.price_cents ?? null)}
+                          {typeof s.duration_minutes === "number" ? (
+                            <span style={{ fontSize: 12, fontWeight: 600, color: "var(--ink50)", marginLeft: 8 }}>
+                              · {s.duration_minutes} min na agenda
+                            </span>
+                          ) : null}
+                        </div>
                         {excerpt ? (
                           <p className="kz-svc-preview-card__excerpt">
                             {excerpt}

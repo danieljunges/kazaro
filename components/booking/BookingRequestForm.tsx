@@ -2,16 +2,18 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, FormEvent } from "react";
-import { submitBookingRequest } from "@/app/profissional/[id]/agendar/actions";
-import { BOOKING_TIME_OPTIONS } from "@/lib/booking/constants";
+import { useState, FormEvent, useEffect } from "react";
+import {
+  fetchBookingSlotsForDate,
+  submitBookingRequest,
+} from "@/app/profissional/[id]/agendar/actions";
 import {
   composeBookingLocationSnapshot,
   validateBookingAddressParts,
   type BookingAddressParts,
 } from "@/lib/address/compose-booking-location";
+import { chargeCentsFromApprovedService, STRIPE_MIN_CHARGE_CENTS } from "@/lib/booking/payment-amount";
 import { fetchViaCep, formatCepDisplay, onlyCepDigits } from "@/lib/address/viacep";
-import { resolveStripeChargeCents, STRIPE_MIN_CHARGE_CENTS } from "@/lib/booking/payment-amount";
 import type { BookingPageContext } from "@/lib/supabase/bookings";
 
 type Props = {
@@ -34,13 +36,17 @@ function formatBrlCents(cents: number) {
 
 export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   const router = useRouter();
-  const [date, setDate] = useState(todayIsoDate());
-  const [time, setTime] = useState<string>(BOOKING_TIME_OPTIONS[0]);
   const [serviceId, setServiceId] = useState<string>(() => {
-    if (initialServiceIndex == null || !context.services.length) return "";
+    if (!context.services.length) return "";
+    if (initialServiceIndex == null) return context.services[0]!.id;
     const i = Math.max(0, Math.min(initialServiceIndex, context.services.length - 1));
-    return context.services[i]?.id ?? "";
+    return context.services[i]?.id ?? context.services[0]!.id;
   });
+  const [date, setDate] = useState(todayIsoDate());
+  const [time, setTime] = useState<string>("");
+  const [timeOptions, setTimeOptions] = useState<string[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [slotsError, setSlotsError] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [cep, setCep] = useState("");
   const [street, setStreet] = useState("");
@@ -69,19 +75,49 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   const [openingCheckout, setOpeningCheckout] = useState(false);
 
   const selectedService = context.services.find((s) => s.id === serviceId);
-  const selectedSvcPrice =
-    selectedService && typeof selectedService.price_cents === "number" ? selectedService.price_cents : null;
-  /** Com serviço escolhido: usa preço do item; “A combinar” usa só o piso do perfil (`price_from_cents`). */
-  const serviceCentsForCharge = serviceId.trim() ? selectedSvcPrice : null;
-  const chargeCents = resolveStripeChargeCents(serviceCentsForCharge, context.defaultPriceFromCents);
+  const chargeCents = selectedService ? chargeCentsFromApprovedService(selectedService.price_cents) : null;
   const willPayAfterSubmit = chargeCents != null;
 
-  const canPayOnlineHint =
-    (typeof context.defaultPriceFromCents === "number" &&
-      context.defaultPriceFromCents >= STRIPE_MIN_CHARGE_CENTS) ||
-    context.services.some(
-      (s) => typeof s.price_cents === "number" && s.price_cents >= STRIPE_MIN_CHARGE_CENTS,
-    );
+  useEffect(() => {
+    if (!context.professionalId || !serviceId.trim()) {
+      setTimeOptions([]);
+      setSlotsError(null);
+      return;
+    }
+    const svc = context.services.find((s) => s.id === serviceId);
+    if (!svc) {
+      setTimeOptions([]);
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      setSlotsLoading(true);
+      setSlotsError(null);
+      const r = await fetchBookingSlotsForDate({
+        professionalId: context.professionalId!,
+        date,
+        durationMinutes: svc.duration_minutes,
+      });
+      if (cancelled) return;
+      setSlotsLoading(false);
+      if (!r.ok) {
+        setTimeOptions([]);
+        setSlotsError(r.message);
+        setTime("");
+        return;
+      }
+      setTimeOptions(r.slots);
+      setTime((prev) => {
+        if (r.slots.length === 0) return "";
+        return r.slots.includes(prev) ? prev : r.slots[0]!;
+      });
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [context.professionalId, serviceId, date, context.services]);
 
   const addressParts: BookingAddressParts = {
     cepDigits: onlyCepDigits(cep),
@@ -93,6 +129,8 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     state: stateUf,
     contactPhone,
   };
+
+  const canSubmitTime = Boolean(time && timeOptions.includes(time));
 
   async function lookupCep() {
     setCepHint(null);
@@ -126,6 +164,14 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
       setError(context.unavailableReason ?? "Este perfil ainda não aceita agendamentos reais.");
       return;
     }
+    if (!serviceId.trim() || !selectedService) {
+      setError("Escolha o serviço com preço fixo.");
+      return;
+    }
+    if (!canSubmitTime || slotsLoading) {
+      setError("Escolha um horário disponível na agenda do profissional.");
+      return;
+    }
     const addrErr = validateBookingAddressParts(addressParts);
     if (addrErr) {
       setError(addrErr);
@@ -135,13 +181,12 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
 
     setLoading(true);
     try {
-      const serviceLabel =
-        context.services.find((s) => s.id === serviceId)?.name || (serviceId ? "Serviço selecionado" : "A combinar");
+      const serviceLabel = selectedService.name;
       const result = await submitBookingRequest({
         professionalId: context.professionalId,
         date,
         time,
-        proServiceId: serviceId || null,
+        proServiceId: serviceId,
         clientNote: note,
         clientLocation: composedLocation,
       });
@@ -271,7 +316,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
           </div>
           <div className="booking-recap-row">
             <span className="booking-recap-k">Serviço</span>
-            <span className="booking-recap-v">{submitted?.serviceLabel ?? "A combinar"}</span>
+            <span className="booking-recap-v">{submitted?.serviceLabel ?? "—"}</span>
           </div>
           {submitted?.location ? (
             <div className="booking-recap-row">
@@ -285,10 +330,10 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
               <span className="booking-recap-v">{submitted.note}</span>
             </div>
           ) : null}
-          {canPayOnline ? (
+          {canPayOnline && priceLabel ? (
             <>
               <p className="booking-recap-hint booking-recap-hint--tight">
-                Pagamento {priceLabel}: use o cartão abaixo (ou no Histórico).
+                Valor do anúncio: {priceLabel}. Pague com cartão abaixo ou no Histórico.
               </p>
               <div className="booking-pay-actions">
                 <button
@@ -302,11 +347,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
                 {payHint ? <p className="auth-error booking-pay-err">{payHint}</p> : null}
               </div>
             </>
-          ) : (
-            <p className="booking-recap-hint booking-recap-hint--tight">
-              <strong>A combinar:</strong> sem cobrança online. Combine valor com {context.displayName} por mensagem.
-            </p>
-          )}
+          ) : null}
         </div>
         <div className="booking-guest-actions booking-guest-actions--tight">
           <Link href={`/profissional/${context.slug}`} className="btn-ghost booking-footer-btn">
@@ -323,7 +364,28 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   return (
     <form className="booking-form" onSubmit={onSubmit}>
       <label className="auth-field">
-        <span className="auth-label">Data preferida</span>
+        <span className="auth-label">Serviço (preço fixo do anúncio)</span>
+        <select
+          className="auth-input"
+          value={serviceId}
+          onChange={(ev) => setServiceId(ev.target.value)}
+          required
+          disabled={context.services.length === 0}
+        >
+          {context.services.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name} · {formatBrlCents(s.price_cents)} · ~{s.duration_minutes} min
+            </option>
+          ))}
+        </select>
+        <p className="booking-service-pay-hint">
+          O valor cobrado é o do anúncio. Negociações extras (escopo maior, urgência) podem vir depois por mensagem —
+          em breve: oferta personalizada no estilo Fiverr.
+        </p>
+      </label>
+
+      <label className="auth-field">
+        <span className="auth-label">Data</span>
         <input
           className="auth-input"
           type="date"
@@ -335,46 +397,30 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
       </label>
 
       <label className="auth-field">
-        <span className="auth-label">Horário sugerido</span>
-        <select className="auth-input" value={time} onChange={(ev) => setTime(ev.target.value)} required>
-          {BOOKING_TIME_OPTIONS.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <label className="auth-field">
-        <span className="auth-label">Serviço (opcional)</span>
+        <span className="auth-label">Horário (agenda do profissional)</span>
         <select
           className="auth-input"
-          value={serviceId}
-          onChange={(ev) => setServiceId(ev.target.value)}
-          disabled={context.services.length === 0}
+          value={time}
+          onChange={(ev) => setTime(ev.target.value)}
+          required
+          disabled={slotsLoading || timeOptions.length === 0}
         >
-          <option value="">
-            {typeof context.defaultPriceFromCents === "number" &&
-            context.defaultPriceFromCents >= STRIPE_MIN_CHARGE_CENTS
-              ? `A combinar (piso ${formatBrlCents(context.defaultPriceFromCents)})`
-              : "A combinar com o profissional"}
-          </option>
-          {context.services.map((s) => {
-            const pc = s.price_cents;
-            const priceBit =
-              typeof pc === "number" && pc >= STRIPE_MIN_CHARGE_CENTS ? ` · ${formatBrlCents(pc)}` : "";
-            return (
-              <option key={s.id} value={s.id}>
-                {s.name}
-                {priceBit}
+          {slotsLoading ? (
+            <option value="">Carregando horários…</option>
+          ) : timeOptions.length === 0 ? (
+            <option value="">Sem horários neste dia</option>
+          ) : (
+            timeOptions.map((t) => (
+              <option key={t} value={t}>
+                {t}
               </option>
-            );
-          })}
+            ))
+          )}
         </select>
-        {canPayOnlineHint ? (
-          <p className="booking-service-pay-hint">
-            Com <strong>preço no serviço</strong> ou com o valor “a partir de” do perfil, após enviar abrimos o{" "}
-            <strong>pagamento no cartão</strong> na hora.
+        {slotsError ? <p className="auth-error" style={{ marginTop: 8, fontSize: 13 }}>{slotsError}</p> : null}
+        {!slotsLoading && timeOptions.length === 0 && !slotsError ? (
+          <p className="booking-service-pay-hint" style={{ marginTop: 6 }}>
+            Nenhum intervalo livre nesta data (fora do expediente ou agenda cheia). Tente outro dia.
           </p>
         ) : null}
       </label>
@@ -520,8 +566,12 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
 
       {error ? <p className="auth-error">{error}</p> : null}
 
-      <button type="submit" className="btn-cta auth-submit" disabled={loading}>
-        {loading ? "Enviando…" : willPayAfterSubmit ? "Agendar e pagar" : "Enviar pedido de agendamento"}
+      <button
+        type="submit"
+        className="btn-cta auth-submit"
+        disabled={loading || slotsLoading || !canSubmitTime}
+      >
+        {loading ? "Enviando…" : willPayAfterSubmit ? "Agendar e pagar" : "Enviar pedido"}
       </button>
     </form>
   );

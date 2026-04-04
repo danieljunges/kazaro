@@ -66,6 +66,75 @@ export async function updateMyProfessionalPublic(input: {
   return { ok: true };
 }
 
+function parseClockToMinutes(s: string): number | null {
+  const m = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(s.trim());
+  if (!m) return null;
+  return Number.parseInt(m[1], 10) * 60 + Number.parseInt(m[2], 10);
+}
+
+export async function updateMyProfessionalSchedule(input: {
+  workDayStart: string;
+  workDayEnd: string;
+  workWeekdays: number[];
+  bookingSlotStepMinutes: number;
+  bookingDefaultDurationMinutes: number;
+}): Promise<{ ok: true } | { ok: false; message: string }> {
+  const supabase = await getSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user?.id) return { ok: false, message: "Faça login para continuar." };
+
+  const sm = parseClockToMinutes(input.workDayStart);
+  const em = parseClockToMinutes(input.workDayEnd);
+  if (sm == null || em == null) {
+    return { ok: false, message: "Use horários no formato HH:MM (ex.: 08:00)." };
+  }
+  if (em <= sm) {
+    return { ok: false, message: "O fim do expediente deve ser depois do início." };
+  }
+
+  const days = [...new Set(input.workWeekdays.map((n) => Math.round(n)).filter((n) => n >= 1 && n <= 7))];
+  if (days.length === 0) {
+    return { ok: false, message: "Marque pelo menos um dia da semana em que você atende." };
+  }
+  days.sort((a, b) => a - b);
+
+  const step = Math.round(Number(input.bookingSlotStepMinutes));
+  if (!Number.isFinite(step) || step < 30 || step > 240) {
+    return { ok: false, message: "Intervalo entre horários: entre 30 e 240 minutos." };
+  }
+
+  const defDur = Math.round(Number(input.bookingDefaultDurationMinutes));
+  if (!Number.isFinite(defDur) || defDur < 15 || defDur > 600) {
+    return { ok: false, message: "Duração padrão: entre 15 e 600 minutos." };
+  }
+
+  const { error } = await supabase
+    .from("professionals")
+    .update({
+      work_day_start: input.workDayStart.trim().slice(0, 5),
+      work_day_end: input.workDayEnd.trim().slice(0, 5),
+      work_weekdays: days,
+      booking_slot_step_minutes: step,
+      booking_default_duration_minutes: defDur,
+    })
+    .eq("id", user.id);
+
+  if (error) return { ok: false, message: error.message || "Não foi possível salvar a agenda." };
+
+  const { data: pro } = await supabase.from("professionals").select("slug").eq("id", user.id).maybeSingle();
+  const slug = pro?.slug as string | undefined;
+  if (slug) {
+    revalidatePath(`/profissional/${slug}`);
+    revalidatePath(`/profissional/${slug}/agendar`);
+  }
+
+  revalidatePath("/dashboard/configuracoes");
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
+
 /**
  * Remove o usuário em auth.users (cascata em profiles, etc.).
  * Exige senha atual (conta e-mail) ou confirmação por e-mail (login social).

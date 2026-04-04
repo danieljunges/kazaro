@@ -30,6 +30,7 @@ export function CreateServiceForm({ occupiedCategoryKeys }: Props) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [durationMinutes, setDurationMinutes] = useState("120");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
@@ -46,22 +47,35 @@ export function CreateServiceForm({ occupiedCategoryKeys }: Props) {
       setErr("Você já cadastrou um serviço nesta área. Escolha outra categoria ou aguarde a análise do que já enviou.");
       return;
     }
+    const priceCents = parsePriceToCentsBRL(price);
+    if (priceCents == null) {
+      setErr("Informe o preço fixo do serviço (valor do anúncio).");
+      return;
+    }
+    const dur = Number.parseInt(durationMinutes, 10);
+    if (Number.isNaN(dur) || dur < 15 || dur > 600) {
+      setErr("Duração estimada: entre 15 e 600 minutos (quanto tempo o serviço ocupa na agenda).");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await createService({
         name,
         description,
-        priceCents: parsePriceToCentsBRL(price),
+        priceCents,
+        durationMinutes: dur,
         categoryKey,
       });
       if (!res.ok) {
         setErr(res.message);
         return;
       }
-      setOk("Serviço enviado para análise. Assim que aprovado, aparece no seu perfil público.");
+      setOk("Serviço enviado para análise. Assim que aprovado, aparece no seu perfil público com preço fixo.");
       setName("");
       setDescription("");
       setPrice("");
+      setDurationMinutes("120");
       setCategoryKey("");
       router.refresh();
     } finally {
@@ -121,13 +135,27 @@ export function CreateServiceForm({ occupiedCategoryKeys }: Props) {
         </label>
 
         <label className="auth-field">
-          <span className="auth-label">Preço sugerido (opcional)</span>
+          <span className="auth-label">Preço fixo do anúncio (obrigatório)</span>
           <input
             className="auth-input"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            placeholder="Ex: 120"
+            placeholder="Ex: 120 ou 120,50"
             inputMode="decimal"
+            required
+          />
+        </label>
+        <label className="auth-field">
+          <span className="auth-label">Duração na agenda (minutos)</span>
+          <input
+            className="auth-input"
+            type="number"
+            min={15}
+            max={600}
+            step={15}
+            value={durationMinutes}
+            onChange={(e) => setDurationMinutes(e.target.value)}
+            required
           />
         </label>
       </div>

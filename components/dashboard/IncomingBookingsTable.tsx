@@ -74,7 +74,7 @@ export function IncomingBookingsTable({ rows }: { rows: IncomingBookingRow[] }) 
                 <td style={{ fontSize: 12, maxWidth: 200 }} title={loc || undefined}>
                   {loc ? truncateNote(loc, 72) : "-"}
                 </td>
-                <td>{row.service_name_snapshot ?? "A combinar"}</td>
+                <td>{row.service_name_snapshot?.trim() || "Serviço"}</td>
                 <td>{formatBookingWhenPtBR(row.scheduled_at)}</td>
                 <td style={{ fontSize: 12, whiteSpace: "nowrap" }}>
                   {row.service_started_at ? formatBookingWhenPtBR(row.service_started_at) : "-"}

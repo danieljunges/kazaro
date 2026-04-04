@@ -1,18 +1,21 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { STRIPE_MIN_CHARGE_CENTS } from "@/lib/booking/payment-amount";
 import { isServiceCategoryKey } from "@/lib/services/category-catalog";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function createService(input: {
   name: string;
   description: string;
-  priceCents: number | null;
+  priceCents: number;
+  durationMinutes: number;
   categoryKey: string;
 }): Promise<{ ok: true } | { ok: false; message: string }> {
   const name = input.name.trim();
   const description = input.description.trim();
   const priceCents = input.priceCents;
+  const durationMinutes = Math.round(Number(input.durationMinutes) || 0);
   const categoryKey = input.categoryKey.trim();
 
   if (!isServiceCategoryKey(categoryKey)) {
@@ -21,8 +24,15 @@ export async function createService(input: {
   if (name.length < 3) return { ok: false, message: "Dê um nome com pelo menos 3 caracteres." };
   if (name.length > 80) return { ok: false, message: "Nome muito longo." };
   if (description.length > 600) return { ok: false, message: "Descrição muito longa." };
-  if (priceCents != null && (!Number.isFinite(priceCents) || priceCents < 0 || priceCents > 50_000_00))
-    return { ok: false, message: "Preço inválido." };
+  if (!Number.isFinite(priceCents) || priceCents < STRIPE_MIN_CHARGE_CENTS || priceCents > 50_000_00) {
+    return {
+      ok: false,
+      message: `Informe um preço válido (mínimo R$ ${(STRIPE_MIN_CHARGE_CENTS / 100).toFixed(2).replace(".", ",")}).`,
+    };
+  }
+  if (durationMinutes < 15 || durationMinutes > 600) {
+    return { ok: false, message: "Duração estimada entre 15 e 600 minutos." };
+  }
 
   const supabase = await getSupabaseServerClient();
   const {
@@ -38,6 +48,7 @@ export async function createService(input: {
     name,
     description: description || null,
     price_cents: priceCents,
+    duration_minutes: durationMinutes,
     status: "pending",
     category_key: categoryKey,
   });

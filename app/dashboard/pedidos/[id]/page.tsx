@@ -118,7 +118,7 @@ export default async function DashboardPedidoDetailPage({ params }: { params: Pr
                 </div>
                 <div>
                   <dt>Serviço</dt>
-                  <dd>{row.service_name_snapshot ?? "A combinar"}</dd>
+                  <dd>{row.service_name_snapshot?.trim() || "Serviço"}</dd>
                 </div>
                 <div>
                   <dt>Valor combinado (referência)</dt>

@@ -42,13 +42,14 @@ on conflict (id) do update set
   bio = excluded.bio,
   updated_at = now();
 
-insert into public.pro_services (professional_id, name, description, price_cents, sort_order)
+insert into public.pro_services (professional_id, name, description, price_cents, duration_minutes, sort_order)
 values
   (
     'COLE_SEU_USER_UUID_AQUI'::uuid,
     'Conserto de vazamento',
     'Vazamentos visíveis e ocultos.',
     12000,
+    120,
     0
   ),
   (
@@ -56,5 +57,6 @@ values
     'Troca de torneira',
     'Instalação e vedação.',
     8000,
+    90,
     1
   );

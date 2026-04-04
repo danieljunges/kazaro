@@ -61,7 +61,7 @@ export default async function AdminAgendamentosPage() {
                     <tr key={b.id}>
                       <td className="o-client">{b.client_name_snapshot}</td>
                       <td style={{ fontSize: 12 }}>{b.client_email_snapshot ?? "-"}</td>
-                      <td>{b.service_name_snapshot ?? "A combinar"}</td>
+                      <td>{b.service_name_snapshot?.trim() || "Serviço"}</td>
                       <td>{fmt(b.scheduled_at)}</td>
                       <td style={{ fontWeight: 800 }}>{statusPt(b.status)}</td>
                       <td style={{ textAlign: "right" }}>
