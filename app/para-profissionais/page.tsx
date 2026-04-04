@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Para profissionais",
   description: `Cadastre seu perfil profissional no ${SITE_NAME} e receba pedidos na sua região.`,
   openGraph: {
-    title: `Para profissionais — ${SITE_NAME}`,
+    title: `Para profissionais | ${SITE_NAME}`,
     description: "Ganhe visibilidade, organize pedidos e evolua sua reputação local.",
     url: `${getSiteUrl()}/para-profissionais`,
     type: "website",

@@ -54,7 +54,7 @@ export const metadata: Metadata = {
   title: "Buscar profissionais",
   description: `Encontre profissionais verificados, compare preços e disponibilidade no ${SITE_NAME}.`,
   openGraph: {
-    title: `Buscar profissionais — ${SITE_NAME}`,
+    title: `Buscar profissionais | ${SITE_NAME}`,
     description: "Filtre por disponibilidade, preço e avaliação em poucos cliques.",
     url: `${getSiteUrl()}/search`,
     type: "website",
@@ -109,7 +109,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
       {sp.conta === "ativada" ? (
         <div className="kz-sh-inner" style={{ paddingBottom: 0 }}>
           <div className="auth-banner auth-banner--ok" style={{ margin: "0 0 16px", textAlign: "left", lineHeight: 1.55 }}>
-            <strong>Conta confirmada.</strong> Tudo certo com seu e-mail — já pode buscar profissionais e agendar com
+            <strong>Conta confirmada.</strong> Tudo certo com seu e-mail: já pode buscar profissionais e agendar com
             tranquilidade.
           </div>
         </div>

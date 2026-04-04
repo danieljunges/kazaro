@@ -190,7 +190,7 @@ export function AccountSecuritySection({
         {!accountDeletionConfigured ? (
           <p className="auth-banner auth-banner--err" style={{ margin: 0 }}>
             A exclusão automática pela página ainda não está disponível. Para encerrar sua conta, fale com o suporte do
-            Kazaro e informe o e-mail da conta — a equipe orienta o próximo passo.
+            Kazaro e informe o e-mail da conta. A equipe orienta o próximo passo.
           </p>
         ) : (
           <form onSubmit={onDeleteAccount}>

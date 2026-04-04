@@ -18,7 +18,7 @@ export function DashboardUserMenu({
 }: {
   initialEmail: string | null;
   initialAvatarUrl: string | null;
-  /** Serviços e ganhos — contas profissional/admin */
+  /** Serviços e ganhos (contas profissional/admin) */
   showProLinks: boolean;
 }) {
   const [email, setEmail] = useState<string | null>(initialEmail);
@@ -75,7 +75,7 @@ export function DashboardUserMenu({
 
       {open ? (
         <div className="kz-dash-user-pop" role="menu">
-          <div className="kz-dash-user-email">{email ?? "—"}</div>
+          <div className="kz-dash-user-email">{email ?? "-"}</div>
           {showProLinks ? (
             <Link className="kz-dash-user-link" role="menuitem" href="/dashboard/servicos">
               Meus serviços

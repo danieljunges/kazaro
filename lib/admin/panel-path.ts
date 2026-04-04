@@ -1,5 +1,5 @@
 /**
- * Painel interno em rota dedicada (não usar `/admin` — ver middleware).
+ * Painel interno em rota dedicada (não usar `/admin`; ver middleware).
  * Para mudar a URL: renomeie a pasta `app/kz-staff-1` e ajuste `ADMIN_PANEL_SEGMENT`.
  */
 export const ADMIN_PANEL_SEGMENT = "kz-staff-1" as const;

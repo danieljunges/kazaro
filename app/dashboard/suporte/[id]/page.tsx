@@ -9,7 +9,7 @@ type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ erro?: s
 
 function fmt(iso: string): string {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("pt-BR", {
     day: "numeric",
     month: "short",
@@ -45,7 +45,7 @@ export default async function DashboardSuporteTicketPage({ params, searchParams 
             </Link>
           </div>
           <p className="sec-sub" style={{ margin: "0 0 16px" }}>
-            {open ? "Chamado aberto — a equipe pode responder a qualquer momento." : "Este chamado está encerrado."}
+            {open ? "Chamado aberto. A equipe pode responder a qualquer momento." : "Este chamado está encerrado."}
           </p>
 
           {sp.erro ? (

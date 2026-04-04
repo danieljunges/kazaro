@@ -6,7 +6,7 @@ export function normalizeProServiceStatus(status: string | null | undefined): st
 
 export function proServiceStatusLabelPt(status: string | null | undefined): string {
   const raw = (status ?? "").trim();
-  if (!raw) return "—";
+  if (!raw) return "-";
   switch (normalizeProServiceStatus(raw)) {
     case "approved":
       return "Ativo";

@@ -19,7 +19,7 @@ export function CompactNav({ backHref, backLabel }: Props) {
   return (
     <nav>
       <div className="nav-inner">
-        <Link href="/" className="logo" aria-label="Kazaro — início">
+        <Link href="/" className="logo" aria-label="Kazaro, início">
           Kazaro
         </Link>
         <div className="nav-right">

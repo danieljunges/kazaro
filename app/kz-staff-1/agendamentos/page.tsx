@@ -6,7 +6,7 @@ import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function fmt(iso: string) {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(d);
 }
 
@@ -35,9 +35,11 @@ export default async function AdminAgendamentosPage() {
         <div className="dash-card">
           <div className="dc-head">Últimos</div>
           <p style={{ margin: "0 0 14px", color: "var(--ink60)", fontSize: 14, lineHeight: 1.55 }}>
-            Fluxo típico: <strong>Pendente</strong> → <strong>Confirmado</strong> → o prestador pode marcar{" "}
-            <strong>Em andamento</strong> quando iniciar o serviço → <strong>Concluído</strong>. Ao mudar o status, o
-            cliente recebe e-mail se o Resend estiver configurado.
+            Fluxo no painel do prestador: <strong>Pendente</strong> → <strong>Confirmado</strong> →{" "}
+            <strong>Em andamento</strong> ao iniciar → <strong>Concluído</strong> com foto de comprovação, ou{" "}
+            <strong>Arquivar</strong> a qualquer momento (sai dos ativos, sem ser concluído).{" "}
+            <strong>Cancelar</strong> comunica cancelamento; <strong>Arquivar</strong> é organização da lista. No admin
+            você pode concluir sem foto. E-mails ao cliente se o Resend estiver configurado.
           </p>
           {!data?.length ? (
             <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14 }}>Sem agendamentos.</p>
@@ -58,12 +60,12 @@ export default async function AdminAgendamentosPage() {
                   {data.map((b: { id: string; scheduled_at: string; status: string; client_name_snapshot: string; client_email_snapshot: string | null; service_name_snapshot: string | null }) => (
                     <tr key={b.id}>
                       <td className="o-client">{b.client_name_snapshot}</td>
-                      <td style={{ fontSize: 12 }}>{b.client_email_snapshot ?? "—"}</td>
+                      <td style={{ fontSize: 12 }}>{b.client_email_snapshot ?? "-"}</td>
                       <td>{b.service_name_snapshot ?? "A combinar"}</td>
                       <td>{fmt(b.scheduled_at)}</td>
                       <td style={{ fontWeight: 800 }}>{statusPt(b.status)}</td>
                       <td style={{ textAlign: "right" }}>
-                        <BookingStatusButtons bookingId={b.id} currentStatus={b.status} />
+                        <BookingStatusButtons bookingId={b.id} currentStatus={b.status} adminBypassProof />
                       </td>
                     </tr>
                   ))}

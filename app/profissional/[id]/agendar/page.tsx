@@ -73,7 +73,7 @@ export default async function AgendarPage({ params, searchParams }: Props) {
           <span className="sec-eyebrow">Agendamento</span>
           <h1 className="sec-title booking-title">Pedido para {ctx.displayName}</h1>
           <p className="sec-sub booking-lead">
-            Escolha data e horário sugeridos. O profissional confirma por mensagem ou pelo painel — nada é cobrado
+            Escolha data e horário sugeridos. O profissional confirma por mensagem ou pelo painel. Nada é cobrado
             automaticamente nesta etapa.
           </p>
           <BookingRequestForm context={ctx} initialServiceIndex={initialServiceIndex} />

@@ -30,7 +30,7 @@ export function buildPrivacySections(input: {
       ],
     },
     {
-      heading: "4. Finalidades e bases legais (LGPD — Lei nº 13.709/2018)",
+      heading: "4. Finalidades e bases legais (LGPD, Lei nº 13.709/2018)",
       body: [
         "Execução de contrato e procedimentos preliminares: viabilizar cadastro, agendamentos, mensagens e prestação do serviço da plataforma (base: execução de contrato, art. 7º, V).",
         "Legítimo interesse: segurança da informação, prevenção a fraudes, melhoria de desempenho e métricas agregadas, respeitando seus direitos e expectativas (art. 7º, IX), quando aplicável.",

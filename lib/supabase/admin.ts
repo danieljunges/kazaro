@@ -2,7 +2,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseEnv } from "@/lib/supabase/env";
 
 /**
- * Cliente com service_role — só em Server Actions / Route Handlers.
+ * Cliente com service_role: só em Server Actions / Route Handlers.
  * Nunca importar em componentes "use client".
  */
 export function getSupabaseServiceRoleClient(): SupabaseClient | null {

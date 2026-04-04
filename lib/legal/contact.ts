@@ -7,7 +7,7 @@ export function getDpoTitle(): string {
   return process.env.NEXT_PUBLIC_DPO_TITLE?.trim() || "Encarregado de dados (DPO)";
 }
 
-/** Texto curto sobre identificação societária — complete com razão social/CNPJ quando formalizado. */
+/** Texto curto sobre identificação societária; complete com razão social/CNPJ quando formalizado. */
 export function getControllerLegalNote(): string {
   return (
     process.env.NEXT_PUBLIC_CONTROLLER_LEGAL_NOTE?.trim() ||

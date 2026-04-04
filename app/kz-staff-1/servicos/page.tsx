@@ -49,11 +49,11 @@ export default async function AdminServicosPage() {
                   {pending.map((s: any) => (
                     <tr key={s.id}>
                       <td style={{ fontSize: 12, fontWeight: 700, whiteSpace: "nowrap" }}>
-                        {labelForCategoryKey(s.category_key ?? undefined) || "—"}
+                        {labelForCategoryKey(s.category_key ?? undefined) || "-"}
                       </td>
                       <td className="o-client">{s.name}</td>
                       <td className="o-price">{formatBRLFromCents(s.price_cents ?? null)}</td>
-                      <td style={{ maxWidth: 420, fontSize: 12 }}>{(s.description ?? "—").slice(0, 180)}</td>
+                      <td style={{ maxWidth: 420, fontSize: 12 }}>{(s.description ?? "-").slice(0, 180)}</td>
                       <td style={{ minWidth: 320 }}>
                         <ServiceReviewButtons serviceId={s.id} />
                       </td>

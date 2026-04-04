@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/** Wordmark só texto — sem símbolo. */
+/** Wordmark só texto, sem símbolo. */
 export function BrandLink({
   href = "/",
   footer = false,
@@ -16,7 +16,7 @@ export function BrandLink({
     );
   }
   return (
-    <Link href={href} className="nav-logo" aria-label="Kazaro — início">
+    <Link href={href} className="nav-logo" aria-label="Kazaro, início">
       <span className="nav-logo-name">Kazaro</span>
     </Link>
   );

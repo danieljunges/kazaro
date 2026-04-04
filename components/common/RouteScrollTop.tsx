@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 
 /**
  * Rola para o topo em navegações “novas” (links internos).
- * Não força topo em voltar/avançar do navegador — preserva posição de leitura.
+ * Não força topo em voltar/avançar do navegador; preserva posição de leitura.
  */
 export function RouteScrollTop() {
   const pathname = usePathname();

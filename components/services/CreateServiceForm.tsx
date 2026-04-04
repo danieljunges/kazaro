@@ -74,7 +74,7 @@ export function CreateServiceForm({ occupiedCategoryKeys }: Props) {
       <fieldset className="kz-svc-fieldset">
         <legend className="kz-svc-fieldset-legend">Área de atuação</legend>
         <p className="kz-svc-fieldset-hint">
-          Escolha <strong>uma</strong> categoria por serviço — igual aos filtros da busca. Se você atua em mais de uma
+          Escolha <strong>uma</strong> categoria por serviço, igual aos filtros da busca. Se você atua em mais de uma
           área (ex.: elétrica e limpeza), cadastre <strong>um serviço para cada</strong>.
         </p>
         {occupied.size >= SERVICE_CATEGORY_KEYS.length ? (

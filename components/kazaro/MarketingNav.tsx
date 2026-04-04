@@ -14,7 +14,7 @@ export function MarketingNav() {
   return (
     <nav>
       <div className="nav-inner">
-        <Link href="/" className="logo" aria-label="Kazaro — início">
+        <Link href="/" className="logo" aria-label="Kazaro, início">
           Kazaro
         </Link>
         <ul className="nav-links">

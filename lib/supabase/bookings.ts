@@ -1,3 +1,4 @@
+import { startEndExclusiveUtcForSaoPauloDay } from "@/lib/datetime/sao-paulo-calendar";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export type BookingServiceOption = { id: string; name: string };
@@ -66,6 +67,10 @@ export type IncomingBookingRow = {
   service_started_at?: string | null;
   service_price_cents_snapshot?: number | null;
   final_price_cents?: number | null;
+  confirmed_at?: string | null;
+  completed_at?: string | null;
+  completion_photo_url?: string | null;
+  archived_at?: string | null;
 };
 
 export async function fetchIncomingBookingsForPro(
@@ -77,11 +82,36 @@ export async function fetchIncomingBookingsForPro(
     const { data, error } = await supabase
       .from("bookings")
       .select(
-        "id, scheduled_at, created_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, client_location_snapshot, service_started_at, service_price_cents_snapshot, final_price_cents",
+        "id, scheduled_at, created_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, client_location_snapshot, service_started_at, service_price_cents_snapshot, final_price_cents, confirmed_at, completed_at, completion_photo_url",
       )
       .eq("professional_id", professionalId)
       .order("scheduled_at", { ascending: false })
       .limit(limit);
+
+    if (error || !data) return [];
+    return data as IncomingBookingRow[];
+  } catch {
+    return [];
+  }
+}
+
+/** Agendamentos do prestador cujo horário combinado cai em um dia civil (America/Sao_Paulo), do mais cedo ao mais tarde. */
+export async function fetchIncomingBookingsForProOnCalendarDay(
+  professionalId: string,
+  yyyyMmDd: string,
+): Promise<IncomingBookingRow[]> {
+  const { startIso, endExclusiveIso } = startEndExclusiveUtcForSaoPauloDay(yyyyMmDd);
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("bookings")
+      .select(
+        "id, scheduled_at, created_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, client_location_snapshot, service_started_at, service_price_cents_snapshot, final_price_cents, confirmed_at, completed_at, completion_photo_url",
+      )
+      .eq("professional_id", professionalId)
+      .gte("scheduled_at", startIso)
+      .lt("scheduled_at", endExclusiveIso)
+      .order("scheduled_at", { ascending: true });
 
     if (error || !data) return [];
     return data as IncomingBookingRow[];
@@ -97,6 +127,7 @@ export type MyBookingRow = {
   service_name_snapshot: string | null;
   client_note: string | null;
   service_started_at: string | null;
+  completion_photo_url?: string | null;
   professionals: { id: string; display_name: string; slug: string } | null;
 };
 
@@ -113,6 +144,7 @@ export async function fetchMyBookingsAsClient(userId: string, limit = 15): Promi
         service_name_snapshot,
         client_note,
         service_started_at,
+        completion_photo_url,
         professionals (
           id,
           display_name,
@@ -173,7 +205,7 @@ export async function fetchIncomingBookingDetailForPro(
     const { data, error } = await supabase
       .from("bookings")
       .select(
-        "id, scheduled_at, created_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, client_location_snapshot, service_started_at, service_price_cents_snapshot, final_price_cents",
+        "id, scheduled_at, created_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, client_location_snapshot, service_started_at, service_price_cents_snapshot, final_price_cents, confirmed_at, completed_at, completion_photo_url, archived_at",
       )
       .eq("id", bookingId)
       .eq("professional_id", professionalId)

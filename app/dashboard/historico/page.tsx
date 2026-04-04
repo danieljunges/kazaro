@@ -15,10 +15,14 @@ function statusLabelPt(status: string): string {
       return "Aguardando confirmação";
     case "confirmed":
       return "Confirmado";
+    case "in_progress":
+      return "Em andamento";
     case "cancelled":
       return "Cancelado";
     case "completed":
       return "Concluído";
+    case "archived":
+      return "Arquivado pelo prestador";
     default:
       return status;
   }
@@ -30,10 +34,14 @@ function statusPillClass(status: string): string {
       return "kz-hist-pill kz-hist-pill--ok";
     case "pending":
       return "kz-hist-pill kz-hist-pill--wait";
+    case "in_progress":
+      return "kz-hist-pill kz-hist-pill--ok";
     case "cancelled":
       return "kz-hist-pill kz-hist-pill--bad";
     case "completed":
       return "kz-hist-pill kz-hist-pill--done";
+    case "archived":
+      return "kz-hist-pill kz-hist-pill--muted";
     default:
       return "kz-hist-pill";
   }
@@ -41,7 +49,7 @@ function statusPillClass(status: string): string {
 
 function formatWhen(iso: string): string {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("pt-BR", {
     weekday: "short",
     day: "numeric",
@@ -54,7 +62,7 @@ function formatWhen(iso: string): string {
 
 function formatStartedPt(iso: string): string {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("pt-BR", {
     day: "numeric",
     month: "short",
@@ -98,7 +106,7 @@ export default async function HistoricoServicosPage() {
           <p className="sec-sub" style={{ margin: "0 0 24px" }}>
             Seus pedidos de agendamento: acompanhe o status, veja quem é o profissional e abra a conversa para combinar
             detalhes ou orçamento. Quando o status estiver <strong>Concluído</strong>, você pode deixar estrelas e um
-            comentário — isso entra na média pública do perfil dele.
+            comentário. Isso entra na média pública do perfil dele.
           </p>
 
           {rows.length === 0 ? (
@@ -175,6 +183,13 @@ function BookingCard({ row, hasReview }: { row: MyBookingRow; hasReview: boolean
         <p className="kz-hist-note">
           <strong>Suas observações:</strong> {row.client_note.trim()}
         </p>
+      ) : null}
+      {row.status === "completed" && row.completion_photo_url?.trim() ? (
+        <div className="kz-hist-proof">
+          <div className="kz-hist-proof-label">Comprovação do serviço</div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={row.completion_photo_url.trim()} alt="Foto do serviço concluído" className="kz-hist-proof-img" />
+        </div>
       ) : null}
       {slug ? (
         <div className="kz-hist-actions">

@@ -1,5 +1,11 @@
 /** Estados do ciclo de vida de um agendamento (espelha o check constraint em `bookings.status`). */
-export type BookingWorkflowStatus = "pending" | "confirmed" | "in_progress" | "cancelled" | "completed";
+export type BookingWorkflowStatus =
+  | "pending"
+  | "confirmed"
+  | "in_progress"
+  | "cancelled"
+  | "completed"
+  | "archived";
 
 export const BOOKING_WORKFLOW_STATUSES: BookingWorkflowStatus[] = [
   "pending",
@@ -7,6 +13,7 @@ export const BOOKING_WORKFLOW_STATUSES: BookingWorkflowStatus[] = [
   "in_progress",
   "cancelled",
   "completed",
+  "archived",
 ];
 
 export function isBookingWorkflowStatus(s: string): s is BookingWorkflowStatus {
@@ -26,6 +33,8 @@ export function bookingStatusLabelShort(status: string): string {
       return "Cancelado";
     case "completed":
       return "Concluído";
+    case "archived":
+      return "Arquivado";
     default:
       return status;
   }
@@ -37,13 +46,15 @@ export function bookingStatusLabelLong(status: string): string {
     case "pending":
       return "Aguardando confirmação do profissional";
     case "confirmed":
-      return "Confirmado — aguardando o horário combinado";
+      return "Confirmado, aguardando o horário combinado";
     case "in_progress":
       return "Profissional iniciou o serviço";
     case "cancelled":
       return "Cancelado";
     case "completed":
       return "Concluído";
+    case "archived":
+      return "Encerrado na lista do prestador (arquivado)";
     default:
       return status;
   }
@@ -56,13 +67,14 @@ export function bookingStatusLabelLong(status: string): string {
 export function canProTransitionBooking(from: string, to: BookingWorkflowStatus): boolean {
   switch (from) {
     case "pending":
-      return to === "confirmed" || to === "cancelled";
+      return to === "confirmed" || to === "cancelled" || to === "archived";
     case "confirmed":
-      return to === "in_progress" || to === "completed" || to === "cancelled";
+      return to === "in_progress" || to === "cancelled" || to === "archived";
     case "in_progress":
-      return to === "completed" || to === "cancelled";
+      return to === "completed" || to === "cancelled" || to === "archived";
     case "completed":
     case "cancelled":
+    case "archived":
       return false;
     default:
       return false;

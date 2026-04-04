@@ -48,7 +48,7 @@ export default async function DashboardMensagensPage() {
                     </div>
                     <div style={{ minWidth: 0 }}>
                       <div className="kz-msg-name">{c.other_name ?? "Conversa"}</div>
-                      <div className="kz-msg-preview">{c.last_preview ?? "—"}</div>
+                      <div className="kz-msg-preview">{c.last_preview ?? "-"}</div>
                     </div>
                     <span className="kz-msg-time">{timeShort(c.last_message_at)}</span>
                   </Link>

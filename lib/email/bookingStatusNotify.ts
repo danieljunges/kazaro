@@ -14,6 +14,8 @@ function emailSubjectLead(status: string): string {
       return "Cancelado";
     case "completed":
       return "Concluído";
+    case "archived":
+      return "Pedido arquivado";
     default:
       return "Atualizado";
   }
@@ -43,7 +45,12 @@ export async function notifyClientOfBookingStatusChange(input: {
           "O profissional marcou que já começou a execução do serviço (chegada no local ou início do trabalho).",
           "Se algo não bater com o combinado, use o chat do Kazaro na mesma conversa do pedido.",
         ]
-      : [""];
+      : input.status === "archived"
+        ? [
+            "",
+            "O prestador arquivou este pedido na lista dele (organização interna). O registro continua no seu histórico.",
+          ]
+        : [""];
 
   const text = [
     `Atualização do seu pedido no Kazaro`,
@@ -61,7 +68,7 @@ export async function notifyClientOfBookingStatusChange(input: {
 
   await sendTextEmail({
     to: input.to,
-    subject: `${subjectLead} — ${input.serviceLabel.slice(0, 40)}${input.serviceLabel.length > 40 ? "…" : ""}`,
+    subject: `${subjectLead} · ${input.serviceLabel.slice(0, 40)}${input.serviceLabel.length > 40 ? "…" : ""}`,
     text,
   });
 }

@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: name,
     description: `Perfil de ${name} no ${SITE_NAME}. Serviços, preços e disponibilidade em um só lugar.`,
     openGraph: {
-      title: `${name} — ${SITE_NAME}`,
+      title: `${name} | ${SITE_NAME}`,
       description: "Perfil profissional com avaliações e serviços detalhados.",
       url,
       type: "website",

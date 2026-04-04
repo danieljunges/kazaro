@@ -139,6 +139,9 @@ export default async function DashboardPage({
 
   const showProUpsell = !proPlanActive(proRow?.pro_until ?? null);
 
+  const activeIncomingBookings = incomingBookings.filter((b) => b.status !== "archived");
+  const archivedIncomingBookings = incomingBookings.filter((b) => b.status === "archived");
+
   const dashboardNotifications = buildDashboardNotificationsFromOverview(
     incomingBookings,
     conversations,
@@ -175,7 +178,7 @@ export default async function DashboardPage({
                 className="auth-banner auth-banner--ok"
                 style={{ marginBottom: 18, textAlign: "left", lineHeight: 1.55 }}
               >
-                <strong>Tudo certo: sua conta está ativa.</strong> Seu e-mail foi confirmado — você já pode usar o
+                <strong>Tudo certo: sua conta está ativa.</strong> Seu e-mail foi confirmado: você já pode usar o
                 painel com calma. Se ainda faltava algum passo no cadastro, siga as sugestões abaixo.
               </div>
             ) : null}
@@ -349,7 +352,7 @@ export default async function DashboardPage({
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div className="msg-name">{c.other_name ?? "Conversa"}</div>
                         <div className="msg-text" style={{ color: "var(--ink60)" }}>
-                          {c.last_preview ?? "—"}
+                          {c.last_preview ?? "-"}
                         </div>
                       </div>
                       <span className="msg-time">{msgTimePt(c.last_message_at)}</span>
@@ -360,7 +363,15 @@ export default async function DashboardPage({
             ) : null}
 
             <div className="dash-card">
-              <div className="dc-head">Pedidos recebidos (agendamentos)</div>
+              <div
+                className="dc-head"
+                style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", justifyContent: "space-between", gap: 10 }}
+              >
+                <span>Pedidos recebidos (agendamentos)</span>
+                <Link href="/dashboard/agenda" className="dc-link" style={{ fontSize: 13, fontWeight: 600 }}>
+                  Ver agenda do dia →
+                </Link>
+              </div>
               <p style={{ margin: "0 0 14px", color: "var(--ink50)", fontSize: 13, lineHeight: 1.55, fontWeight: 500 }}>
                 Toque numa linha da tabela para abrir o pedido com todos os detalhes.
               </p>
@@ -369,7 +380,36 @@ export default async function DashboardPage({
                   Nenhum pedido ainda. Assim que clientes agendarem pelo seu perfil público, eles aparecem aqui.
                 </p>
               ) : (
-                <IncomingBookingsTable rows={incomingBookings} />
+                <>
+                  {activeIncomingBookings.length === 0 ? (
+                    <p style={{ margin: "0 0 16px", color: "var(--ink50)", fontSize: 14, lineHeight: 1.55, fontWeight: 500 }}>
+                      Nenhum pedido ativo no momento. Os arquivados ficam na lista abaixo.
+                    </p>
+                  ) : (
+                    <IncomingBookingsTable rows={activeIncomingBookings} />
+                  )}
+                  {archivedIncomingBookings.length > 0 ? (
+                    <div style={{ marginTop: activeIncomingBookings.length ? 28 : 0 }}>
+                      <div className="dc-head" style={{ marginBottom: 8 }}>
+                        Arquivados
+                      </div>
+                      <p
+                        style={{
+                          margin: "0 0 14px",
+                          color: "var(--ink50)",
+                          fontSize: 13,
+                          lineHeight: 1.55,
+                          fontWeight: 500,
+                        }}
+                      >
+                        Pedidos que você tirou da lista de <strong>ativos</strong> não entram no contador do topo. Use{" "}
+                        <strong>Arquivar</strong> quando quiser (pendente, confirmado ou em andamento), sem precisar
+                        concluir com foto.
+                      </p>
+                      <IncomingBookingsTable rows={archivedIncomingBookings} />
+                    </div>
+                  ) : null}
+                </>
               )}
             </div>
           </div>

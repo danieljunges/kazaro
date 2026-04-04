@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: `Trabalhe com o time do ${SITE_NAME}. Vagas e cultura.`,
   alternates: { canonical: `${getSiteUrl()}/carreiras` },
   openGraph: {
-    title: `Carreiras — ${SITE_NAME}`,
+    title: `Carreiras | ${SITE_NAME}`,
     description: "Conheça o Kazaro e acompanhe oportunidades futuras.",
     url: `${getSiteUrl()}/carreiras`,
     type: "website",
@@ -28,7 +28,7 @@ export default function CarreirasPage() {
         },
         {
           heading: "Enquanto isso",
-          body: "Se quiser deixar seu interesse registrado ou falar sobre parcerias, use o canal de contato — assim conseguimos te avisar quando surgir algo alinhado ao seu perfil.",
+          body: "Se quiser deixar seu interesse registrado ou falar sobre parcerias, use o canal de contato. Assim conseguimos te avisar quando surgir algo alinhado ao seu perfil.",
         },
       ]}
     >

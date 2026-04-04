@@ -68,9 +68,7 @@ export default async function DashboardServicosPage() {
           <header className="kz-svc-page-head">
             <span className="sec-eyebrow">Painel do prestador</span>
             <div className="kz-svc-page-head__row">
-              <h1 className="sec-title" style={{ fontSize: "clamp(28px, 4vw, 40px)", margin: 0, lineHeight: 1.08 }}>
-                Meus serviços
-              </h1>
+              <h1 className="sec-title kz-svc-page-title">Meus serviços</h1>
               {isPro && pro?.slug ? (
                 <Link className="dc-link kz-svc-page-head__link" href={`/profissional/${pro.slug}`}>
                   Ver perfil →
@@ -91,7 +89,7 @@ export default async function DashboardServicosPage() {
             <>
               <p className="sec-sub" style={{ margin: "0 0 18px", maxWidth: 720 }}>
                 Cada serviço fica ligado a <strong>uma área</strong> (como na busca). Para atuar em mais de uma, crie um
-                serviço por área. Enquanto estiver <strong>em análise</strong>, só você vê aqui; depois de aprovado,
+                serviço por área. Enquanto estiver <strong>em análise</strong>, só você vê aqui. Depois de aprovado,
                 aparece no perfil público e ajuda nas buscas por categoria.
               </p>
               <CreateServiceForm occupiedCategoryKeys={occupiedCategoryKeys} />
@@ -102,7 +100,7 @@ export default async function DashboardServicosPage() {
             <div style={{ marginTop: 28 }}>
               <div className="kz-svc-list-head">Prévia dos seus serviços</div>
               <p className="sec-sub" style={{ margin: "0 0 14px", fontSize: 13 }}>
-                Resumo de como fica organizado — texto completo e preço como no perfil público após aprovação.
+                Resumo de como fica organizado: texto completo e preço como no perfil público após aprovação.
               </p>
               {svc.length ? (
                 <div className="kz-svc-preview-list">
@@ -135,7 +133,7 @@ export default async function DashboardServicosPage() {
                           </p>
                         ) : (
                           <p className="kz-svc-preview-card__excerpt kz-svc-preview-card__excerpt--muted">
-                            Sem descrição — você pode detalhar melhor no próximo cadastro.
+                            Sem descrição. Você pode detalhar melhor no próximo cadastro.
                           </p>
                         )}
                         {!isProServiceApproved(s.status) && s.reviewer_note ? (

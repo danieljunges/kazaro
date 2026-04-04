@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BookingCompleteSection } from "@/components/booking/BookingCompleteSection";
+import { BookingTimeline } from "@/components/booking/BookingTimeline";
 import { BookingStatusButtons } from "@/components/dashboard/BookingStatusButtons";
 import { DashboardSidebar } from "@/components/kazaro/DashboardSidebar";
 import { DashboardMobileMenu } from "@/components/dashboard/DashboardMobileMenu";
@@ -33,6 +35,8 @@ function statusStyle(status: string): { background: string; color: string } {
       return { background: "var(--ember-bg)", color: "var(--ember)" };
     case "completed":
       return { background: "var(--cream)", color: "var(--ink60)" };
+    case "archived":
+      return { background: "rgba(62, 62, 52, 0.08)", color: "var(--ink50)" };
     default:
       return { background: "var(--cream)", color: "var(--ink60)" };
   }
@@ -93,14 +97,24 @@ export default async function DashboardPedidoDetailPage({ params }: { params: Pr
                   {bookingStatusLabelShort(row.status)}
                 </span>
               </div>
-              <dl className="kz-pedido-dl">
+              <BookingTimeline
+                status={row.status}
+                createdAt={row.created_at}
+                scheduledAt={row.scheduled_at}
+                confirmedAt={row.confirmed_at}
+                serviceStartedAt={row.service_started_at}
+                completedAt={row.completed_at}
+                archivedAt={row.archived_at}
+              />
+
+              <dl className="kz-pedido-dl" style={{ marginTop: 22 }}>
                 <div>
                   <dt>E-mail</dt>
-                  <dd>{row.client_email_snapshot ?? "—"}</dd>
+                  <dd>{row.client_email_snapshot ?? "-"}</dd>
                 </div>
                 <div>
                   <dt>Local do serviço</dt>
-                  <dd>{row.client_location_snapshot?.trim() || "—"}</dd>
+                  <dd>{row.client_location_snapshot?.trim() || "-"}</dd>
                 </div>
                 <div>
                   <dt>Serviço</dt>
@@ -116,16 +130,40 @@ export default async function DashboardPedidoDetailPage({ params }: { params: Pr
                 </div>
                 <div>
                   <dt>Início do serviço (prestador)</dt>
-                  <dd>{row.service_started_at ? formatBookingWhenPtBR(row.service_started_at) : "—"}</dd>
+                  <dd>{row.service_started_at ? formatBookingWhenPtBR(row.service_started_at) : "-"}</dd>
                 </div>
                 <div className="kz-pedido-dl--wide">
                   <dt>Observações do cliente</dt>
-                  <dd>{row.client_note?.trim() || "—"}</dd>
+                  <dd>{row.client_note?.trim() || "-"}</dd>
                 </div>
+                {row.status === "completed" && row.completion_photo_url?.trim() ? (
+                  <div className="kz-pedido-dl--wide">
+                    <dt>Comprovação (foto)</dt>
+                    <dd>
+                      <a
+                        href={row.completion_photo_url.trim()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="dc-link"
+                      >
+                        Abrir foto em nova aba →
+                      </a>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={row.completion_photo_url.trim()}
+                        alt="Comprovação do serviço concluído"
+                        className="kz-pedido-proof-img"
+                      />
+                    </dd>
+                  </div>
+                ) : null}
               </dl>
               <div style={{ marginTop: 20 }}>
                 <BookingStatusButtons bookingId={row.id} currentStatus={row.status} />
               </div>
+              {row.status === "in_progress" ? (
+                <BookingCompleteSection bookingId={row.id} />
+              ) : null}
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ erro?: s
 
 function fmt(iso: string): string {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("pt-BR", {
     day: "numeric",
     month: "short",
@@ -45,7 +45,7 @@ export default async function AdminSuporteTicketPage({ params, searchParams }: P
         {ticket.subject}
       </div>
       <p className="sec-sub" style={{ margin: "0 0 20px" }}>
-        {ownerRow?.full_name ?? "—"} · {ownerRow?.email ?? "sem e-mail no perfil"} ·{" "}
+        {ownerRow?.full_name ?? "-"} · {ownerRow?.email ?? "sem e-mail no perfil"} ·{" "}
         {ticket.status === "open" ? "Aberto" : "Encerrado"}
       </p>
 

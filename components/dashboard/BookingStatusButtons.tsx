@@ -7,22 +7,31 @@ import type { BookingWorkflowStatus } from "@/lib/booking/workflow";
 
 type Action = { to: BookingWorkflowStatus; label: string };
 
-function actionsFor(currentStatus: string): Action[] {
+/** Admin pode concluir sem foto; prestador conclui só no detalhe do pedido com upload. */
+function actionsFor(currentStatus: string, adminBypassProof: boolean): Action[] {
   switch (currentStatus) {
     case "pending":
       return [
         { to: "confirmed", label: "Confirmar" },
+        { to: "archived", label: "Arquivar" },
         { to: "cancelled", label: "Cancelar" },
       ];
     case "confirmed":
       return [
         { to: "in_progress", label: "Iniciar serviço" },
-        { to: "completed", label: "Concluir" },
+        { to: "archived", label: "Arquivar" },
         { to: "cancelled", label: "Cancelar" },
       ];
     case "in_progress":
+      if (adminBypassProof) {
+        return [
+          { to: "completed", label: "Concluir" },
+          { to: "archived", label: "Arquivar" },
+          { to: "cancelled", label: "Cancelar" },
+        ];
+      }
       return [
-        { to: "completed", label: "Concluir" },
+        { to: "archived", label: "Arquivar" },
         { to: "cancelled", label: "Cancelar" },
       ];
     default:
@@ -30,13 +39,23 @@ function actionsFor(currentStatus: string): Action[] {
   }
 }
 
-export function BookingStatusButtons({ bookingId, currentStatus }: { bookingId: string; currentStatus: string }) {
+export function BookingStatusButtons({
+  bookingId,
+  currentStatus,
+  adminBypassProof = false,
+}: {
+  bookingId: string;
+  currentStatus: string;
+  /** Só painel admin: concluir sem foto de comprovação. */
+  adminBypassProof?: boolean;
+}) {
   const router = useRouter();
   const [loadingTo, setLoadingTo] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
-  const actions = useMemo(() => actionsFor(currentStatus), [currentStatus]);
-  const terminal = currentStatus === "cancelled" || currentStatus === "completed";
+  const actions = useMemo(() => actionsFor(currentStatus, adminBypassProof), [currentStatus, adminBypassProof]);
+  const terminal =
+    currentStatus === "cancelled" || currentStatus === "completed" || currentStatus === "archived";
 
   if (terminal || actions.length === 0) {
     return null;

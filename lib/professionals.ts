@@ -32,10 +32,10 @@ export type ProfessionalDetail = ProfessionalCard & {
 };
 
 const COMMON_TIMES = [
-  "09:00 — disponível",
-  "11:00 — disponível",
-  "14:00 — disponível",
-  "16:00 — disponível",
+  "09:00, disponível",
+  "11:00, disponível",
+  "14:00, disponível",
+  "16:00, disponível",
 ];
 
 export const SEARCH_GRID_PROS: ProfessionalCard[] = [
@@ -121,7 +121,7 @@ const DETAIL: Record<string, Omit<ProfessionalDetail, keyof ProfessionalCard> & 
     categoryHref: "/search",
     categoryLabel: "Encanamento",
     about:
-      "Encanador com mais de 10 anos de experiência em residências e imóveis de temporada em Florianópolis. Especializado em vazamentos, troca de torneiras, desentupimento e instalação de aquecedores. Atendo com pontualidade e deixo o ambiente como encontrei — ou melhor.",
+      "Encanador com mais de 10 anos de experiência em residências e imóveis de temporada em Florianópolis. Especializado em vazamentos, troca de torneiras, desentupimento e instalação de aquecedores. Atendo com pontualidade e deixo o ambiente como encontrei, ou melhor.",
     services: [
       {
         name: "Conserto de vazamento",
@@ -206,7 +206,7 @@ export function fallbackDetailFromSlug(slug: string): ProfessionalDetail {
       .toUpperCase(),
     name: title,
     roleLine: "Profissional · Florianópolis, SC",
-    rating: "—",
+    rating: "-",
     reviewsCount: "0",
     price: "Sob consulta",
     avail: "week",
@@ -221,10 +221,10 @@ export function fallbackDetailFromSlug(slug: string): ProfessionalDetail {
     services: [],
     reviews: [],
     statRow: [
-      { val: "—", label: "Avaliações" },
-      { val: "—", label: "Nota média" },
-      { val: "—", label: "Na plataforma" },
-      { val: "—", label: "Jobs concluídos" },
+      { val: "-", label: "Avaliações" },
+      { val: "-", label: "Nota média" },
+      { val: "-", label: "Na plataforma" },
+      { val: "-", label: "Jobs concluídos" },
     ],
     bookingTimes: COMMON_TIMES,
   };

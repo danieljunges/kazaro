@@ -4,10 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 
-type NavIcon = "grid" | "wrench" | "msg" | "money" | "search" | "help" | "list";
+type NavIcon = "grid" | "calendar" | "wrench" | "msg" | "money" | "search" | "help" | "list";
 
 const NAV_PRO = [
   { label: "Visão geral", href: "/dashboard", icon: "grid" as const },
+  { label: "Agenda", href: "/dashboard/agenda", icon: "calendar" as const },
   { label: "Meus serviços", href: "/dashboard/servicos", icon: "wrench" as const },
   { label: "Mensagens", href: "/dashboard/mensagens", icon: "msg" as const },
   { label: "Suporte", href: "/dashboard/suporte", icon: "help" as const },
@@ -30,6 +31,16 @@ function Icon({ name }: { name: NavIcon }) {
         <rect x="14" y="3" width="7" height="7" rx="1" />
         <rect x="3" y="14" width="7" height="7" rx="1" />
         <rect x="14" y="14" width="7" height="7" rx="1" />
+      </svg>
+    );
+  }
+  if (name === "calendar") {
+    return (
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
       </svg>
     );
   }
@@ -87,6 +98,7 @@ function Icon({ name }: { name: NavIcon }) {
 function navLinkActive(pathname: string, href: string): boolean {
   if (href === "/search") return pathname === "/search";
   if (href === "/dashboard") return pathname === "/dashboard" || pathname.startsWith("/dashboard/pedidos");
+  if (href === "/dashboard/agenda") return pathname.startsWith("/dashboard/agenda");
   if (href === "/dashboard/mensagens") return pathname.startsWith("/dashboard/mensagens");
   if (href === "/dashboard/suporte") return pathname.startsWith("/dashboard/suporte");
   if (href === "/dashboard/historico") return pathname.startsWith("/dashboard/historico");
@@ -107,7 +119,7 @@ export function DashboardSidebar({
 
   return (
     <aside className="dash-sidebar">
-      <Link href="/dashboard" className="ds-logo" aria-label="Kazaro — Dashboard">
+      <Link href="/dashboard" className="ds-logo" aria-label="Kazaro, painel">
         <span className="ds-logo-name">Kazaro</span>
       </Link>
       <div className="ds-profile">

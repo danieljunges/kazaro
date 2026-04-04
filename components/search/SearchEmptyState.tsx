@@ -37,7 +37,7 @@ export function SearchEmptyState({
       <div className="search-empty">
         <p className="search-empty__title">Ainda não há profissionais na base</p>
         <p className="search-empty__text">
-          A base está pronta — cadastre prestadores no painel (SQL ou painel admin) para eles aparecerem aqui
+          A base está pronta. Cadastre prestadores no painel (SQL ou painel admin) para eles aparecerem aqui
           automaticamente.
         </p>
         <div className="search-empty__actions">

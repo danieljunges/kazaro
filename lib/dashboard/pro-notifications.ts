@@ -83,7 +83,7 @@ export async function fetchProDashboardNotificationSlices(
     supabase
       .from("bookings")
       .select(
-        "id, scheduled_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, client_location_snapshot, service_started_at, service_price_cents_snapshot, final_price_cents, created_at",
+        "id, scheduled_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, client_location_snapshot, service_started_at, service_price_cents_snapshot, final_price_cents, created_at, confirmed_at, completed_at, completion_photo_url, archived_at",
       )
       .eq("professional_id", professionalId)
       .eq("status", "pending")

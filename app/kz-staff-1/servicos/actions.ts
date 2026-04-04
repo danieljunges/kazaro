@@ -63,7 +63,7 @@ export async function reviewService(input: {
           "Abra o dashboard para ver os detalhes:",
           dashUrl,
           "",
-          "— Kazaro",
+          "- Kazaro",
         ]
           .filter(Boolean)
           .join("\n");

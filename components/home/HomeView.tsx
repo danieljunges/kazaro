@@ -12,7 +12,7 @@ const SERVICES: { name: string; price: string; hint: string }[] = [
   {
     name: "Encanamento",
     price: "R$ 120",
-    hint: "Vazamento, troca de torneira, desentupimento — o que aparece no dia a dia.",
+    hint: "Vazamento, troca de torneira, desentupimento: o que aparece no dia a dia.",
   },
   {
     name: "Elétrica",
@@ -27,12 +27,12 @@ const SERVICES: { name: string; price: string; hint: string }[] = [
   {
     name: "Montagem de móveis",
     price: "R$ 80",
-    hint: "Montador vai até você — ideal depois de compra ou mudança.",
+    hint: "Montador vai até você, ideal depois de compra ou mudança.",
   },
   {
     name: "Pintura",
     price: "R$ 200",
-    hint: "Cômodo ou apartamento completo — orçamento fechado antes de começar.",
+    hint: "Cômodo ou apartamento completo, com orçamento fechado antes de começar.",
   },
   {
     name: "Frete e mudança",
@@ -50,12 +50,12 @@ const HOW_STEPS: { num: string; title: string; desc: string }[] = [
   {
     num: "01",
     title: "Escolha com calma",
-    desc: "Perfil com histórico, preço por tipo de serviço e disponibilidade real — sem pressa de chat genérico ou formulário interminável.",
+    desc: "Perfil com histórico, preço por tipo de serviço e disponibilidade real, sem pressa de chat genérico ou formulário interminável.",
   },
   {
     num: "02",
     title: "Combine data e horário",
-    desc: "Reserva com confirmação do profissional. Você sabe quem vem, quando vem e quanto vai pagar — antes de qualquer compromisso.",
+    desc: "Reserva com confirmação do profissional. Você sabe quem vem, quando vem e quanto vai pagar antes de qualquer compromisso.",
   },
   {
     num: "03",
@@ -223,7 +223,7 @@ export function HomeView() {
                 <em>por aqui</em>
               </h2>
               <p className="sec-sub" style={{ marginTop: 14 }}>
-                Valores de entrada para Floripa — cada profissional fecha o detalhe no perfil, antes de você comprometer.
+                Valores de entrada para Floripa: cada profissional fecha o detalhe no perfil, antes de você comprometer.
               </p>
             </div>
             <Link className="link-arrow" href="/search">
@@ -445,7 +445,7 @@ export function HomeView() {
                   <div>
                     <div className="wi-title">Preço alinhado no perfil</div>
                     <div className="wi-desc">
-                      O valor combinado no app é a referência — alterações só com o seu aceite explícito.
+                      O valor combinado no app é a referência. Alterações só com o seu aceite explícito.
                     </div>
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-/** Alinhado aos chips da busca (`/search`) — uma categoria por serviço ativo/pendente. */
+/** Alinhado aos chips da busca (`/search`): uma categoria por serviço ativo/pendente. */
 export const SERVICE_CATEGORY_KEYS = [
   "encanamento",
   "eletrica",
@@ -73,7 +73,7 @@ export const SERVICE_CATEGORIES: readonly ServiceCategoryDef[] = [
   },
 ] as const;
 
-/** Chips da página /search — mesma ordem e rótulos do cadastro de serviços. */
+/** Chips da página /search: mesma ordem e rótulos do cadastro de serviços. */
 export function searchPageFilterChips(): { label: string; query: string }[] {
   return [{ label: "Todos", query: "" }, ...SERVICE_CATEGORIES.map((c) => ({ label: c.label, query: c.chipQuery }))];
 }

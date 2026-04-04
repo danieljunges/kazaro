@@ -6,7 +6,7 @@ import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 function fmt(iso: string): string {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
     month: "short",
@@ -62,7 +62,7 @@ export default async function AdminHome() {
       <div className="dash-topbar">
         <div>
           <div className="dt-title">Painel administrativo</div>
-          <div className="dt-sub">Visão geral da plataforma — filas, números e acesso a todos os módulos</div>
+          <div className="dt-sub">Visão geral da plataforma: filas, números e acesso a todos os módulos</div>
         </div>
         <div className="dt-right" style={{ flexWrap: "wrap", gap: 10 }}>
           <Link href={adminPath("/servicos")} className="btn-cta" style={{ textDecoration: "none" }}>
@@ -231,7 +231,7 @@ export default async function AdminHome() {
                     <tr key={b.id}>
                       <td>
                         <div style={{ fontWeight: 600 }}>{b.client_name_snapshot}</div>
-                        <div style={{ fontSize: 12, color: "var(--ink50)" }}>{b.service_name_snapshot ?? "—"}</div>
+                        <div style={{ fontSize: 12, color: "var(--ink50)" }}>{b.service_name_snapshot ?? "-"}</div>
                       </td>
                       <td style={{ whiteSpace: "nowrap", fontSize: 12, color: "var(--ink60)" }}>
                         {fmt(b.scheduled_at)}

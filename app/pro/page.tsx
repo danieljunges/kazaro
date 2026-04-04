@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Perfil Pro",
   description: `Plano de destaque para prestadores no ${SITE_NAME}, com renovacao a cada 30 dias.`,
   openGraph: {
-    title: `Perfil Pro — ${SITE_NAME}`,
+    title: `Perfil Pro | ${SITE_NAME}`,
     description: "Mais visibilidade para prestadores que querem escalar atendimentos.",
     url: `${getSiteUrl()}/pro`,
     type: "website",

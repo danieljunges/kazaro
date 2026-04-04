@@ -39,7 +39,7 @@ export default async function AdminUsuariosPage() {
                 <tbody>
                   {data.map((u: any) => (
                     <tr key={u.id}>
-                      <td className="o-client">{u.full_name ?? "—"}</td>
+                      <td className="o-client">{u.full_name ?? "-"}</td>
                       <td style={{ fontSize: 12, fontFamily: "ui-monospace, monospace" }}>{String(u.id).slice(0, 8)}…</td>
                       <td style={{ fontWeight: 800 }}>{u.role}</td>
                       <td style={{ textAlign: "right" }}>

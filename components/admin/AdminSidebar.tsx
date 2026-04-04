@@ -25,7 +25,7 @@ export function AdminSidebar({ email, adminBase }: { email: string | null; admin
 
   return (
     <aside className="dash-sidebar">
-      <Link href={adminBase} className="ds-logo" aria-label="Kazaro — Admin">
+      <Link href={adminBase} className="ds-logo" aria-label="Kazaro, administração">
         <span className="ds-logo-name">Kazaro</span>
       </Link>
 
@@ -36,7 +36,7 @@ export function AdminSidebar({ email, adminBase }: { email: string | null; admin
         <div style={{ minWidth: 0 }}>
           <div className="ds-pname">Administrador</div>
           <div className="ds-prole" style={{ wordBreak: "break-all" }}>
-            {email ?? "—"}
+            {email ?? "-"}
           </div>
         </div>
       </div>

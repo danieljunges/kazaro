@@ -1921,22 +1921,6 @@ a.btn-book-now:visited {
   text-decoration: underline;
 }
 
-/* Painel: mesma família do SaaS (Plus Jakarta), títulos menos “preto chapado” */
-.home-editorial .dash .dt-title {
-  font-family: var(--sans);
-  font-weight: 700;
-  font-size: 17px;
-  letter-spacing: -0.02em;
-  color: var(--ink70);
-}
-.home-editorial .dash .dc-head {
-  font-family: var(--sans);
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: -0.02em;
-  color: var(--ink70);
-}
-
 /* Meus serviços (/dashboard/servicos) — cabeçalho + cards mais suaves */
 .home-editorial .kz-svc-dashboard .kz-svc-page-head {
   margin-bottom: 20px;
@@ -1953,6 +1937,16 @@ a.btn-book-now:visited {
 }
 .home-editorial .kz-svc-dashboard .kz-svc-page-head__link {
   flex-shrink: 0;
+}
+/* Título Meus serviços: alinhado ao restante do SaaS (sem preto pesado do hero) */
+.home-editorial .kz-svc-dashboard h1.kz-svc-page-title.sec-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(26px, 3.5vw, 36px);
+  letter-spacing: -0.02em;
+  line-height: 1.14;
+  color: var(--ink70);
+  margin: 0;
 }
 .home-editorial .kz-svc-dashboard .kz-svc-list-head {
   font-family: var(--sans);
@@ -1980,6 +1974,220 @@ a.btn-book-now:visited {
 }
 .kz-inbooking-row:hover {
   background: rgba(21, 140, 121, 0.06);
+}
+
+/* Agenda do prestador (/dashboard/agenda) */
+.home-editorial .kz-agenda-wrap {
+  padding: 28px 26px 32px;
+}
+.kz-agenda-head {
+  margin-bottom: 20px;
+}
+.kz-agenda-head .sec-eyebrow {
+  margin-bottom: 8px;
+}
+.kz-agenda-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(26px, 3.5vw, 34px);
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  color: var(--ink70);
+  margin: 0 0 10px;
+}
+.kz-agenda-sub {
+  margin: 0;
+  max-width: 560px;
+  line-height: 1.55;
+}
+.kz-agenda-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.kz-agenda-nav-btn {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink70);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border2);
+  background: var(--white);
+  transition: border-color 0.15s, background 0.15s;
+}
+.kz-agenda-nav-btn:hover {
+  border-color: var(--ink);
+  background: var(--cream);
+}
+.kz-agenda-nav-btn--ghost {
+  font-weight: 600;
+  color: var(--lime-deep);
+  border-color: rgba(21, 140, 121, 0.35);
+}
+.kz-agenda-nav-btn--ghost:hover {
+  background: rgba(21, 140, 121, 0.08);
+  border-color: var(--lime-deep);
+}
+.kz-agenda-nav-today {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lime-deep);
+  padding: 8px 12px;
+}
+.kz-agenda-date-line {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 22px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.kz-agenda-empty {
+  text-align: center;
+  padding: 28px 12px 8px;
+}
+.kz-agenda-empty-title {
+  font-family: var(--sans);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink70);
+  margin: 0 0 8px;
+}
+.kz-agenda-empty-copy {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink50);
+  margin: 0 0 16px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.kz-agenda-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.kz-agenda-item {
+  display: flex;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+.kz-agenda-item + .kz-agenda-item {
+  margin-top: 4px;
+}
+.kz-agenda-item__rail {
+  width: 4px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--lime-deep), rgba(21, 140, 121, 0.35));
+  margin-right: 14px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  min-height: 48px;
+  align-self: stretch;
+}
+.kz-agenda-item__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 6px 0 14px;
+}
+.kz-agenda-item__time {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  min-width: 52px;
+  padding-top: 10px;
+}
+.kz-agenda-item__card {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--paper);
+  border: 1.5px solid var(--border2);
+  border-radius: 14px;
+  padding: 12px 14px 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.kz-agenda-item__card:hover {
+  border-color: var(--lime-deep);
+  box-shadow: 0 6px 20px rgba(21, 140, 121, 0.1);
+}
+.kz-agenda-item__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.kz-agenda-item__client {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink70);
+}
+.kz-agenda-item__service {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink60);
+  line-height: 1.45;
+}
+.kz-agenda-item__meta {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink50);
+  font-weight: 500;
+}
+.kz-agenda-chip {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+.kz-agenda-chip--ok {
+  background: var(--success-bg);
+  color: var(--success);
+}
+.kz-agenda-chip--progress {
+  background: rgba(21, 140, 121, 0.12);
+  color: var(--success);
+}
+.kz-agenda-chip--pending {
+  background: var(--coral-bg);
+  color: var(--coral);
+}
+.kz-agenda-chip--bad {
+  background: var(--ember-bg);
+  color: var(--ember);
+}
+.kz-agenda-chip--done {
+  background: var(--cream);
+  color: var(--ink60);
+}
+.kz-agenda-chip--muted {
+  background: rgba(62, 62, 52, 0.08);
+  color: var(--ink50);
 }
 
 /* Detalhe do pedido (/dashboard/pedidos/[id]) */
@@ -2011,6 +2219,183 @@ a.btn-book-now:visited {
   .kz-pedido-dl {
     grid-template-columns: 1fr;
   }
+}
+
+/* Linha do tempo do pedido (prestador) */
+.kz-booking-timeline {
+  padding: 16px 0 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.kz-booking-timeline__title {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink50);
+  margin-bottom: 14px;
+}
+.kz-booking-timeline__archived-hint {
+  margin: -6px 0 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink50);
+  font-weight: 500;
+}
+.kz-booking-timeline__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.kz-booking-timeline__step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 8px 0 14px;
+  position: relative;
+}
+.kz-booking-timeline__step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 36px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+  border-radius: 2px;
+}
+.kz-booking-timeline__step--done:not(:last-child)::before {
+  background: rgba(21, 140, 121, 0.35);
+}
+.kz-booking-timeline__dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  font-family: var(--sans);
+  background: var(--cream);
+  border: 2px solid var(--border);
+  color: var(--ink50);
+  z-index: 1;
+}
+.kz-booking-timeline__step--done .kz-booking-timeline__dot {
+  background: var(--success-bg);
+  border-color: rgba(42, 107, 69, 0.35);
+  color: var(--success);
+}
+.kz-booking-timeline__step--current .kz-booking-timeline__dot {
+  border-color: var(--success);
+  box-shadow: 0 0 0 3px rgba(21, 140, 121, 0.2);
+  color: var(--success);
+}
+.kz-booking-timeline__step--archived .kz-booking-timeline__dot {
+  background: rgba(62, 62, 52, 0.1);
+  border-color: var(--ink40);
+  color: var(--ink50);
+}
+.kz-booking-timeline__step--archived.kz-booking-timeline__step--current .kz-booking-timeline__dot {
+  box-shadow: 0 0 0 3px rgba(62, 62, 52, 0.12);
+  border-color: var(--ink50);
+}
+.kz-booking-timeline__body {
+  min-width: 0;
+  padding-top: 2px;
+}
+.kz-booking-timeline__label {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink70);
+  letter-spacing: -0.02em;
+}
+.kz-booking-timeline__when {
+  font-size: 12px;
+  color: var(--ink50);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Conclusão com foto */
+.kz-booking-complete {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.kz-booking-complete__title {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink70);
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.kz-booking-complete__hint {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink50);
+  font-weight: 500;
+}
+.kz-booking-complete__form {
+  max-width: 420px;
+}
+.kz-booking-complete__file input[type="file"] {
+  font-size: 13px;
+  font-family: var(--sans);
+}
+.kz-booking-complete__file-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink50);
+  margin-bottom: 6px;
+}
+.kz-booking-complete__preview {
+  margin-top: 12px;
+  max-width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--cream);
+}
+
+.kz-pedido-proof-img {
+  display: block;
+  margin-top: 10px;
+  max-width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.kz-hist-proof {
+  margin-top: 12px;
+}
+.kz-hist-proof-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink50);
+  margin-bottom: 8px;
+}
+.kz-hist-proof-img {
+  width: 100%;
+  max-width: 360px;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border);
 }
 
 /* ─── Ganhos (Dashboard) ─── */
@@ -2143,6 +2528,11 @@ a.btn-book-now:visited {
 .kz-mini-btn--completed {
   background: var(--cream);
   color: var(--ink60);
+}
+.kz-mini-btn--archived {
+  background: rgba(62, 62, 52, 0.08);
+  color: var(--ink50);
+  border-color: rgba(62, 62, 52, 0.15);
 }
 .o-price {
   font-family: var(--sans);
@@ -2324,6 +2714,10 @@ a.btn-book-now:visited {
 }
 .kz-hist-pill--done {
   background: var(--cream);
+  color: var(--ink50);
+}
+.kz-hist-pill--muted {
+  background: rgba(62, 62, 52, 0.1);
   color: var(--ink50);
 }
 

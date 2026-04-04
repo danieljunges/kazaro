@@ -46,9 +46,9 @@ function formatPriceBRL(cents: number | null): string {
 }
 
 function formatRating(v: number | string | null): string {
-  if (v == null) return "—";
+  if (v == null) return "-";
   const n = typeof v === "string" ? parseFloat(v) : v;
-  if (Number.isNaN(n)) return "—";
+  if (Number.isNaN(n)) return "-";
   return n.toFixed(1).replace(".", ",");
 }
 
@@ -105,10 +105,10 @@ export function mapProRowToCard(row: ProRow, index: number, filterExtra?: string
 }
 
 const BOOKING_TIMES = [
-  "09:00 — disponível",
-  "11:00 — disponível",
-  "14:00 — disponível",
-  "16:00 — disponível",
+  "09:00, disponível",
+  "11:00, disponível",
+  "14:00, disponível",
+  "16:00, disponível",
 ];
 
 function splitDisplayName(displayName: string): { line1: string; line2: string } {
@@ -206,8 +206,8 @@ export async function fetchProfessionalDetailFromDb(slug: string): Promise<Profe
       statRow: [
         { val: String(row.reviews_count ?? 0), label: "Avaliações" },
         { val: formatRating(ratingAvg), label: "Nota média" },
-        { val: "—", label: "Na plataforma" },
-        { val: "—", label: "Jobs concluídos" },
+        { val: "-", label: "Na plataforma" },
+        { val: "-", label: "Jobs concluídos" },
       ],
       bookingTimes: BOOKING_TIMES,
     };

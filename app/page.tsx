@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "O profissional certo para o seu lar",
   description: SITE_DESCRIPTION,
   openGraph: {
-    title: `${SITE_NAME} — Serviços para casa em Florianópolis`,
+    title: `${SITE_NAME} | Serviços para casa em Florianópolis`,
     description: SITE_DESCRIPTION,
     url,
     type: "website",

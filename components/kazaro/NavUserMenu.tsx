@@ -121,7 +121,7 @@ export function NavUserMenu({
 
       {open ? (
         <div className="nav-user-pop" role="menu" aria-label="Conta">
-          <div className="nav-user-email">{email ?? "—"}</div>
+          <div className="nav-user-email">{email ?? "-"}</div>
           {isProNav ? (
             <Link className="nav-user-link" role="menuitem" href="/dashboard">
               Dashboard

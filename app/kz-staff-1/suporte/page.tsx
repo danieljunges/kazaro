@@ -4,7 +4,7 @@ import { fetchAllSupportTicketsForAdmin } from "@/lib/supabase/support";
 
 function fmt(iso: string): string {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
+  if (Number.isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("pt-BR", {
     day: "numeric",
     month: "short",
@@ -50,9 +50,9 @@ export default async function AdminSuportePage() {
                     </Link>
                   </td>
                   <td>
-                    <div style={{ fontSize: 13 }}>{t.owner_name ?? "—"}</div>
+                    <div style={{ fontSize: 13 }}>{t.owner_name ?? "-"}</div>
                     <div className="sec-sub" style={{ margin: 0, fontSize: 12 }}>
-                      {t.owner_email ?? "—"}
+                      {t.owner_email ?? "-"}
                     </div>
                   </td>
                   <td>{t.status === "open" ? "Aberto" : "Encerrado"}</td>

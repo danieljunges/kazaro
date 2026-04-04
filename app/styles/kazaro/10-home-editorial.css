@@ -1556,3 +1556,43 @@
     padding-right: max(14px, env(safe-area-inset-right, 0px));
   }
 }
+
+/* Tipografia unificada no produto (conta, painel, admin): Jakarta + peso/cor coerentes */
+.home-editorial .dt-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  color: var(--ink70);
+}
+.home-editorial .dc-head {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.02em;
+  color: var(--ink70);
+}
+.home-editorial .kz-prof-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  color: var(--ink70);
+}
+.home-editorial .o-client {
+  font-weight: 650;
+  color: var(--ink70);
+}
+.home-editorial .orders-table th {
+  font-family: var(--sans);
+  font-weight: 600;
+  color: var(--ink50);
+}
+.home-editorial .kpi-val,
+.home-editorial .kz-earn-val {
+  font-family: var(--sans);
+  font-weight: 800;
+  color: var(--ink70);
+}
+.home-editorial .kpi-label,
+.home-editorial .kz-earn-sub {
+  font-family: var(--sans);
+}
