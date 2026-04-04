@@ -1,4 +1,5 @@
 import type { ProfessionalCard, ProfessionalDetail, ReviewRow, ServiceRow, AvailTag } from "@/lib/professionals";
+import { labelForCategoryKey, searchBlobForCategoryKey } from "@/lib/services/category-catalog";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { fetchPublicReviewsForProfessional, type BookingReviewPublic } from "@/lib/supabase/reviews";
 
@@ -86,7 +87,7 @@ function roleLineFromRow(row: ProRow): string {
   return city;
 }
 
-export function mapProRowToCard(row: ProRow, index: number): ProfessionalCard {
+export function mapProRowToCard(row: ProRow, index: number, filterExtra?: string): ProfessionalCard {
   const ratingAvg = typeof row.rating_avg === "string" ? parseFloat(row.rating_avg) : row.rating_avg;
   return {
     slug: row.slug,
@@ -99,6 +100,7 @@ export function mapProRowToCard(row: ProRow, index: number): ProfessionalCard {
     avail: availFromDb(row.availability_hint),
     verified: row.is_verified,
     phClass: PH_ROTATION[index % PH_ROTATION.length] as ProfessionalCard["phClass"],
+    ...(filterExtra?.trim() ? { filterExtra: filterExtra.trim() } : {}),
   };
 }
 
@@ -131,7 +133,23 @@ export async function fetchProfessionalsForSearch(): Promise<ProfessionalCard[] 
 
     if (error) return null;
     if (!data?.length) return [];
-    return (data as ProRow[]).map((row, i) => mapProRowToCard(row, i));
+
+    const ids = (data as ProRow[]).map((r) => r.id);
+    const { data: catRows } = await supabase
+      .from("pro_services")
+      .select("professional_id, category_key")
+      .in("professional_id", ids)
+      .eq("status", "approved");
+
+    const extraByPro = new Map<string, string>();
+    for (const r of catRows ?? []) {
+      const pid = r.professional_id as string;
+      const blob = searchBlobForCategoryKey(r.category_key as string | null);
+      if (!blob) continue;
+      extraByPro.set(pid, `${extraByPro.get(pid) ?? ""} ${blob}`);
+    }
+
+    return (data as ProRow[]).map((row, i) => mapProRowToCard(row, i, extraByPro.get(row.id)));
   } catch {
     return null;
   }
@@ -153,16 +171,20 @@ export async function fetchProfessionalDetailFromDb(slug: string): Promise<Profe
     const row = pro as ProRow;
     const { data: svc } = await supabase
       .from("pro_services")
-      .select("name, description, price_cents, status")
+      .select("name, description, price_cents, status, category_key")
       .eq("professional_id", row.id)
       .order("sort_order", { ascending: true });
 
-    const services: ServiceRow[] = (svc as (ServiceDbRow & { status?: string | null })[] | null)?.length
-      ? (svc as (ServiceDbRow & { status?: string | null })[]).filter((s) => (s.status ?? "approved") === "approved").map((s) => ({
-          name: s.name,
-          desc: s.description?.trim() || "",
-          price: formatPriceBRL(s.price_cents),
-        }))
+    const services: ServiceRow[] = (svc as (ServiceDbRow & { status?: string | null; category_key?: string | null })[] | null)
+      ?.length
+      ? (svc as (ServiceDbRow & { status?: string | null; category_key?: string | null })[])
+          .filter((s) => (s.status ?? "approved") === "approved")
+          .map((s) => ({
+            name: s.name,
+            desc: s.description?.trim() || "",
+            price: formatPriceBRL(s.price_cents),
+            categoryLabel: labelForCategoryKey(s.category_key ?? undefined) || undefined,
+          }))
       : [];
 
     const { line1, line2 } = splitDisplayName(row.display_name);

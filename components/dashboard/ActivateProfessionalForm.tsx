@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { activateProfessionalProfile } from "@/app/dashboard/ativar-perfil/actions";
+import { SERVICE_CATEGORIES } from "@/lib/services/category-catalog";
 
 type Props = {
   initialDisplayName: string;
@@ -31,7 +32,8 @@ export function ActivateProfessionalForm({ initialDisplayName }: Props) {
     <form className="auth-form" onSubmit={onSubmit} style={{ maxWidth: 520 }}>
       <p className="sec-sub" style={{ margin: "0 0 20px" }}>
         Essas informações definem como você aparece na busca e registram seu documento para uso interno do Kazaro (não
-        aparece no perfil público).
+        aparece no perfil público). Depois, em &quot;Meus serviços&quot;, cada cadastro usa{" "}
+        <strong>uma das mesmas áreas dos filtros da busca</strong>: {SERVICE_CATEGORIES.map((c) => c.label).join(", ")}.
       </p>
 
       <label className="auth-field">

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { adminPath } from "@/lib/admin/panel-path";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { sendTextEmail } from "@/lib/email/resend";
+import { labelForCategoryKey } from "@/lib/services/category-catalog";
 import { getSiteUrl } from "@/lib/site";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -24,7 +25,7 @@ export async function reviewService(input: {
   // pega dados para notificação
   const { data: svc } = await supabase
     .from("pro_services")
-    .select("id, name, professional_id")
+    .select("id, name, professional_id, category_key")
     .eq("id", id)
     .maybeSingle();
 
@@ -44,11 +45,14 @@ export async function reviewService(input: {
       if (to) {
         const who = ((prof?.full_name as string | null) ?? "").trim() || "Olá";
         const serviceName = ((svc?.name as string | null) ?? "").trim() || "seu serviço";
+        const area = labelForCategoryKey((svc?.category_key as string | null) ?? undefined);
         const subject =
           status === "approved" ? "Seu serviço foi aprovado no Kazaro" : "Seu serviço foi revisado no Kazaro";
         const dashUrl = `${getSiteUrl()}/dashboard/servicos`;
         const text = [
           `${who},`,
+          "",
+          area ? `Área: ${area}.` : "",
           "",
           status === "approved"
             ? `Boa notícia: "${serviceName}" foi aprovado e já pode aparecer no seu perfil.`

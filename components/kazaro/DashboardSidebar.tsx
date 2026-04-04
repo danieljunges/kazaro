@@ -86,6 +86,7 @@ function Icon({ name }: { name: NavIcon }) {
 
 function navLinkActive(pathname: string, href: string): boolean {
   if (href === "/search") return pathname === "/search";
+  if (href === "/dashboard") return pathname === "/dashboard" || pathname.startsWith("/dashboard/pedidos");
   if (href === "/dashboard/mensagens") return pathname.startsWith("/dashboard/mensagens");
   if (href === "/dashboard/suporte") return pathname.startsWith("/dashboard/suporte");
   if (href === "/dashboard/historico") return pathname.startsWith("/dashboard/historico");

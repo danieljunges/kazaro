@@ -55,11 +55,13 @@ export async function fetchBookingPageContext(slug: string): Promise<BookingPage
 export type IncomingBookingRow = {
   id: string;
   scheduled_at: string;
+  created_at?: string;
   status: string;
   client_name_snapshot: string;
   client_email_snapshot: string | null;
   service_name_snapshot: string | null;
   client_note: string | null;
+  client_location_snapshot?: string | null;
   client_id: string;
   service_started_at?: string | null;
   service_price_cents_snapshot?: number | null;
@@ -75,7 +77,7 @@ export async function fetchIncomingBookingsForPro(
     const { data, error } = await supabase
       .from("bookings")
       .select(
-        "id, scheduled_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, service_started_at, service_price_cents_snapshot, final_price_cents",
+        "id, scheduled_at, created_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, client_location_snapshot, service_started_at, service_price_cents_snapshot, final_price_cents",
       )
       .eq("professional_id", professionalId)
       .order("scheduled_at", { ascending: false })
@@ -159,5 +161,27 @@ export async function countActiveIncomingBookings(professionalId: string): Promi
     return count ?? 0;
   } catch {
     return 0;
+  }
+}
+
+export async function fetchIncomingBookingDetailForPro(
+  professionalId: string,
+  bookingId: string,
+): Promise<IncomingBookingRow | null> {
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("bookings")
+      .select(
+        "id, scheduled_at, created_at, status, client_id, client_name_snapshot, client_email_snapshot, service_name_snapshot, client_note, client_location_snapshot, service_started_at, service_price_cents_snapshot, final_price_cents",
+      )
+      .eq("id", bookingId)
+      .eq("professional_id", professionalId)
+      .maybeSingle();
+
+    if (error || !data) return null;
+    return data as IncomingBookingRow;
+  } catch {
+    return null;
   }
 }

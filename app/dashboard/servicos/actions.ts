@@ -1,17 +1,23 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { isServiceCategoryKey } from "@/lib/services/category-catalog";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function createService(input: {
   name: string;
   description: string;
   priceCents: number | null;
+  categoryKey: string;
 }): Promise<{ ok: true } | { ok: false; message: string }> {
   const name = input.name.trim();
   const description = input.description.trim();
   const priceCents = input.priceCents;
+  const categoryKey = input.categoryKey.trim();
 
+  if (!isServiceCategoryKey(categoryKey)) {
+    return { ok: false, message: "Escolha em que área este serviço se enquadra." };
+  }
   if (name.length < 3) return { ok: false, message: "Dê um nome com pelo menos 3 caracteres." };
   if (name.length > 80) return { ok: false, message: "Nome muito longo." };
   if (description.length > 600) return { ok: false, message: "Descrição muito longa." };
@@ -33,11 +39,22 @@ export async function createService(input: {
     description: description || null,
     price_cents: priceCents,
     status: "pending",
+    category_key: categoryKey,
   });
-  if (insErr) return { ok: false, message: insErr.message || "Não foi possível criar o serviço." };
+
+  if (insErr) {
+    if (insErr.code === "23505") {
+      return {
+        ok: false,
+        message:
+          "Você já tem um serviço nesta área (em análise ou ativo). Cadastre outra categoria ou aguarde a moderação.",
+      };
+    }
+    return { ok: false, message: insErr.message || "Não foi possível criar o serviço." };
+  }
 
   revalidatePath("/dashboard/servicos");
   revalidatePath("/dashboard");
+  revalidatePath("/search");
   return { ok: true };
 }
-

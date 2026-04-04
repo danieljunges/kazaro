@@ -9,20 +9,11 @@ import {
   foldSearchText,
   resolveSearchQuery,
 } from "@/lib/search/filterProfessionals";
+import { searchPageFilterChips } from "@/lib/services/category-catalog";
 import { fetchProfessionalsForSearch } from "@/lib/supabase/professionals-public";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
 
-/** Rótulo exibido e termo enviado em `q` (alinha com roleLine / dados reais). */
-const FILTER_CHIPS: { label: string; query: string }[] = [
-  { label: "Todos", query: "" },
-  { label: "Encanamento", query: "encanador" },
-  { label: "Elétrica", query: "eletricista" },
-  { label: "Limpeza", query: "limpeza" },
-  { label: "Montagem", query: "montagem" },
-  { label: "Pintura", query: "pintor" },
-  { label: "Reforma", query: "reforma" },
-  { label: "Jardinagem", query: "jardin" },
-];
+const FILTER_CHIPS = searchPageFilterChips();
 
 const PER_PAGE = 12;
 

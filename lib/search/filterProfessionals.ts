@@ -31,7 +31,7 @@ export function filterProfessionalsByQuery(
   const t = foldSearchText(q ?? "");
   if (!t) return rows;
   return rows.filter((r) => {
-    const hay = foldSearchText(`${r.name} ${r.roleLine} ${r.slug} ${r.price}`);
+    const hay = foldSearchText(`${r.name} ${r.roleLine} ${r.slug} ${r.price} ${r.filterExtra ?? ""}`);
     return hay.includes(t);
   });
 }

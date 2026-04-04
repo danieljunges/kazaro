@@ -13,6 +13,8 @@ export type SubmitBookingInput = {
   time: string;
   proServiceId: string | null;
   clientNote: string;
+  /** Onde o serviço será realizado (bairro, endereço ou referência). */
+  clientLocation: string;
 };
 
 function toScheduledIso(date: string, time: string): string | null {
@@ -93,6 +95,13 @@ export async function submitBookingRequest(
   const clientEmail = user.email ?? null;
 
   const note = input.clientNote.trim().slice(0, 2000);
+  const clientLocation = input.clientLocation.trim().slice(0, 500);
+  if (clientLocation.length < 5) {
+    return {
+      ok: false,
+      message: "Informe onde o serviço será feito (bairro, endereço ou ponto de referência, mín. 5 caracteres).",
+    };
+  }
 
   const { error: insErr } = await supabase.from("bookings").insert({
     professional_id: input.professionalId,
@@ -102,6 +111,7 @@ export async function submitBookingRequest(
     service_price_cents_snapshot: servicePriceSnapshot,
     scheduled_at: scheduledIso,
     client_note: note || null,
+    client_location_snapshot: clientLocation,
     client_name_snapshot: clientName,
     client_email_snapshot: clientEmail,
     status: "pending",

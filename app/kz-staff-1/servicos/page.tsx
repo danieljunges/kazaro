@@ -1,5 +1,6 @@
 import { adminPath } from "@/lib/admin/panel-path";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
+import { labelForCategoryKey } from "@/lib/services/category-catalog";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { ServiceReviewButtons } from "@/components/admin/ServiceReviewButtons";
 
@@ -15,7 +16,7 @@ export default async function AdminServicosPage() {
   const supabase = await getSupabaseServerClient();
   const { data: pending } = await supabase
     .from("pro_services")
-    .select("id, name, description, price_cents, status, created_at, professional_id")
+    .select("id, name, description, price_cents, status, created_at, professional_id, category_key")
     .eq("status", "pending")
     .order("created_at", { ascending: true })
     .limit(200);
@@ -47,6 +48,9 @@ export default async function AdminServicosPage() {
                 <tbody>
                   {pending.map((s: any) => (
                     <tr key={s.id}>
+                      <td style={{ fontSize: 12, fontWeight: 700, whiteSpace: "nowrap" }}>
+                        {labelForCategoryKey(s.category_key ?? undefined) || "—"}
+                      </td>
                       <td className="o-client">{s.name}</td>
                       <td className="o-price">{formatBRLFromCents(s.price_cents ?? null)}</td>
                       <td style={{ maxWidth: 420, fontSize: 12 }}>{(s.description ?? "—").slice(0, 180)}</td>

@@ -43,7 +43,11 @@ export function BookingStatusButtons({ bookingId, currentStatus }: { bookingId: 
   }
 
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "flex-end", flexWrap: "wrap" }}>
+    <div
+      style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "flex-end", flexWrap: "wrap" }}
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => e.stopPropagation()}
+    >
       {actions.map((a) => {
         const disabled = loadingTo !== null;
         return (

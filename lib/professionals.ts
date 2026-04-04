@@ -11,9 +11,11 @@ export type ProfessionalCard = {
   avail: AvailTag;
   verified: boolean;
   phClass: "ph-1" | "ph-2" | "ph-3" | "ph-4" | "ph-5" | "ph-6";
+  /** Texto extra para filtro na busca (categorias dos serviços aprovados). */
+  filterExtra?: string;
 };
 
-export type ServiceRow = { name: string; desc: string; price: string };
+export type ServiceRow = { name: string; desc: string; price: string; categoryLabel?: string };
 
 export type ReviewRow = { id: string; score: string; text: string; author: string; info: string };
 

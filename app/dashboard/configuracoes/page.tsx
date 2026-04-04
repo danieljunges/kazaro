@@ -6,6 +6,7 @@ import { fetchMyProfile } from "@/lib/supabase/profile-data";
 import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { isAccountDeletionConfigured } from "@/lib/supabase/admin";
 import { AccountSecuritySection } from "@/components/settings/AccountSecuritySection";
+import { ProfessionalPublicSettingsForm } from "@/components/settings/ProfessionalPublicSettingsForm";
 import { ProfileSettingsForm } from "@/components/settings/ProfileSettingsForm";
 
 export default async function DashboardConfiguracoesPage() {
@@ -17,6 +18,16 @@ export default async function DashboardConfiguracoesPage() {
 
   const [profile, role] = await Promise.all([fetchMyProfile(user.id), fetchMyProfileRole(user.id)]);
   const home = dashboardHomeHref(role);
+
+  let pro: { display_name: string; service_region: string | null } | null = null;
+  if (role === "professional") {
+    const { data } = await supabase
+      .from("professionals")
+      .select("display_name, service_region")
+      .eq("id", user.id)
+      .maybeSingle();
+    pro = data;
+  }
 
   const userEmail = user.email?.trim() ?? "";
   const hasEmailPasswordProvider = (user.identities ?? []).some((i) => i.provider === "email");
@@ -41,6 +52,13 @@ export default async function DashboardConfiguracoesPage() {
             initialPhone={profile?.phone ?? null}
             initialAvatarUrl={profile?.avatar_url ?? null}
           />
+
+          {role === "professional" && pro ? (
+            <ProfessionalPublicSettingsForm
+              initialDisplayName={(pro.display_name as string)?.trim() || ""}
+              initialServiceRegion={(pro.service_region as string | null)?.trim() || ""}
+            />
+          ) : null}
 
           <AccountSecuritySection
             userEmail={userEmail}

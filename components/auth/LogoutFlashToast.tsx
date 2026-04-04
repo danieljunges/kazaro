@@ -23,7 +23,10 @@ export function LogoutFlashToast() {
     const p = new URLSearchParams(qs);
     const saiu = p.get("saiu") === "1";
     const excluida = p.get("conta") === "excluida";
-    if (!saiu && !excluida) return;
+    if (!saiu && !excluida) {
+      setVisible(false);
+      return;
+    }
 
     setText(saiu ? "Você foi desconectado." : "Sua conta foi excluída. Até logo.");
     setVisible(true);
@@ -37,7 +40,10 @@ export function LogoutFlashToast() {
     }, FLASH_MS);
 
     return () => clearTimeout(t);
-  }, [qs, pathname, router]);
+    // Não incluir `router`: em várias versões do Next a referência muda a cada render,
+    // cancelando o timeout em loop e deixando o aviso fixo na tela.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- router instável de propósito
+  }, [qs, pathname]);
 
   if (!visible) return null;
 

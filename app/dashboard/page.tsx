@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { DashboardSidebar } from "@/components/kazaro/DashboardSidebar";
-import { BookingStatusButtons } from "@/components/dashboard/BookingStatusButtons";
+import { IncomingBookingsTable } from "@/components/dashboard/IncomingBookingsTable";
 import { DashboardMobileMenu } from "@/components/dashboard/DashboardMobileMenu";
 import { DashboardUserMenu } from "@/components/dashboard/DashboardUserMenu";
-import { bookingStatusLabelShort } from "@/lib/booking/workflow";
 import {
   countActiveIncomingBookings,
   fetchIncomingBookingsForPro,
@@ -14,6 +13,14 @@ import { fetchConversationsForDashboard } from "@/lib/supabase/messages";
 import { fetchMyProfileRole, type ProfileRole } from "@/lib/supabase/profile";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { fetchMyProfile } from "@/lib/supabase/profile-data";
+import {
+  isProServiceApproved,
+  isProServicePending,
+  proServiceStatusCssKey,
+  proServiceStatusLabelPt,
+} from "@/lib/services/pro-service-status";
+import { buildDashboardNotificationsFromOverview } from "@/lib/dashboard/pro-notifications";
+import { DashboardNotificationsBell } from "@/components/dashboard/DashboardNotificationsBell";
 
 function formatTodayPtBR() {
   return new Intl.DateTimeFormat("pt-BR", {
@@ -22,17 +29,6 @@ function formatTodayPtBR() {
     month: "long",
     year: "numeric",
   }).format(new Date());
-}
-
-function formatBookingWhen(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "—";
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "numeric",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(d);
 }
 
 function formatPriceBRL(cents: number | null | undefined): string {
@@ -59,40 +55,6 @@ function msgTimePt(iso: string): string {
   y.setDate(y.getDate() - 1);
   if (d.toDateString() === y.toDateString()) return "Ontem";
   return new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "short" }).format(d);
-}
-
-function statusLabelPt(status: string): string {
-  return bookingStatusLabelShort(status);
-}
-
-function statusStyle(status: string): { background: string; color: string } {
-  switch (status) {
-    case "confirmed":
-      return { background: "var(--success-bg)", color: "var(--success)" };
-    case "in_progress":
-      return { background: "rgba(21, 140, 121, 0.12)", color: "var(--success)" };
-    case "pending":
-      return { background: "var(--coral-bg)", color: "var(--coral)" };
-    case "cancelled":
-      return { background: "var(--ember-bg)", color: "var(--ember)" };
-    case "completed":
-      return { background: "var(--cream)", color: "var(--ink60)" };
-    default:
-      return { background: "var(--cream)", color: "var(--ink60)" };
-  }
-}
-
-function serviceStatusPt(s: string): string {
-  switch (s) {
-    case "approved":
-      return "Ativo";
-    case "pending":
-      return "Em análise";
-    case "rejected":
-      return "Rejeitado";
-    default:
-      return s;
-  }
 }
 
 function proPlanActive(proUntil: string | null | undefined): boolean {
@@ -165,8 +127,8 @@ export default async function DashboardPage({
     price_cents: number | null;
     status: string;
   }[];
-  const approvedServices = myServices.filter((s) => s.status === "approved");
-  const pendingServices = myServices.filter((s) => s.status === "pending");
+  const approvedServices = myServices.filter((s) => isProServiceApproved(s.status));
+  const pendingServices = myServices.filter((s) => isProServicePending(s.status));
 
   const showRevenueKpi = earnings.totalCents > 0 || earnings.completedCount > 0;
   const reviewsCount = typeof proRow?.reviews_count === "number" ? proRow.reviews_count : 0;
@@ -176,6 +138,12 @@ export default async function DashboardPage({
   const awaitingReply = conversations.filter((c) => c.awaitingMyReply).length;
 
   const showProUpsell = !proPlanActive(proRow?.pro_until ?? null);
+
+  const dashboardNotifications = buildDashboardNotificationsFromOverview(
+    incomingBookings,
+    conversations,
+    pendingServices.length,
+  );
 
   return (
     <div className="home-editorial">
@@ -193,12 +161,7 @@ export default async function DashboardPage({
               </div>
             </div>
             <div className="dt-right">
-              <button type="button" className="notif-btn" aria-label="Notificações">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--ink60)" }} aria-hidden>
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                </svg>
-              </button>
+              <DashboardNotificationsBell items={dashboardNotifications} />
               <DashboardUserMenu
                 initialEmail={user?.email ?? null}
                 initialAvatarUrl={profile?.avatar_url ?? null}
@@ -284,14 +247,14 @@ export default async function DashboardPage({
                 ) : null}
             </div>
 
-            <div className="dash-card" style={{ marginBottom: 18 }}>
-              <div className="dc-head">
+            <div className="dash-card kz-dash-meus-servicos" style={{ marginBottom: 18 }}>
+              <div className="dc-head dc-head--meus-servicos">
                 Meus serviços
                 <Link className="dc-link" href="/dashboard/servicos">
                   Gerenciar tudo →
                 </Link>
               </div>
-              <p style={{ margin: "0 0 14px", color: "var(--ink60)", fontSize: 14, lineHeight: 1.55 }}>
+              <p style={{ margin: "0 0 14px", color: "var(--ink50)", fontSize: 14, lineHeight: 1.55, fontWeight: 500 }}>
                 Serviços aprovados aparecem no seu perfil público. Acompanhe preços e status como no painel de um vendedor.
               </p>
               {approvedServices.length === 0 && pendingServices.length === 0 ? (
@@ -312,28 +275,29 @@ export default async function DashboardPage({
                       </tr>
                     </thead>
                     <tbody>
-                      {myServices.map((s) => (
-                        <tr key={s.id}>
-                          <td className="o-client" style={{ fontWeight: 700 }}>
-                            {s.name}
-                          </td>
-                          <td>{formatPriceBRL(s.price_cents)}</td>
-                          <td>
-                            <span
-                              className="o-status"
-                              style={
-                                s.status === "approved"
-                                  ? { background: "var(--success-bg)", color: "var(--success)" }
-                                  : s.status === "pending"
-                                    ? { background: "var(--coral-bg)", color: "var(--coral)" }
-                                    : { background: "var(--cream)", color: "var(--ink60)" }
-                              }
-                            >
-                              {serviceStatusPt(s.status)}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
+                      {myServices.map((s) => {
+                        const sk = proServiceStatusCssKey(s.status);
+                        return (
+                          <tr key={s.id}>
+                            <td className="o-client">{s.name}</td>
+                            <td>{formatPriceBRL(s.price_cents)}</td>
+                            <td>
+                              <span
+                                className="o-status"
+                                style={
+                                  sk === "approved"
+                                    ? { background: "var(--success-bg)", color: "var(--success)" }
+                                    : sk === "pending"
+                                      ? { background: "var(--coral-bg)", color: "var(--coral)" }
+                                      : { background: "var(--cream)", color: "var(--ink60)" }
+                                }
+                              >
+                                {proServiceStatusLabelPt(s.status)}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -397,56 +361,15 @@ export default async function DashboardPage({
 
             <div className="dash-card">
               <div className="dc-head">Pedidos recebidos (agendamentos)</div>
+              <p style={{ margin: "0 0 14px", color: "var(--ink50)", fontSize: 13, lineHeight: 1.55, fontWeight: 500 }}>
+                Toque numa linha da tabela para abrir o pedido com todos os detalhes.
+              </p>
               {incomingBookings.length === 0 ? (
                 <p style={{ margin: 0, color: "var(--ink60)", fontSize: 14, lineHeight: 1.6 }}>
                   Nenhum pedido ainda. Assim que clientes agendarem pelo seu perfil público, eles aparecem aqui.
                 </p>
               ) : (
-                <div className="kz-table-scroll">
-                  <table className="orders-table">
-                    <thead>
-                      <tr>
-                        <th>Cliente</th>
-                        <th>Contato</th>
-                        <th>Serviço</th>
-                        <th>Data</th>
-                        <th>Início do serviço</th>
-                        <th>Status</th>
-                        <th>Obs.</th>
-                        <th style={{ textAlign: "right" }}>Ações</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {incomingBookings.map((row) => {
-                        const st = statusStyle(row.status);
-                        return (
-                          <tr key={row.id}>
-                            <td className="o-client">{row.client_name_snapshot}</td>
-                            <td style={{ fontSize: 12 }}>{row.client_email_snapshot ?? "—"}</td>
-                            <td>{row.service_name_snapshot ?? "A combinar"}</td>
-                            <td>{formatBookingWhen(row.scheduled_at)}</td>
-                            <td style={{ fontSize: 12, whiteSpace: "nowrap" }}>
-                              {row.service_started_at ? formatBookingWhen(row.service_started_at) : "—"}
-                            </td>
-                            <td>
-                              <span className="o-status" style={{ background: st.background, color: st.color }}>
-                                {statusLabelPt(row.status)}
-                              </span>
-                            </td>
-                            <td style={{ fontSize: 12, maxWidth: 200 }} title={row.client_note ?? undefined}>
-                              {row.client_note
-                                ? `${row.client_note.slice(0, 80)}${row.client_note.length > 80 ? "…" : ""}`
-                                : "—"}
-                            </td>
-                            <td style={{ textAlign: "right" }}>
-                              <BookingStatusButtons bookingId={row.id} currentStatus={row.status} />
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                <IncomingBookingsTable rows={incomingBookings} />
               )}
             </div>
           </div>

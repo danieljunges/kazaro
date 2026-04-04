@@ -30,6 +30,42 @@ export async function updateMyProfile(input: {
   return { ok: true };
 }
 
+export async function updateMyProfessionalPublic(input: {
+  displayName: string;
+  serviceRegion: string;
+}): Promise<{ ok: true } | { ok: false; message: string }> {
+  const supabase = await getSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user?.id) return { ok: false, message: "Faça login para continuar." };
+
+  const display_name = input.displayName.trim().slice(0, 120);
+  const service_region = input.serviceRegion.trim().slice(0, 200);
+  if (display_name.length < 2) {
+    return { ok: false, message: "Informe o nome público (mín. 2 caracteres)." };
+  }
+  if (service_region.length < 3) {
+    return { ok: false, message: "Descreva a região ou bairros em que você atende." };
+  }
+
+  const { error } = await supabase
+    .from("professionals")
+    .update({ display_name, service_region })
+    .eq("id", user.id);
+
+  if (error) return { ok: false, message: error.message || "Não foi possível salvar." };
+
+  const { data: pro } = await supabase.from("professionals").select("slug").eq("id", user.id).maybeSingle();
+  const slug = pro?.slug as string | undefined;
+  if (slug) revalidatePath(`/profissional/${slug}`);
+
+  revalidatePath("/dashboard/configuracoes");
+  revalidatePath("/dashboard");
+  revalidatePath("/search");
+  return { ok: true };
+}
+
 /**
  * Remove o usuário em auth.users (cascata em profiles, etc.).
  * Exige senha atual (conta e-mail) ou confirmação por e-mail (login social).

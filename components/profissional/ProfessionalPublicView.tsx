@@ -99,6 +99,7 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
         ) : (
           detail.services.map((s, i) => (
             <div key={`${s.name}-${i}`} className="service-item">
+              {s.categoryLabel ? <div className="si-category">{s.categoryLabel}</div> : null}
               <div className="si-name">{s.name}</div>
               <div className="si-desc">{s.desc}</div>
               <div className="si-footer">

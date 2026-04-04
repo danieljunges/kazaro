@@ -31,6 +31,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     return context.services[i]?.id ?? "";
   });
   const [note, setNote] = useState("");
+  const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -39,6 +40,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     time: string;
     serviceLabel: string;
     note: string;
+    location: string;
   } | null>(null);
 
   async function onSubmit(e: FormEvent) {
@@ -58,12 +60,13 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
         time,
         proServiceId: serviceId || null,
         clientNote: note,
+        clientLocation: location,
       });
       if (!result.ok) {
         setError(result.message);
         return;
       }
-      setSubmitted({ date, time, serviceLabel, note: note.trim() });
+      setSubmitted({ date, time, serviceLabel, note: note.trim(), location: location.trim() });
       setDone(true);
       router.refresh();
     } finally {
@@ -121,6 +124,12 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
             <span className="booking-recap-k">Serviço</span>
             <span className="booking-recap-v">{submitted?.serviceLabel ?? "A combinar"}</span>
           </div>
+          {submitted?.location ? (
+            <div className="booking-recap-row">
+              <span className="booking-recap-k">Local</span>
+              <span className="booking-recap-v">{submitted.location}</span>
+            </div>
+          ) : null}
           {submitted?.note ? (
             <div className="booking-recap-row">
               <span className="booking-recap-k">Obs.</span>
@@ -186,6 +195,20 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
       </label>
 
       <label className="auth-field">
+        <span className="auth-label">Local do serviço</span>
+        <input
+          className="auth-input"
+          type="text"
+          required
+          minLength={5}
+          maxLength={500}
+          value={location}
+          onChange={(ev) => setLocation(ev.target.value)}
+          placeholder="Bairro, endereço ou referência (onde o profissional deve ir)"
+        />
+      </label>
+
+      <label className="auth-field">
         <span className="auth-label">Observações</span>
         <textarea
           className="auth-input booking-textarea"
@@ -193,7 +216,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
           maxLength={2000}
           value={note}
           onChange={(ev) => setNote(ev.target.value)}
-          placeholder="Endereço ou referência, tipo de problema, melhor forma de contato…"
+          placeholder="Tipo de problema, melhor horário para ligar, detalhes do serviço…"
         />
       </label>
 
