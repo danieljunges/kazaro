@@ -1,7 +1,7 @@
 import { startEndExclusiveUtcForSaoPauloDay } from "@/lib/datetime/sao-paulo-calendar";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
-export type BookingServiceOption = { id: string; name: string };
+export type BookingServiceOption = { id: string; name: string; price_cents: number | null };
 
 export type BookingPageContext = {
   professionalId: string | null;
@@ -37,7 +37,7 @@ export async function fetchBookingPageContext(slug: string): Promise<BookingPage
 
     const { data: svc } = await supabase
       .from("pro_services")
-      .select("id, name")
+      .select("id, name, price_cents")
       .eq("professional_id", pro.id)
       .order("sort_order", { ascending: true });
 
@@ -45,7 +45,11 @@ export async function fetchBookingPageContext(slug: string): Promise<BookingPage
       professionalId: pro.id as string,
       slug: pro.slug as string,
       displayName: pro.display_name as string,
-      services: ((svc ?? []) as { id: string; name: string }[]).map((s) => ({ id: s.id, name: s.name })),
+      services: ((svc ?? []) as { id: string; name: string; price_cents: number | null }[]).map((s) => ({
+        id: s.id,
+        name: s.name,
+        price_cents: typeof s.price_cents === "number" ? s.price_cents : null,
+      })),
       isBookable: true,
     };
   } catch {

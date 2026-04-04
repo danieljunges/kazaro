@@ -27,6 +27,10 @@ function todayIsoDate() {
   return `${y}-${m}-${day}`;
 }
 
+function formatBrlCents(cents: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
+}
+
 export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   const router = useRouter();
   const [date, setDate] = useState(todayIsoDate());
@@ -61,6 +65,12 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   } | null>(null);
   const [payLoading, setPayLoading] = useState(false);
   const [payHint, setPayHint] = useState<string | null>(null);
+  const [openingCheckout, setOpeningCheckout] = useState(false);
+
+  const selectedService = context.services.find((s) => s.id === serviceId);
+  const selectedPriceCents =
+    selectedService && typeof selectedService.price_cents === "number" ? selectedService.price_cents : null;
+  const willPayAfterSubmit = (selectedPriceCents ?? 0) >= 50;
 
   const addressParts: BookingAddressParts = {
     cepDigits: onlyCepDigits(cep),
@@ -100,6 +110,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+    setPayHint(null);
     if (!context.isBookable || !context.professionalId) {
       setError(context.unavailableReason ?? "Este perfil ainda não aceita agendamentos reais.");
       return;
@@ -127,6 +138,29 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
         setError(result.message);
         return;
       }
+
+      if (typeof result.priceCents === "number" && result.priceCents >= 50) {
+        setOpeningCheckout(true);
+        let leavingToStripe = false;
+        try {
+          const r = await fetch("/api/stripe/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ bookingId: result.bookingId }),
+          });
+          const j = (await r.json()) as { url?: string; error?: string };
+          if (r.ok && j.url) {
+            leavingToStripe = true;
+            window.location.href = j.url;
+          } else {
+            setPayHint(j.error ?? "Não foi possível abrir o pagamento. Tente pelo botão abaixo.");
+          }
+        } finally {
+          if (!leavingToStripe) setOpeningCheckout(false);
+        }
+        if (leavingToStripe) return;
+      }
+
       setSubmitted({
         date,
         time,
@@ -136,12 +170,20 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
         bookingId: result.bookingId,
         priceCents: result.priceCents,
       });
-      setPayHint(null);
       setDone(true);
       router.refresh();
     } finally {
       setLoading(false);
     }
+  }
+
+  if (openingCheckout) {
+    return (
+      <div className="booking-success booking-success--tight booking-pay-redirect" aria-live="polite">
+        <p className="booking-success-title">Abrindo pagamento seguro</p>
+        <p className="booking-recap-hint booking-pay-redirect-msg">Redirecionando para o Stripe…</p>
+      </div>
+    );
   }
 
   if (!context.isBookable || !context.professionalId) {
@@ -202,23 +244,16 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     }
 
     const priceLabel =
-      canPayOnline && submitted?.priceCents != null
-        ? new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
-            submitted.priceCents / 100,
-          )
-        : null;
+      canPayOnline && submitted?.priceCents != null ? formatBrlCents(submitted.priceCents) : null;
 
     return (
-      <div className="booking-success">
+      <div className="booking-success booking-success--tight">
         <p className="booking-success-title">Pedido enviado</p>
-        <p className="sec-sub" style={{ margin: "0 0 20px" }}>
-          {context.displayName} receberá seu pedido com data, horário e observações. Você pode acompanhar o status em{" "}
-          <Link href="/dashboard" className="auth-link">
-            Dashboard
-          </Link>
-          .
+        <p className="sec-sub booking-success-lead">
+          Acompanhe em <Link href="/dashboard/historico" className="auth-link">Histórico</Link> ou{" "}
+          <Link href="/dashboard" className="auth-link">Dashboard</Link>.
         </p>
-        <div className="booking-recap" aria-label="Resumo do pedido">
+        <div className="booking-recap booking-recap--tight" aria-label="Resumo do pedido">
           <div className="booking-recap-row">
             <span className="booking-recap-k">Quando</span>
             <span className="booking-recap-v">{when}</span>
@@ -241,42 +276,33 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
           ) : null}
           {canPayOnline ? (
             <>
-              <p className="booking-recap-hint" style={{ marginTop: 14 }}>
-                Este serviço tem valor definido ({priceLabel}). Você pode pagar com cartão agora; o pedido continua
-                aguardando a confirmação do profissional.
+              <p className="booking-recap-hint booking-recap-hint--tight">
+                Pagamento {priceLabel}: use o cartão abaixo (ou no Histórico).
               </p>
-              <div style={{ marginTop: 16 }}>
+              <div className="booking-pay-actions">
                 <button
                   type="button"
-                  className="btn-cta auth-submit"
+                  className="btn-cta auth-submit booking-pay-btn"
                   disabled={payLoading}
                   onClick={() => void startStripeCheckout()}
                 >
-                  {payLoading ? "Redirecionando…" : `Pagar ${priceLabel} com cartão`}
+                  {payLoading ? "Abrindo…" : `Pagar ${priceLabel}`}
                 </button>
-                {payHint ? <p className="auth-error" style={{ marginTop: 10 }}>{payHint}</p> : null}
+                {payHint ? <p className="auth-error booking-pay-err">{payHint}</p> : null}
               </div>
-              <p className="booking-recap-hint" style={{ marginTop: 12 }}>
-                Prefere combinar depois? Você também pode pagar pelo{" "}
-                <Link href="/dashboard/historico" className="auth-link">
-                  Histórico de serviços
-                </Link>
-                .
-              </p>
             </>
           ) : (
-            <p className="booking-recap-hint">
-              Sem pagamento online neste pedido (serviço a combinar ou valor não informado). Quando o profissional
-              confirmar, você acompanha no Dashboard.
+            <p className="booking-recap-hint booking-recap-hint--tight">
+              <strong>A combinar:</strong> sem cobrança online. Combine valor com {context.displayName} por mensagem.
             </p>
           )}
         </div>
-        <div className="booking-guest-actions">
-          <Link href={`/profissional/${context.slug}`} className="btn-ghost">
+        <div className="booking-guest-actions booking-guest-actions--tight">
+          <Link href={`/profissional/${context.slug}`} className="btn-ghost booking-footer-btn">
             Voltar ao perfil
           </Link>
-          <Link href="/search" className="btn-cta">
-            Buscar outros profissionais
+          <Link href="/search" className="btn-cta booking-footer-btn">
+            Buscar outros
           </Link>
         </div>
       </div>
@@ -317,12 +343,23 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
           disabled={context.services.length === 0}
         >
           <option value="">A combinar com o profissional</option>
-          {context.services.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name}
-            </option>
-          ))}
+          {context.services.map((s) => {
+            const pc = s.price_cents;
+            const priceBit =
+              typeof pc === "number" && pc >= 50 ? ` · ${formatBrlCents(pc)}` : "";
+            return (
+              <option key={s.id} value={s.id}>
+                {s.name}
+                {priceBit}
+              </option>
+            );
+          })}
         </select>
+        {context.services.some((s) => typeof s.price_cents === "number" && (s.price_cents ?? 0) >= 50) ? (
+          <p className="booking-service-pay-hint">
+            Serviço com valor: após enviar, abrimos o <strong>pagamento no cartão</strong> na hora.
+          </p>
+        ) : null}
       </label>
 
       <fieldset className="booking-address-fieldset">
@@ -467,7 +504,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
       {error ? <p className="auth-error">{error}</p> : null}
 
       <button type="submit" className="btn-cta auth-submit" disabled={loading}>
-        {loading ? "Enviando…" : "Enviar pedido de agendamento"}
+        {loading ? "Enviando…" : willPayAfterSubmit ? "Agendar e pagar" : "Enviar pedido de agendamento"}
       </button>
     </form>
   );
