@@ -378,10 +378,6 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
             </option>
           ))}
         </select>
-        <p className="booking-service-pay-hint">
-          O valor cobrado é o do anúncio. Negociações extras (escopo maior, urgência) podem vir depois por mensagem —
-          em breve: oferta personalizada no estilo Fiverr.
-        </p>
       </label>
 
       <label className="auth-field">

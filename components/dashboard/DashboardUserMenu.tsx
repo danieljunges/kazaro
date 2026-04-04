@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
+import { AUTH_SIGNOUT_MIN_MS, ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 function initialFromEmail(email: string | null): string {
@@ -26,8 +25,6 @@ export function DashboardUserMenu({
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
-
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
     const serverHadUser = Boolean(initialEmail);
@@ -115,9 +112,8 @@ export function DashboardUserMenu({
               const t0 = Date.now();
               try {
                 await getSupabaseBrowserClient().auth.signOut();
-                await ensureMinElapsedSince(t0);
-                router.replace("/?saiu=1");
-                router.refresh();
+                await ensureMinElapsedSince(t0, AUTH_SIGNOUT_MIN_MS);
+                window.location.assign("/?saiu=1");
               } finally {
                 setBusy(false);
               }

@@ -79,8 +79,8 @@ export default async function AgendarPage({ params, searchParams }: Props) {
           <h1 className="sec-title booking-title">Pedido para {ctx.displayName}</h1>
           <p className="sec-sub booking-lead">
             Escolha o <strong>serviço</strong> (preço fixo do anúncio), a <strong>data</strong> e um{" "}
-            <strong>horário livre na agenda</strong> do profissional. O pagamento no cartão abre logo após enviar
-            (Stripe). O prestador define expediente e intervalos em Configurações.
+            <strong>horário livre na agenda</strong> do profissional. O prestador define expediente e intervalos em
+            Configurações.
           </p>
           <BookingRequestForm context={ctx} initialServiceIndex={initialServiceIndex} />
         </div>

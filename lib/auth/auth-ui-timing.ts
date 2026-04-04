@@ -1,5 +1,8 @@
-/** Feedback mínimo em login, logout e cadastro (padrão comum em sites). */
+/** Feedback mínimo em login e cadastro (padrão comum em sites). */
 export const AUTH_FLOW_MIN_MS = 700;
+
+/** Logout: sem espera artificial — o utilizador percebia “sair duas vezes” com 700ms. */
+export const AUTH_SIGNOUT_MIN_MS = 0;
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));

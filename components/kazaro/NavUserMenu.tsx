@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { AUTH_SIGNOUT_MIN_MS, ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { ProfileRole } from "@/lib/supabase/profile";
 
@@ -27,12 +26,13 @@ export function NavUserMenu({
   const [checked, setChecked] = useState(initialEmail !== undefined);
   const [user, setUser] = useState<SessionUser | null>(() => {
     if (initialEmail === undefined) return null;
-    return { email: initialEmail ?? null, avatarUrl: initialAvatarUrl ?? null };
+    /* `null` do servidor = visitante; objeto `{ email: null }` é truthy e mostrava “Minha conta” até o cliente sincronizar. */
+    if (!initialEmail) return null;
+    return { email: initialEmail, avatarUrl: initialAvatarUrl ?? null };
   });
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     if (initialEmail === undefined) return;
@@ -43,6 +43,22 @@ export function NavUserMenu({
       setUser({ email: initialEmail, avatarUrl: initialAvatarUrl ?? null });
     }
   }, [initialEmail, initialAvatarUrl]);
+
+  /* Sessão em memória (ex.: após login) pode existir antes do SSR ver o cookie — alinha antes do primeiro paint extra. */
+  useLayoutEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser({
+          email: session.user.email ?? null,
+          avatarUrl: initialAvatarUrl ?? null,
+        });
+      } else if (!initialEmail) {
+        setUser(null);
+      }
+      setChecked(true);
+    });
+  }, [initialAvatarUrl, initialEmail]);
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
@@ -151,9 +167,8 @@ export function NavUserMenu({
               try {
                 const supabase = getSupabaseBrowserClient();
                 await supabase.auth.signOut();
-                await ensureMinElapsedSince(t0);
-                router.replace("/?saiu=1");
-                router.refresh();
+                await ensureMinElapsedSince(t0, AUTH_SIGNOUT_MIN_MS);
+                window.location.assign("/?saiu=1");
               } finally {
                 setBusy(false);
               }
