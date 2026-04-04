@@ -1195,7 +1195,7 @@ a.btn-book-now:visited {
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
   gap: 14px;
   margin-bottom: 18px;
 }
@@ -2026,6 +2026,40 @@ a.btn-book-now:visited {
   max-width: 560px;
   line-height: 1.55;
 }
+.kz-agenda-availability {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--lime-muted);
+  background: linear-gradient(135deg, rgba(21, 140, 121, 0.07), var(--white));
+}
+.kz-agenda-availability__title {
+  margin: 0 0 8px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lime-deep);
+}
+.kz-agenda-availability__body {
+  margin: 0 0 10px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink70);
+}
+.kz-agenda-availability__link {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lime-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.kz-agenda-availability__link:hover {
+  color: var(--ink);
+}
 .kz-agenda-nav {
   display: flex;
   flex-wrap: wrap;
@@ -2802,6 +2836,27 @@ a.btn-book-now:visited {
   font-size: 12.5px;
   line-height: 1.45;
   color: var(--ink50);
+  font-weight: 500;
+}
+.home-editorial .booking-schedule-hint {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink60);
+  font-weight: 500;
+}
+.home-editorial .booking-schedule-warn {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--coral);
+  font-weight: 600;
+}
+.home-editorial .booking-unified-agenda-note {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink60);
   font-weight: 500;
 }
 .home-editorial .section.booking-section:has(.booking-success--tight) {

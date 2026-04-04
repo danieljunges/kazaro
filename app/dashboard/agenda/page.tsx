@@ -10,8 +10,12 @@ import {
   todayYyyyMmDdSaoPaulo,
 } from "@/lib/datetime/sao-paulo-calendar";
 import { bookingStatusLabelShort } from "@/lib/booking/workflow";
+import { formatIsoWeekdaysBriefPt } from "@/lib/booking/schedule-labels";
 import { SITE_NAME } from "@/lib/site";
-import { fetchIncomingBookingsForProOnCalendarDay } from "@/lib/supabase/bookings";
+import {
+  fetchIncomingBookingsForProOnCalendarDay,
+  fetchProfessionalScheduleForDashboard,
+} from "@/lib/supabase/bookings";
 
 export const metadata: Metadata = {
   title: `Agenda | ${SITE_NAME}`,
@@ -54,7 +58,10 @@ export default async function DashboardAgendaPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const { user } = await requireProfessionalTools("/dashboard/agenda");
   const day = normalizeAgendaDayParam(sp.dia);
-  const rows = await fetchIncomingBookingsForProOnCalendarDay(user.id, day);
+  const [rows, schedule] = await Promise.all([
+    fetchIncomingBookingsForProOnCalendarDay(user.id, day),
+    fetchProfessionalScheduleForDashboard(user.id),
+  ]);
   const today = todayYyyyMmDdSaoPaulo();
   const prev = shiftSaoPauloCalendarDay(day, -1);
   const next = shiftSaoPauloCalendarDay(day, 1);
@@ -73,6 +80,25 @@ export default async function DashboardAgendaPage({ searchParams }: PageProps) {
               Horários combinados com clientes, no fuso de Florianópolis. Toque num compromisso para ver o pedido completo.
             </p>
           </header>
+
+          {schedule ? (
+            <section className="kz-agenda-availability" aria-label="Expediente para novos agendamentos">
+              <p className="kz-agenda-availability__title">Quando clientes podem marcar (agenda pública)</p>
+              <p className="kz-agenda-availability__body">
+                <strong>
+                  {schedule.workDayStart} – {schedule.workDayEnd}
+                </strong>{" "}
+                · dias{" "}
+                <strong>{formatIsoWeekdaysBriefPt(schedule.workWeekdays)}</strong>
+                {" · "}
+                oferta de horários a cada <strong>{schedule.bookingSlotStepMinutes} min</strong>. Vale para{" "}
+                <strong>todos os serviços</strong> — um pedido bloqueia o horário na agenda inteira.
+              </p>
+              <Link href="/dashboard/configuracoes" className="kz-agenda-availability__link">
+                Alterar horário de trabalho em Configurações →
+              </Link>
+            </section>
+          ) : null}
 
           <div className="kz-agenda-nav" role="group" aria-label="Escolher dia">
             <Link className="kz-agenda-nav-btn" href={`/dashboard/agenda?dia=${prev}`} prefetch>

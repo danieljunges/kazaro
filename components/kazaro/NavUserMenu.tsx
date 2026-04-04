@@ -18,65 +18,60 @@ export function NavUserMenu({
   initialAvatarUrl,
   accountKind,
 }: {
-  initialEmail?: string | null;
+  initialEmail: string | null;
   initialAvatarUrl?: string | null;
-  /** Papel da conta (servidor); só usado quando há sessão */
   accountKind?: ProfileRole | null;
 }) {
-  const [checked, setChecked] = useState(initialEmail !== undefined);
-  const [user, setUser] = useState<SessionUser | null>(() => {
-    if (initialEmail === undefined) return null;
-    /* `null` do servidor = visitante; objeto `{ email: null }` é truthy e mostrava “Minha conta” até o cliente sincronizar. */
-    if (!initialEmail) return null;
-    return { email: initialEmail, avatarUrl: initialAvatarUrl ?? null };
-  });
+  const serverLoggedIn = Boolean(initialEmail);
+  const [ready, setReady] = useState(false);
+  const [user, setUser] = useState<SessionUser | null>(null);
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (initialEmail === undefined) return;
-    setChecked(true);
-    if (!initialEmail) {
-      setUser(null);
-    } else {
-      setUser({ email: initialEmail, avatarUrl: initialAvatarUrl ?? null });
-    }
-  }, [initialEmail, initialAvatarUrl]);
-
-  /* Sessão em memória (ex.: após login) pode existir antes do SSR ver o cookie — alinha antes do primeiro paint extra. */
+  /* 1) Alinha com o servidor: visitante no HTML nunca mostra nome por causa de sessão antiga no browser. */
   useLayoutEffect(() => {
     const supabase = getSupabaseBrowserClient();
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setUser({
-          email: session.user.email ?? null,
-          avatarUrl: initialAvatarUrl ?? null,
-        });
-      } else if (!initialEmail) {
+      if (!serverLoggedIn) {
         setUser(null);
-      }
-      setChecked(true);
-    });
-  }, [initialAvatarUrl, initialEmail]);
-
-  useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-    const serverHadUser = Boolean(initialEmail);
-
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "INITIAL_SESSION" && !session?.user && serverHadUser) {
-        return;
-      }
-      if (session?.user) {
+      } else if (session?.user) {
         setUser({
           email: session.user.email ?? null,
           avatarUrl: initialAvatarUrl ?? null,
         });
       } else {
-        setUser(null);
+        setUser({ email: initialEmail, avatarUrl: initialAvatarUrl ?? null });
       }
-      setChecked(true);
+      setReady(true);
+    });
+  }, [serverLoggedIn, initialEmail, initialAvatarUrl]);
+
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient();
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!serverLoggedIn) {
+        if (event === "SIGNED_IN" && session?.user) {
+          setUser({
+            email: session.user.email ?? null,
+            avatarUrl: initialAvatarUrl ?? null,
+          });
+        } else if (!session?.user) {
+          setUser(null);
+        }
+      } else {
+        if (event === "INITIAL_SESSION" && !session?.user) {
+          return;
+        }
+        if (session?.user) {
+          setUser({
+            email: session.user.email ?? null,
+            avatarUrl: initialAvatarUrl ?? null,
+          });
+        } else {
+          setUser(null);
+        }
+      }
       setOpen(false);
     });
 
@@ -91,9 +86,15 @@ export function NavUserMenu({
       sub.subscription.unsubscribe();
       document.removeEventListener("mousedown", onDoc);
     };
-  }, [initialAvatarUrl, initialEmail]);
+  }, [serverLoggedIn, initialEmail, initialAvatarUrl]);
 
-  if (!checked) return null;
+  if (!ready) {
+    return (
+      <div className="nav-user nav-user--hydrating" aria-busy="true" aria-label="Carregando conta">
+        <span className="nav-pending-label">Carregando…</span>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
@@ -181,4 +182,3 @@ export function NavUserMenu({
     </div>
   );
 }
-

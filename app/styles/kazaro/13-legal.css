@@ -130,6 +130,15 @@ body:has(.kz-cookie-bar) {
   letter-spacing: 0.02em;
 }
 
+/* NavUserMenu: até getSession alinhar com o servidor (evita flash de nome logado) */
+.home-editorial .nav-user.nav-user--hydrating {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 40px;
+  min-width: min(100px, 28vw);
+}
+
 .home-editorial .legal-section-body {
   margin: 0;
   color: var(--ink50);

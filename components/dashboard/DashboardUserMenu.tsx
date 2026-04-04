@@ -10,6 +10,11 @@ function initialFromEmail(email: string | null): string {
   return /[A-Z0-9]/.test(c) ? c : "?";
 }
 
+/**
+ * Menu da conta na topbar do dashboard.
+ * Dados vêm só do servidor (página já exige login) — sem `onAuthStateChange` que limpava e-mail
+ * antes do redirect no logout e gerava UI estranha.
+ */
 export function DashboardUserMenu({
   initialEmail,
   initialAvatarUrl,
@@ -17,7 +22,6 @@ export function DashboardUserMenu({
 }: {
   initialEmail: string | null;
   initialAvatarUrl: string | null;
-  /** Serviços e ganhos (contas profissional/admin) */
   showProLinks: boolean;
 }) {
   const [email, setEmail] = useState<string | null>(initialEmail);
@@ -25,30 +29,21 @@ export function DashboardUserMenu({
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-    const serverHadUser = Boolean(initialEmail);
+    setEmail(initialEmail);
+    setAvatarUrl(initialAvatarUrl);
+  }, [initialEmail, initialAvatarUrl]);
 
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "INITIAL_SESSION" && !session?.user && serverHadUser) {
-        return;
-      }
-      setEmail(session?.user?.email ?? null);
-      setOpen(false);
-    });
-
+  useEffect(() => {
     const onDoc = (ev: MouseEvent) => {
       const el = rootRef.current;
       if (!el) return;
       if (ev.target instanceof Node && !el.contains(ev.target)) setOpen(false);
     };
     document.addEventListener("mousedown", onDoc);
-
-    return () => {
-      sub.subscription.unsubscribe();
-      document.removeEventListener("mousedown", onDoc);
-    };
-  }, [initialEmail]);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, []);
 
   return (
     <div className="kz-dash-user" ref={rootRef}>
@@ -126,4 +121,3 @@ export function DashboardUserMenu({
     </div>
   );
 }
-

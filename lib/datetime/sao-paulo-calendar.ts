@@ -62,3 +62,15 @@ export function formatAgendaTimePtBR(iso: string): string {
     minute: "2-digit",
   }).format(d);
 }
+
+/**
+ * Dia da semana ISO 8601 (1 = segunda … 7 = domingo), alinhado a `professionals.work_weekdays` no Postgres.
+ * Usa meio-dia em America/Sao_Paulo para não mudar o dia civil por UTC.
+ */
+export function isoWeekdayFromYyyyMmDdSaoPaulo(yyyyMmDd: string): number | null {
+  if (!DAY_RE.test(yyyyMmDd)) return null;
+  const d = new Date(`${yyyyMmDd}T12:00:00-03:00`);
+  if (Number.isNaN(d.getTime())) return null;
+  const w = d.getUTCDay();
+  return w === 0 ? 7 : w;
+}

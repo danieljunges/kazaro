@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect, useMemo } from "react";
 import {
   fetchBookingSlotsForDate,
   submitBookingRequest,
+  type BookingSlotsEmptyReason,
 } from "@/app/profissional/[id]/agendar/actions";
+import { formatIsoWeekdaysBriefPt } from "@/lib/booking/schedule-labels";
+import { isoWeekdayFromYyyyMmDdSaoPaulo } from "@/lib/datetime/sao-paulo-calendar";
 import {
   composeBookingLocationSnapshot,
   validateBookingAddressParts,
@@ -47,6 +50,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   const [timeOptions, setTimeOptions] = useState<string[]>([]);
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [slotsError, setSlotsError] = useState<string | null>(null);
+  const [slotsEmptyReason, setSlotsEmptyReason] = useState<BookingSlotsEmptyReason | null>(null);
   const [note, setNote] = useState("");
   const [cep, setCep] = useState("");
   const [street, setStreet] = useState("");
@@ -78,10 +82,41 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
   const chargeCents = selectedService ? chargeCentsFromApprovedService(selectedService.price_cents) : null;
   const willPayAfterSubmit = chargeCents != null;
 
+  const scheduleLine = useMemo(() => {
+    const sch = context.schedule;
+    if (!sch) return null;
+    return `Expediente ${sch.workDayStart}–${sch.workDayEnd} (Florianópolis). Dias: ${formatIsoWeekdaysBriefPt(sch.workWeekdays)}. Oferta de horários a cada ${sch.bookingSlotStepMinutes} min (duração do serviço escolhido define quanto tempo fica ocupado).`;
+  }, [context.schedule]);
+
+  const dateNotAWorkdayHint = useMemo(() => {
+    const sch = context.schedule;
+    if (!sch || !date) return null;
+    const iso = isoWeekdayFromYyyyMmDdSaoPaulo(date);
+    if (iso == null) return null;
+    if (sch.workWeekdays.includes(iso)) return null;
+    const weekdayLong = new Intl.DateTimeFormat("pt-BR", {
+      weekday: "long",
+      timeZone: "America/Sao_Paulo",
+    }).format(new Date(`${date}T12:00:00-03:00`));
+    return `Esta data é ${weekdayLong}: não está entre os dias em que este profissional atende (${formatIsoWeekdaysBriefPt(sch.workWeekdays)}). Escolha outra data ou peça para incluir esse dia em Configurações.`;
+  }, [context.schedule, date]);
+
+  const emptySlotsExplanation = useMemo(() => {
+    if (slotsLoading || slotsError || timeOptions.length > 0) return null;
+    if (slotsEmptyReason === "weekday_off") {
+      return "Este dia da semana não está na disponibilidade deste profissional (ele desmarcou esse dia em Configurações). Sábado, domingo e feriados podem estar abertos — depende só dos dias que ele marcou.";
+    }
+    if (slotsEmptyReason === "no_slots_in_workday") {
+      return "Neste dia não há horário livre com a duração deste serviço: outros pedidos já podem ocupar a agenda (vale para todos os serviços) ou o tempo do serviço não cabe no expediente restante. Tente outro dia ou outro serviço, se for mais curto.";
+    }
+    return "Nenhum horário disponível nesta data. Tente outro dia.";
+  }, [slotsLoading, slotsError, timeOptions.length, slotsEmptyReason]);
+
   useEffect(() => {
     if (!context.professionalId || !serviceId.trim()) {
       setTimeOptions([]);
       setSlotsError(null);
+      setSlotsEmptyReason(null);
       return;
     }
     const svc = context.services.find((s) => s.id === serviceId);
@@ -94,6 +129,7 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     (async () => {
       setSlotsLoading(true);
       setSlotsError(null);
+      setSlotsEmptyReason(null);
       const r = await fetchBookingSlotsForDate({
         professionalId: context.professionalId!,
         date,
@@ -104,10 +140,12 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
       if (!r.ok) {
         setTimeOptions([]);
         setSlotsError(r.message);
+        setSlotsEmptyReason(null);
         setTime("");
         return;
       }
       setTimeOptions(r.slots);
+      setSlotsEmptyReason(r.slots.length === 0 ? (r.emptyReason ?? null) : null);
       setTime((prev) => {
         if (r.slots.length === 0) return "";
         return r.slots.includes(prev) ? prev : r.slots[0]!;
@@ -378,6 +416,9 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
             </option>
           ))}
         </select>
+        <p className="booking-unified-agenda-note">
+          A agenda é <strong>uma só</strong> para todos os serviços: qualquer pedido já marcado bloqueia aquele horário, não importa o tipo de serviço.
+        </p>
       </label>
 
       <label className="auth-field">
@@ -390,6 +431,8 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
           value={date}
           onChange={(ev) => setDate(ev.target.value)}
         />
+        {scheduleLine ? <p className="booking-schedule-hint">{scheduleLine}</p> : null}
+        {dateNotAWorkdayHint ? <p className="booking-schedule-warn">{dateNotAWorkdayHint}</p> : null}
       </label>
 
       <label className="auth-field">
@@ -414,9 +457,9 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
           )}
         </select>
         {slotsError ? <p className="auth-error" style={{ marginTop: 8, fontSize: 13 }}>{slotsError}</p> : null}
-        {!slotsLoading && timeOptions.length === 0 && !slotsError ? (
+        {!slotsLoading && timeOptions.length === 0 && !slotsError && emptySlotsExplanation ? (
           <p className="booking-service-pay-hint" style={{ marginTop: 6 }}>
-            Nenhum intervalo livre nesta data (fora do expediente ou agenda cheia). Tente outro dia.
+            {emptySlotsExplanation}
           </p>
         ) : null}
       </label>

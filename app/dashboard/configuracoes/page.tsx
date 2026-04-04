@@ -8,6 +8,7 @@ import { isAccountDeletionConfigured } from "@/lib/supabase/admin";
 import { AccountSecuritySection } from "@/components/settings/AccountSecuritySection";
 import { ProfessionalPublicSettingsForm } from "@/components/settings/ProfessionalPublicSettingsForm";
 import { ProfessionalScheduleForm } from "@/components/settings/ProfessionalScheduleForm";
+import { DEFAULT_WORK_WEEKDAYS_ALL } from "@/lib/booking/schedule-defaults";
 import { ProfileSettingsForm } from "@/components/settings/ProfileSettingsForm";
 
 export default async function DashboardConfiguracoesPage() {
@@ -80,7 +81,7 @@ export default async function DashboardConfiguracoesPage() {
               initialWorkWeekdays={
                 Array.isArray(pro.work_weekdays) && pro.work_weekdays.length
                   ? (pro.work_weekdays as unknown[]).map((x) => Number(x)).filter((n) => n >= 1 && n <= 7)
-                  : [1, 2, 3, 4, 5]
+                  : [...DEFAULT_WORK_WEEKDAYS_ALL]
               }
               initialSlotStep={pro.booking_slot_step_minutes ?? 60}
               initialDefaultDuration={pro.booking_default_duration_minutes ?? 120}

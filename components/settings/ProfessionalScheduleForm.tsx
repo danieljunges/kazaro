@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateMyProfessionalSchedule } from "@/app/dashboard/configuracoes/actions";
+import { DEFAULT_WORK_WEEKDAYS_ALL } from "@/lib/booking/schedule-defaults";
 
 const WEEK_OPTS: { iso: number; label: string }[] = [
   { iso: 1, label: "Seg" },
@@ -145,6 +146,11 @@ export function ProfessionalScheduleForm({
             </button>
           ))}
         </div>
+        <p className="sec-sub" style={{ margin: "10px 0 0", fontSize: 12.5, maxWidth: 640, lineHeight: 1.5 }}>
+          <strong>Importante:</strong> o expediente (início/fim) vale só nos dias <strong>marcados</strong>. Sábado e
+          domingo ficam abertos para agendamento como qualquer outro dia — <strong>desmarque</strong> os dias em que você
+          não atende (folga fixa, etc.).
+        </p>
       </div>
 
       <div className="kz-prof-row kz-prof-grid" style={{ marginTop: 14 }}>

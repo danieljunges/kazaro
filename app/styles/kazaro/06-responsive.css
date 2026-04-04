@@ -142,6 +142,12 @@
     padding-right: max(16px, env(safe-area-inset-right, 0px));
   }
 
+  .dash {
+    overflow-x: clip;
+    max-width: 100%;
+    width: 100%;
+  }
+
   .dash-body {
     min-width: 0;
   }
@@ -155,11 +161,42 @@
 
   .dash-topbar-lead {
     width: 100%;
+    min-width: 0;
+  }
+
+  .dash-topbar-titles {
+    min-width: 0;
+  }
+
+  .home-editorial .dash-topbar .dt-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
   }
 
   .dt-right {
     width: 100%;
     justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .home-editorial .kpi-val {
+    font-size: clamp(22px, 6.5vw, 27px);
+  }
+
+  .orders-table {
+    font-size: 12px;
+  }
+
+  .orders-table th,
+  .orders-table td {
+    padding: 8px 6px;
+  }
+
+  .dash-row > * {
+    min-width: 0;
   }
 
   .admin-app .admin-hub-grid {
@@ -219,5 +256,17 @@
     padding-left: 12px;
     padding-right: 12px;
     font-size: 13px;
+  }
+}
+
+/* Barra compacta: só avatar no menu da conta (evita empurrar Agendar) */
+@media (max-width: 400px) {
+  .home-editorial .nav-user-name,
+  .home-editorial .nav-user-caret {
+    display: none;
+  }
+
+  .home-editorial .nav-user-btn {
+    padding: 6px 8px;
   }
 }

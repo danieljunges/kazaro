@@ -1,6 +1,7 @@
 "use server";
 
 import { chargeCentsFromApprovedService, STRIPE_MIN_CHARGE_CENTS } from "@/lib/booking/payment-amount";
+import { isoWeekdayFromYyyyMmDdSaoPaulo } from "@/lib/datetime/sao-paulo-calendar";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const SP = "-03:00";
@@ -30,11 +31,16 @@ function toScheduledIso(date: string, time: string): string | null {
   return d.toISOString();
 }
 
+export type BookingSlotsEmptyReason = "weekday_off" | "no_slots_in_workday";
+
 export async function fetchBookingSlotsForDate(input: {
   professionalId: string;
   date: string;
   durationMinutes: number;
-}): Promise<{ ok: true; slots: string[] } | { ok: false; message: string }> {
+}): Promise<
+  | { ok: true; slots: string[]; emptyReason?: BookingSlotsEmptyReason }
+  | { ok: false; message: string }
+> {
   const supabase = await getSupabaseServerClient();
   const {
     data: { user },
@@ -49,6 +55,25 @@ export async function fetchBookingSlotsForDate(input: {
   }
 
   const dur = Math.min(600, Math.max(15, Math.round(Number(input.durationMinutes) || 120)));
+
+  const { data: proW, error: wErr } = await supabase
+    .from("professionals")
+    .select("work_weekdays")
+    .eq("id", input.professionalId)
+    .maybeSingle();
+
+  if (wErr || !proW) {
+    return { ok: false, message: "Não foi possível carregar a agenda deste profissional." };
+  }
+
+  const wdRaw = proW.work_weekdays as unknown;
+  const wdays = Array.isArray(wdRaw)
+    ? (wdRaw as unknown[]).map((n) => Math.round(Number(n))).filter((n) => n >= 1 && n <= 7)
+    : [];
+  const isoDow = isoWeekdayFromYyyyMmDdSaoPaulo(date);
+  if (isoDow != null && wdays.length > 0 && !wdays.includes(isoDow)) {
+    return { ok: true, slots: [], emptyReason: "weekday_off" };
+  }
 
   const { data, error } = await supabase.rpc("kazaro_booking_slots", {
     p_professional_id: input.professionalId,
@@ -66,6 +91,9 @@ export async function fetchBookingSlotsForDate(input: {
   }
 
   const slots = Array.isArray(data) ? (data as unknown[]).filter((s): s is string => typeof s === "string") : [];
+  if (slots.length === 0) {
+    return { ok: true, slots: [], emptyReason: "no_slots_in_workday" };
+  }
   return { ok: true, slots };
 }
 

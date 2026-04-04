@@ -1,4 +1,5 @@
 import { STRIPE_MIN_CHARGE_CENTS } from "@/lib/booking/payment-amount";
+import { DEFAULT_WORK_WEEKDAYS_ALL } from "@/lib/booking/schedule-defaults";
 import { startEndExclusiveUtcForSaoPauloDay } from "@/lib/datetime/sao-paulo-calendar";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -9,6 +10,15 @@ export type BookingServiceOption = {
   duration_minutes: number;
 };
 
+/** Regras de expediente (uma agenda única para todos os serviços do prestador). */
+export type BookingSchedulePublic = {
+  workDayStart: string;
+  workDayEnd: string;
+  /** ISO 1=seg … 7=dom */
+  workWeekdays: number[];
+  bookingSlotStepMinutes: number;
+};
+
 export type BookingPageContext = {
   professionalId: string | null;
   slug: string;
@@ -16,6 +26,8 @@ export type BookingPageContext = {
   services: BookingServiceOption[];
   isBookable: boolean;
   unavailableReason?: string;
+  /** Só em perfis reais; ausente em modo demo. */
+  schedule?: BookingSchedulePublic | null;
 };
 
 export async function fetchServicePriceCents(serviceId: string): Promise<number | null> {
@@ -30,12 +42,61 @@ export async function fetchServicePriceCents(serviceId: string): Promise<number 
   }
 }
 
+function padClockHHMM(v: unknown, fallback: string): string {
+  if (v == null) return fallback;
+  const s = String(v).trim();
+  if (/^\d{2}:\d{2}$/.test(s)) return s;
+  if (/^\d{2}:\d{2}:\d{2}/.test(s)) return s.slice(0, 5);
+  return fallback;
+}
+
+function buildScheduleFromProRow(pro: Record<string, unknown>): BookingSchedulePublic | null {
+  if (!pro?.id) return null;
+  const wd = pro.work_weekdays;
+  const rawDays = Array.isArray(wd)
+    ? (wd as unknown[]).map((n) => Math.round(Number(n))).filter((n) => n >= 1 && n <= 7)
+    : [];
+  const workWeekdays =
+    rawDays.length > 0 ? [...new Set(rawDays)].sort((a, b) => a - b) : [...DEFAULT_WORK_WEEKDAYS_ALL];
+  const stepRaw = pro.booking_slot_step_minutes;
+  const bookingSlotStepMinutes =
+    typeof stepRaw === "number" && Number.isFinite(stepRaw) && stepRaw >= 30 && stepRaw <= 240
+      ? stepRaw
+      : 60;
+  return {
+    workDayStart: padClockHHMM(pro.work_day_start, "08:00"),
+    workDayEnd: padClockHHMM(pro.work_day_end, "18:00"),
+    workWeekdays,
+    bookingSlotStepMinutes,
+  };
+}
+
+/** Expediente do prestador (painel Agenda). */
+export async function fetchProfessionalScheduleForDashboard(
+  professionalId: string,
+): Promise<BookingSchedulePublic | null> {
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data: pro, error } = await supabase
+      .from("professionals")
+      .select("id, work_day_start, work_day_end, work_weekdays, booking_slot_step_minutes")
+      .eq("id", professionalId)
+      .maybeSingle();
+    if (error || !pro?.id) return null;
+    return buildScheduleFromProRow(pro as Record<string, unknown>);
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchBookingPageContext(slug: string): Promise<BookingPageContext | null> {
   try {
     const supabase = await getSupabaseServerClient();
     const { data: pro, error: pErr } = await supabase
       .from("professionals")
-      .select("id, slug, display_name")
+      .select(
+        "id, slug, display_name, work_day_start, work_day_end, work_weekdays, booking_slot_step_minutes",
+      )
       .eq("slug", slug)
       .maybeSingle();
 
@@ -65,6 +126,8 @@ export async function fetchBookingPageContext(slug: string): Promise<BookingPage
           typeof s.duration_minutes === "number" && s.duration_minutes >= 15 ? s.duration_minutes : 120,
       }));
 
+    const schedule = buildScheduleFromProRow(pro);
+
     if (services.length === 0) {
       return {
         professionalId: pro.id as string,
@@ -72,6 +135,7 @@ export async function fetchBookingPageContext(slug: string): Promise<BookingPage
         displayName: pro.display_name as string,
         services: [],
         isBookable: false,
+        schedule,
         unavailableReason:
           "Este profissional ainda não tem serviço aprovado com preço fixo para agendamento. Tente mais tarde ou envie uma mensagem pelo perfil.",
       };
@@ -83,6 +147,7 @@ export async function fetchBookingPageContext(slug: string): Promise<BookingPage
       displayName: pro.display_name as string,
       services,
       isBookable: true,
+      schedule,
     };
   } catch {
     return null;

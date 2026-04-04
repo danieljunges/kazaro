@@ -132,6 +132,7 @@ export async function updateMyProfessionalSchedule(input: {
 
   revalidatePath("/dashboard/configuracoes");
   revalidatePath("/dashboard");
+  revalidatePath("/dashboard/agenda");
   return { ok: true };
 }
 
