@@ -31,7 +31,9 @@ function toScheduledIso(date: string, time: string): string | null {
 
 export async function submitBookingRequest(
   input: SubmitBookingInput,
-): Promise<{ ok: true } | { ok: false; message: string }> {
+): Promise<
+  { ok: true; bookingId: string; priceCents: number | null } | { ok: false; message: string }
+> {
   const supabase = await getSupabaseServerClient();
   const {
     data: { user },
@@ -103,19 +105,27 @@ export async function submitBookingRequest(
     };
   }
 
-  const { error: insErr } = await supabase.from("bookings").insert({
-    professional_id: input.professionalId,
-    client_id: user.id,
-    pro_service_id: proServiceId,
-    service_name_snapshot: serviceNameSnapshot,
-    service_price_cents_snapshot: servicePriceSnapshot,
-    scheduled_at: scheduledIso,
-    client_note: note || null,
-    client_location_snapshot: clientLocation,
-    client_name_snapshot: clientName,
-    client_email_snapshot: clientEmail,
-    status: "pending",
-  });
+  const paymentStatus =
+    typeof servicePriceSnapshot === "number" && servicePriceSnapshot > 0 ? "unpaid" : "none";
+
+  const { data: inserted, error: insErr } = await supabase
+    .from("bookings")
+    .insert({
+      professional_id: input.professionalId,
+      client_id: user.id,
+      pro_service_id: proServiceId,
+      service_name_snapshot: serviceNameSnapshot,
+      service_price_cents_snapshot: servicePriceSnapshot,
+      scheduled_at: scheduledIso,
+      client_note: note || null,
+      client_location_snapshot: clientLocation,
+      client_name_snapshot: clientName,
+      client_email_snapshot: clientEmail,
+      status: "pending",
+      payment_status: paymentStatus,
+    })
+    .select("id")
+    .single();
 
   if (insErr) {
     const msg = insErr.message?.toLowerCase() ?? "";
@@ -129,5 +139,10 @@ export async function submitBookingRequest(
     return { ok: false, message: insErr.message || "Não foi possível salvar o pedido." };
   }
 
-  return { ok: true };
+  const bookingId = inserted?.id as string | undefined;
+  if (!bookingId) {
+    return { ok: false, message: "Pedido salvo mas sem identificador. Tente de novo." };
+  }
+
+  return { ok: true, bookingId, priceCents: servicePriceSnapshot };
 }

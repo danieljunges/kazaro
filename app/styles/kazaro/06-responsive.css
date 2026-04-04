@@ -125,24 +125,28 @@
   overscroll-behavior-x: contain;
 }
 
-/* ========== Refino mobile (todas as rotas: público, conta, admin) ========== */
+/* ========== Refino mobile (conta, admin, páginas públicas utilitárias) ========== */
 .admin-app {
   max-width: 100%;
   overflow-x: clip;
 }
 
-@media (max-width: 720px) {
+/*
+  ≤640px: mesmo “modo telefone” da home (safe area, topbar empilhada, sem estourar largura).
+  - Dash com sidebar: /dashboard, /dashboard/pedidos/…
+  - Shell CompactNav: /dashboard/configuracoes, mensagens, suporte, servicos, etc. (.public-page)
+*/
+@media (max-width: 640px) {
   .public-page__intro {
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: max(16px, env(safe-area-inset-right, 0px));
   }
 
-  .home-editorial .section {
-    padding-left: max(14px, env(safe-area-inset-left, 0px));
-    padding-right: max(14px, env(safe-area-inset-right, 0px));
+  .dash-body {
+    min-width: 0;
   }
 
-  /* Topbar do dashboard/admin: título e ações empilham, nada corta à direita */
+  /* Topbar do dashboard/admin: título e ações empilham */
   .dash-topbar {
     flex-direction: column;
     align-items: stretch;
@@ -165,6 +169,43 @@
   .admin-app .admin-hub-card {
     min-height: 0;
   }
+
+  /* Internas do painel (Configurações, Ganhos, Mensagens, Suporte, Histórico, Serviços, Agenda…) */
+  .home-editorial.public-page {
+    min-width: 0;
+    overflow-x: clip;
+  }
+
+  .home-editorial.public-page .section {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    padding-left: max(14px, env(safe-area-inset-left, 0px));
+    padding-right: max(14px, env(safe-area-inset-right, 0px));
+    padding-top: clamp(22px, 6vw, 36px);
+    padding-bottom: clamp(32px, 9vw, 52px);
+  }
+
+  .home-editorial.public-page .section > .pro-page-card {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Inline maxWidth nos TSX vira limite no desktop; no mobile o cartão usa 100% da área útil */
+  .home-editorial.public-page .section > .pro-page-card[style] {
+    max-width: 100% !important;
+  }
+
+  .kz-admin-actions {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .kz-admin-actions > div {
+    justify-content: flex-start !important;
+  }
 }
 
 @media (max-width: 520px) {
@@ -178,17 +219,5 @@
     padding-left: 12px;
     padding-right: 12px;
     font-size: 13px;
-  }
-}
-
-/* Formulários admin (aprovar serviço): uma coluna em telas estreitas */
-@media (max-width: 640px) {
-  .kz-admin-actions {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-  }
-
-  .kz-admin-actions > div {
-    justify-content: flex-start !important;
   }
 }

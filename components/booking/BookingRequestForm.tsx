@@ -56,7 +56,11 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
     serviceLabel: string;
     note: string;
     location: string;
+    bookingId: string;
+    priceCents: number | null;
   } | null>(null);
+  const [payLoading, setPayLoading] = useState(false);
+  const [payHint, setPayHint] = useState<string | null>(null);
 
   const addressParts: BookingAddressParts = {
     cepDigits: onlyCepDigits(cep),
@@ -123,7 +127,16 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
         setError(result.message);
         return;
       }
-      setSubmitted({ date, time, serviceLabel, note: note.trim(), location: composedLocation });
+      setSubmitted({
+        date,
+        time,
+        serviceLabel,
+        note: note.trim(),
+        location: composedLocation,
+        bookingId: result.bookingId,
+        priceCents: result.priceCents,
+      });
+      setPayHint(null);
       setDone(true);
       router.refresh();
     } finally {
@@ -162,6 +175,39 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
       }).format(d);
     })();
 
+    const canPayOnline =
+      submitted != null &&
+      typeof submitted.priceCents === "number" &&
+      submitted.priceCents >= 50;
+
+    async function startStripeCheckout() {
+      if (!submitted?.bookingId) return;
+      setPayLoading(true);
+      setPayHint(null);
+      try {
+        const r = await fetch("/api/stripe/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bookingId: submitted.bookingId }),
+        });
+        const j = (await r.json()) as { url?: string; error?: string };
+        if (!r.ok) {
+          setPayHint(j.error ?? "Não foi possível abrir o pagamento.");
+          return;
+        }
+        if (j.url) window.location.href = j.url;
+      } finally {
+        setPayLoading(false);
+      }
+    }
+
+    const priceLabel =
+      canPayOnline && submitted?.priceCents != null
+        ? new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
+            submitted.priceCents / 100,
+          )
+        : null;
+
     return (
       <div className="booking-success">
         <p className="booking-success-title">Pedido enviado</p>
@@ -193,9 +239,37 @@ export function BookingRequestForm({ context, initialServiceIndex }: Props) {
               <span className="booking-recap-v">{submitted.note}</span>
             </div>
           ) : null}
-          <p className="booking-recap-hint">
-            Sem pagamento agora. Assim que o profissional confirmar, você verá o status no Dashboard.
-          </p>
+          {canPayOnline ? (
+            <>
+              <p className="booking-recap-hint" style={{ marginTop: 14 }}>
+                Este serviço tem valor definido ({priceLabel}). Você pode pagar com cartão agora; o pedido continua
+                aguardando a confirmação do profissional.
+              </p>
+              <div style={{ marginTop: 16 }}>
+                <button
+                  type="button"
+                  className="btn-cta auth-submit"
+                  disabled={payLoading}
+                  onClick={() => void startStripeCheckout()}
+                >
+                  {payLoading ? "Redirecionando…" : `Pagar ${priceLabel} com cartão`}
+                </button>
+                {payHint ? <p className="auth-error" style={{ marginTop: 10 }}>{payHint}</p> : null}
+              </div>
+              <p className="booking-recap-hint" style={{ marginTop: 12 }}>
+                Prefere combinar depois? Você também pode pagar pelo{" "}
+                <Link href="/dashboard/historico" className="auth-link">
+                  Histórico de serviços
+                </Link>
+                .
+              </p>
+            </>
+          ) : (
+            <p className="booking-recap-hint">
+              Sem pagamento online neste pedido (serviço a combinar ou valor não informado). Quando o profissional
+              confirmar, você acompanha no Dashboard.
+            </p>
+          )}
         </div>
         <div className="booking-guest-actions">
           <Link href={`/profissional/${context.slug}`} className="btn-ghost">

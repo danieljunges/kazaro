@@ -128,6 +128,8 @@ export type MyBookingRow = {
   client_note: string | null;
   service_started_at: string | null;
   completion_photo_url?: string | null;
+  service_price_cents_snapshot?: number | null;
+  payment_status?: string | null;
   professionals: { id: string; display_name: string; slug: string } | null;
 };
 
@@ -145,6 +147,8 @@ export async function fetchMyBookingsAsClient(userId: string, limit = 15): Promi
         client_note,
         service_started_at,
         completion_photo_url,
+        service_price_cents_snapshot,
+        payment_status,
         professionals (
           id,
           display_name,

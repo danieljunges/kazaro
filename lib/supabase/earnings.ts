@@ -13,9 +13,10 @@ export async function fetchEarningsThisMonth(professionalId: string): Promise<{
     const supabase = await getSupabaseServerClient();
     const { data, error } = await supabase
       .from("bookings")
-      .select("final_price_cents, service_price_cents_snapshot, status, scheduled_at")
+      .select("final_price_cents, service_price_cents_snapshot, status, scheduled_at, payment_status")
       .eq("professional_id", professionalId)
       .eq("status", "completed")
+      .in("payment_status", ["none", "paid"])
       .gte("scheduled_at", startIso)
       .limit(500);
 

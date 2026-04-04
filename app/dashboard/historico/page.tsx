@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { StripePayButton } from "@/components/booking/StripePayButton";
 import { CompactNav } from "@/components/kazaro/CompactNav";
-import { bookingStatusLabelShort } from "@/lib/booking/workflow";
 import { dashboardHomeHref } from "@/lib/dashboard/home-href";
 import { BookingReviewForm } from "@/components/reviews/BookingReviewForm";
 import { fetchMyBookingsAsClient, type MyBookingRow } from "@/lib/supabase/bookings";
@@ -76,7 +76,12 @@ function isActiveBooking(status: string): boolean {
   return status === "pending" || status === "confirmed" || status === "in_progress";
 }
 
-export default async function HistoricoServicosPage() {
+export default async function HistoricoServicosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ pagamento?: string }>;
+}) {
+  const sp = await searchParams;
   const supabase = await getSupabaseServerClient();
   const {
     data: { user },
@@ -108,6 +113,22 @@ export default async function HistoricoServicosPage() {
             detalhes ou orçamento. Quando o status estiver <strong>Concluído</strong>, você pode deixar estrelas e um
             comentário. Isso entra na média pública do perfil dele.
           </p>
+
+          {sp.pagamento === "sucesso" ? (
+            <div
+              className="auth-banner auth-banner--ok"
+              style={{ marginBottom: 18, textAlign: "left", lineHeight: 1.55 }}
+            >
+              <strong>Pagamento confirmado.</strong> O pedido segue aguardando a confirmação do profissional; você pode
+              acompanhar o status abaixo.
+            </div>
+          ) : null}
+          {sp.pagamento === "cancelado" ? (
+            <div className="auth-banner" style={{ marginBottom: 18, textAlign: "left", lineHeight: 1.55 }}>
+              <strong>Pagamento cancelado.</strong> Nada foi cobrado. Nos pedidos com valor definido, use{" "}
+              <strong>Pagar com cartão</strong> no card do pedido para tentar de novo.
+            </div>
+          ) : null}
 
           {rows.length === 0 ? (
             <p className="sec-sub" style={{ margin: 0 }}>
@@ -147,10 +168,17 @@ export default async function HistoricoServicosPage() {
   );
 }
 
+function formatBrl(cents: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
+}
+
 function BookingCard({ row, hasReview }: { row: MyBookingRow; hasReview: boolean }) {
   const pro = row.professionals;
   const slug = pro?.slug;
   const showReviewForm = row.status === "completed" && !hasReview;
+  const cents = row.service_price_cents_snapshot;
+  const showStripePay =
+    row.payment_status === "unpaid" && typeof cents === "number" && cents >= 50;
 
   return (
     <li className="kz-hist-card">
@@ -193,6 +221,9 @@ function BookingCard({ row, hasReview }: { row: MyBookingRow; hasReview: boolean
       ) : null}
       {slug ? (
         <div className="kz-hist-actions">
+          {showStripePay ? (
+            <StripePayButton bookingId={row.id} label={`Pagar ${formatBrl(cents)} com cartão`} />
+          ) : null}
           <Link href={`/dashboard/mensagens/novo/${encodeURIComponent(slug)}`} className="btn-cta" style={{ fontSize: 14, padding: "10px 18px" }}>
             Mensagem sobre este pedido
           </Link>
