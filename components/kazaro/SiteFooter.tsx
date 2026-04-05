@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -51,6 +52,11 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link href="/carreiras">Carreiras</Link>
+              </li>
+              <li>
+                <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+                  Instagram @{INSTAGRAM_HANDLE}
+                </a>
               </li>
             </ul>
           </div>

@@ -6,28 +6,33 @@ import { NavigationProgress } from "@/components/common/NavigationProgress";
 import { RouteScrollTop } from "@/components/common/RouteScrollTop";
 import { KzSaasMotion } from "@/components/motion/KzSaasMotion";
 import { CookieConsentBar } from "@/components/legal/CookieConsentBar";
-import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE_DEFAULT, SITE_TITLE_TEMPLATE } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${SITE_NAME} - Servicos para casa em Florianopolis`,
-    template: `%s | ${SITE_NAME}`,
+    default: SITE_TITLE_DEFAULT,
+    template: SITE_TITLE_TEMPLATE,
   },
   description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  icons: {
+    icon: [{ url: "/kazaro-icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/kazaro-icon.svg", type: "image/svg+xml" }],
+  },
   openGraph: {
     type: "website",
     locale: "pt_BR",
     url: siteUrl,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} - Servicos para casa em Florianopolis`,
+    title: SITE_TITLE_DEFAULT,
     description: SITE_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} - Servicos para casa em Florianopolis`,
+    title: SITE_TITLE_DEFAULT,
     description: SITE_DESCRIPTION,
   },
   robots: {

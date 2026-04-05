@@ -121,6 +121,42 @@ function splitDisplayName(displayName: string): { line1: string; line2: string }
   };
 }
 
+/** Profissionais reais para vitrine da home (ordenados por reputação). */
+export async function fetchProfessionalsForHome(limit = 8): Promise<ProfessionalCard[]> {
+  try {
+    const supabase = await getSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("professionals")
+      .select(
+        "id, slug, display_name, headline, city, neighborhood, service_region, is_verified, availability_hint, rating_avg, reviews_count, price_from_cents",
+      )
+      .order("reviews_count", { ascending: false, nullsFirst: false })
+      .order("rating_avg", { ascending: false, nullsFirst: true })
+      .limit(Math.min(Math.max(limit, 1), 24));
+
+    if (error || !data?.length) return [];
+
+    const ids = (data as ProRow[]).map((r) => r.id);
+    const { data: catRows } = await supabase
+      .from("pro_services")
+      .select("professional_id, category_key")
+      .in("professional_id", ids)
+      .eq("status", "approved");
+
+    const extraByPro = new Map<string, string>();
+    for (const r of catRows ?? []) {
+      const pid = r.professional_id as string;
+      const blob = searchBlobForCategoryKey(r.category_key as string | null);
+      if (!blob) continue;
+      extraByPro.set(pid, `${extraByPro.get(pid) ?? ""} ${blob}`);
+    }
+
+    return (data as ProRow[]).map((row, i) => mapProRowToCard(row, i, extraByPro.get(row.id)));
+  } catch {
+    return [];
+  }
+}
+
 export async function fetchProfessionalsForSearch(): Promise<ProfessionalCard[] | null> {
   try {
     const supabase = await getSupabaseServerClient();

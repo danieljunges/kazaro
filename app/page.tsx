@@ -1,30 +1,59 @@
 import type { Metadata } from "next";
+import { HomeView } from "@/components/home/HomeView";
 import { MarketingNav } from "@/components/kazaro/MarketingNav";
 import { SiteFooter } from "@/components/kazaro/SiteFooter";
-import { HomeView } from "@/components/home/HomeView";
-import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { fetchProfessionalsForHome } from "@/lib/supabase/professionals-public";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE_DEFAULT } from "@/lib/site";
 
 const url = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: "O profissional certo para o seu lar",
+  title: { absolute: SITE_TITLE_DEFAULT },
   description: SITE_DESCRIPTION,
+  keywords: [
+    "serviços para casa Florianópolis",
+    "encanador Florianópolis",
+    "eletricista Florianópolis",
+    "faxina Florianópolis",
+    "profissionais verificados",
+    SITE_NAME,
+  ],
   openGraph: {
-    title: `${SITE_NAME} | Serviços para casa em Florianópolis`,
+    title: SITE_TITLE_DEFAULT,
     description: SITE_DESCRIPTION,
     url,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE_DEFAULT,
+    description: SITE_DESCRIPTION,
   },
   alternates: {
     canonical: url,
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [spotlightPros, proTotalListed] = await Promise.all([
+    fetchProfessionalsForHome(8),
+    (async () => {
+      try {
+        const supabase = await getSupabaseServerClient();
+        const { count, error } = await supabase.from("professionals").select("*", { count: "exact", head: true });
+        if (error) return 0;
+        return count ?? 0;
+      } catch {
+        return 0;
+      }
+    })(),
+  ]);
+
   return (
     <div className="home-editorial">
       <MarketingNav />
-      <HomeView />
+      <HomeView spotlightPros={spotlightPros} proTotalListed={proTotalListed} />
       <SiteFooter />
     </div>
   );

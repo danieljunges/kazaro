@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { ProfessionalCard } from "@/lib/professionals";
+import { availBadge, proSurfaceClass, starsFromRatingPt } from "@/lib/home/spotlight-helpers";
 
 const TRUST_LINE = [
   "Profissionais com verificação de antecedentes",
@@ -80,8 +82,19 @@ function PbCheck() {
   );
 }
 
-export function HomeView() {
+export function HomeView({
+  spotlightPros,
+  proTotalListed,
+}: {
+  spotlightPros: ProfessionalCard[];
+  /** Total de linhas em `professionals` (para estatística na faixa). */
+  proTotalListed: number;
+}) {
   const trustLoop = [...TRUST_LINE, ...TRUST_LINE];
+  const featured = spotlightPros[0];
+  const gridPros = spotlightPros.slice(0, 6);
+  const heroAvail = featured ? availBadge(featured.avail) : null;
+  const heroSurface = featured ? proSurfaceClass(featured.phClass) : "ph-green";
 
   return (
     <>
@@ -138,42 +151,59 @@ export function HomeView() {
 
           <div className="hero-right">
             <div className="hero-card-main">
-              <div className="hcm-img">
-                <div className="hcm-img-placeholder ph-green">
-                  <span className="avail-tag">Disponível hoje</span>
-                </div>
-              </div>
-              <div className="hcm-body">
-                <div className="hcm-top">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    className="hcm-avatar"
-                    src="https://i.pravatar.cc/100?img=11"
-                    alt=""
-                    width={46}
-                    height={46}
-                  />
-                  <div>
-                    <div className="hcm-name">Carlos Machado</div>
-                    <div className="hcm-role">Encanador · Trindade</div>
+              {featured ? (
+                <>
+                  <div className="hcm-img">
+                    <div className={`hcm-img-placeholder ${heroSurface}`}>
+                      <span className="avail-tag">{heroAvail?.label}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="hcm-stars">
-                  <span className="stars">★★★★★</span>
-                  <span className="hcm-rating">4,9</span>
-                  <span className="hcm-count">· 127 avaliações</span>
-                </div>
-                <div className="hcm-divider" />
-                <div className="hcm-footer">
-                  <div>
-                    <div className="hcm-price-label">a partir de</div>
-                    <div className="hcm-price">R$ 120</div>
+                  <div className="hcm-body">
+                    <div className="hcm-top">
+                      <div className="hcm-ava-fallback" aria-hidden>
+                        {featured.initials}
+                      </div>
+                      <div>
+                        <div className="hcm-name">{featured.name}</div>
+                        <div className="hcm-role">{featured.roleLine}</div>
+                      </div>
+                    </div>
+                    <div className="hcm-stars">
+                      <span className="stars">{starsFromRatingPt(featured.rating)}</span>
+                      <span className="hcm-rating">{featured.rating}</span>
+                      <span className="hcm-count">· {featured.reviewsCount} avaliações</span>
+                    </div>
+                    <div className="hcm-divider" />
+                    <div className="hcm-footer">
+                      <div>
+                        <div className="hcm-price-label">a partir de</div>
+                        <div className="hcm-price">{featured.price}</div>
+                      </div>
+                      <Link href={`/profissional/${featured.slug}`} className="btn-ver">
+                        Ver perfil →
+                      </Link>
+                    </div>
                   </div>
-                  <Link href="/profissional/carlos-eduardo-machado" className="btn-ver">
-                    Ver agenda →
-                  </Link>
-                </div>
-              </div>
+                </>
+              ) : (
+                <>
+                  <div className="hcm-img">
+                    <div className="hcm-img-placeholder ph-green">
+                      <span className="avail-tag">Rede Kazaro</span>
+                    </div>
+                  </div>
+                  <div className="hcm-body">
+                    <p className="sec-sub" style={{ margin: 0, lineHeight: 1.55 }}>
+                      Ainda não há perfis públicos na vitrine. Se você presta serviço em Florianópolis, pode ser o primeiro a
+                      aparecer aqui.
+                    </p>
+                    <div className="hcm-divider" style={{ margin: "16px 0" }} />
+                    <Link href="/para-profissionais" className="btn-ver" style={{ width: "100%", justifyContent: "center" }}>
+                      Criar perfil profissional →
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
             <div className="float-badge">
               <div className="fb-icon">
@@ -383,12 +413,20 @@ export function HomeView() {
           </div>
           <div className="stat-item">
             <div className="stat-num">
-              +<span>180</span>
+              {proTotalListed > 0 ? (
+                <>
+                  +<span>{proTotalListed}</span>
+                </>
+              ) : (
+                <>
+                  +<span>0</span>
+                </>
+              )}
             </div>
             <div className="stat-label">
               Profissionais
               <br />
-              verificados ativos
+              na plataforma
             </div>
           </div>
           <div className="stat-item">
