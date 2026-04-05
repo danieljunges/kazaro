@@ -253,6 +253,26 @@
   background: var(--cream-alt);
   margin-bottom: 6px;
 }
+.home-editorial button.kz-site-drawer-link {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.home-editorial .kz-site-drawer-link--danger {
+  color: #a33b2f;
+}
+.home-editorial .kz-site-drawer-link--danger:hover {
+  background: rgba(196, 92, 74, 0.08);
+}
+.home-editorial .kz-site-drawer-link--danger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 
 /* ─── Menu do usuário (logado) ─── */
 .home-editorial .nav-user {

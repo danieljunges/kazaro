@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { AUTH_SIGNOUT_MIN_MS, ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import type { ProfileRole } from "@/lib/supabase/profile";
 
 type Props = {
@@ -14,6 +16,7 @@ type Props = {
 
 export function SiteNavDrawer({ variant, backHref, backLabel, accountKind }: Props) {
   const [open, setOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -214,6 +217,30 @@ export function SiteNavDrawer({ variant, backHref, backLabel, accountKind }: Pro
                 )}
               </>
             )}
+
+            {accountKind != null ? (
+              <>
+                <div className="kz-site-drawer-section">Sessão</div>
+                <button
+                  type="button"
+                  className="kz-site-drawer-link kz-site-drawer-link--danger"
+                  disabled={signingOut}
+                  onClick={async () => {
+                    setSigningOut(true);
+                    const t0 = Date.now();
+                    try {
+                      await getSupabaseBrowserClient().auth.signOut();
+                      await ensureMinElapsedSince(t0, AUTH_SIGNOUT_MIN_MS);
+                      window.location.assign("/?saiu=1");
+                    } finally {
+                      setSigningOut(false);
+                    }
+                  }}
+                >
+                  {signingOut ? "Saindo…" : "Sair da conta"}
+                </button>
+              </>
+            ) : null}
 
             <div className="kz-site-drawer-section">Legal</div>
             <Link href="/privacidade" className="kz-site-drawer-link" onClick={() => setOpen(false)}>

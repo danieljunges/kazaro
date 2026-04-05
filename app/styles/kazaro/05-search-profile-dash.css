@@ -765,6 +765,11 @@ a.btn-book-now:visited {
   color: var(--ink60);
   font-size: 13px;
 }
+.dash-mnav-footer {
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
 
 .admin-mobile-bar {
   display: none;

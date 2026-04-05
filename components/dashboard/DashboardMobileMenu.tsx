@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 
 const ITEMS_PRO = [
   { label: "Visão geral", href: "/dashboard" },
@@ -87,6 +88,9 @@ export function DashboardMobileMenu({ accountKind }: { accountKind: "client" | "
                 {i.label}
               </Link>
             ))}
+            <div className="dash-mnav-footer">
+              <SignOutButton />
+            </div>
           </div>
         </>
       ) : null}

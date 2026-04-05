@@ -349,4 +349,20 @@
     max-height: min(80vh, 560px);
     overflow-y: auto;
   }
+
+  /*
+    Popover da conta na barra pública/compacta: absolute + overflow-x clip no .home-editorial
+    cortava o menu (Sair sumia). Mesmo padrão fixo do painel.
+  */
+  .home-editorial .nav-user-pop {
+    position: fixed;
+    z-index: 400;
+    left: max(10px, env(safe-area-inset-left, 0px));
+    right: max(10px, env(safe-area-inset-right, 0px));
+    top: max(56px, calc(env(safe-area-inset-top, 0px) + 48px));
+    width: auto;
+    max-width: none;
+    max-height: min(80vh, 560px);
+    overflow-y: auto;
+  }
 }

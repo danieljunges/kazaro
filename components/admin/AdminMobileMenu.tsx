@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 
 function adminNavActive(pathname: string, href: string): boolean {
   if (pathname === href) return true;
@@ -76,6 +77,9 @@ export function AdminMobileMenu({ adminBase }: { adminBase: string }) {
             <Link href="/dashboard" className="dash-mnav-link dash-mnav-link--muted" onClick={() => setOpen(false)}>
               ← Voltar ao dashboard
             </Link>
+            <div className="dash-mnav-footer">
+              <SignOutButton />
+            </div>
           </div>
         </>
       ) : null}
