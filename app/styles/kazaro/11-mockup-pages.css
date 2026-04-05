@@ -523,6 +523,21 @@
     padding-right: max(20px, env(safe-area-inset-right, 0px));
   }
 }
+@media (max-width: 520px) {
+  .home-editorial.kz-busca .kz-search-header {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+  .home-editorial.kz-busca .kz-fb-inner {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+  .home-editorial.kz-busca .kz-busca-main {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+}
+
 @media (max-width: 640px) {
   .home-editorial.kz-busca .kz-results-grid {
     grid-template-columns: 1fr;

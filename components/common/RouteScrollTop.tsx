@@ -21,6 +21,15 @@ export function RouteScrollTop() {
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
+  /* Voltar do histórico / bfcache: não saltar para o topo e estragar a leitura */
+  useEffect(() => {
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) skipNextScroll.current = true;
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 

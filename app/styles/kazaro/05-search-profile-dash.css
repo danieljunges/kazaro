@@ -498,8 +498,12 @@ a.btn-book-now:visited {
 .btn-contratar:hover { color: var(--ink); text-decoration-color: var(--ink); }
 
 /* ─────────────────────────────────────────
-   DASHBOARD
+   DASHBOARD (segmento /dashboard)
 ───────────────────────────────────────── */
+.kz-dashboard-route-root {
+  min-height: 100dvh;
+}
+
 .dash {
   display: flex;
   min-height: 100vh;

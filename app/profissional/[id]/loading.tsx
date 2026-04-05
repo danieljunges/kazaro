@@ -1,9 +1,9 @@
 export default function ProfissionalLoading() {
   return (
-    <div className="public-page">
-      <div className="navbar" style={{ height: 66 }}>
-        <div className="skel" style={{ width: 120, height: 28, borderRadius: 8, marginLeft: 24 }} />
-        <div className="skel" style={{ width: 220, height: 36, borderRadius: 8, marginRight: 24 }} />
+    <div className="public-page kz-route-loading">
+      <div className="navbar">
+        <div className="skel" style={{ width: 120, height: 28, borderRadius: 8 }} />
+        <div className="skel" style={{ width: "min(220px, 42vw)", height: 36, borderRadius: 8 }} />
       </div>
       <div className="pp-bg">
         <div className="pp-band">

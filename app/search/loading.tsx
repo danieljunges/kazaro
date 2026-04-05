@@ -1,9 +1,9 @@
 export default function SearchLoading() {
   return (
-    <div className="public-page">
-      <div className="navbar" style={{ height: 66 }}>
-        <div className="skel" style={{ width: 120, height: 28, borderRadius: 8, marginLeft: 24 }} />
-        <div className="skel" style={{ width: 180, height: 36, borderRadius: 8, marginRight: 24 }} />
+    <div className="public-page kz-route-loading">
+      <div className="navbar">
+        <div className="skel" style={{ width: 120, height: 28, borderRadius: 8 }} />
+        <div className="skel" style={{ width: "min(180px, 38vw)", height: 36, borderRadius: 8 }} />
       </div>
       <div className="sp-topbar">
         <div className="sp-search-row" style={{ maxWidth: 780, margin: "0 auto 16px" }}>

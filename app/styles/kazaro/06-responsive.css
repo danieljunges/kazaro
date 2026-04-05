@@ -138,15 +138,52 @@
   overflow-x: clip;
 }
 
+/* Loadings de rota (search, perfil) — mesmo cuidado de largura que o restante do app */
+.kz-route-loading {
+  max-width: 100%;
+  overflow-x: clip;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 /*
   ≤640px: mesmo “modo telefone” da home (safe area, topbar empilhada, sem estourar largura).
   - Dash com sidebar: /dashboard, /dashboard/pedidos/…
   - Shell CompactNav: /dashboard/configuracoes, mensagens, suporte, servicos, etc. (.public-page)
 */
 @media (max-width: 640px) {
+  /*
+    Shell comum: rotas /dashboard/* e qualquer página home-editorial sem .public-page
+    (ex.: visão geral com sidebar) — evita largura mínima implícita estourando a viewport.
+  */
+  .kz-dashboard-route-root {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: clip;
+    box-sizing: border-box;
+  }
+
   .public-page__intro {
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  /*
+    404 e páginas que usam <main class="public-page"> só por dentro do .home-editorial
+    (o bloco .home-editorial.public-page .section não se aplica ao wrapper).
+  */
+  .home-editorial > main.public-page {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  /* Cartões com maxWidth inline no TSX — útil também fora de .public-page */
+  .home-editorial .section > .pro-page-card[style],
+  .home-editorial .section .pro-page-card[style] {
+    max-width: 100% !important;
   }
 
   .dash {
@@ -251,11 +288,6 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-  }
-
-  /* Inline maxWidth nos TSX vira limite no desktop; no mobile o cartão usa 100% da área útil */
-  .home-editorial.public-page .section > .pro-page-card[style] {
-    max-width: 100% !important;
   }
 
   .kz-admin-actions {

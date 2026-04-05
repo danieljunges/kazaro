@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { CompactNavProNotifications } from "@/components/dashboard/CompactNavProNotifications";
+import { CompactNavContextChip } from "@/components/kazaro/CompactNavContextChip";
 import { PublicNavRight } from "@/components/kazaro/PublicNavRight";
 
 type Props = {
@@ -19,10 +21,14 @@ export function CompactNav({ backHref, backLabel }: Props) {
   return (
     <nav>
       <div className="nav-inner">
-        <Link href="/" className="logo" aria-label="Kazaro, início">
-          Kazaro
-        </Link>
+        <div className="nav-brand-cluster">
+          <Link href="/" className="logo" aria-label="Kazaro, início">
+            Kazaro
+          </Link>
+          <CompactNavContextChip backHref={backHref} backLabel={backLabel} />
+        </div>
         <div className="nav-right">
+          <CompactNavProNotifications />
           <Suspense fallback={<NavRightFallback />}>
             <PublicNavRight variant="compact" backHref={backHref} backLabel={backLabel} />
           </Suspense>
