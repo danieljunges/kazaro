@@ -44,6 +44,8 @@ export function SiteNavDrawer({ variant, backHref, backLabel, accountKind }: Pro
   }, [open]);
 
   const isProNav = accountKind === "professional" || accountKind === "admin";
+  /** No painel (CompactNav) o prestador já está no produto — não misturar com vitrine “Para profissionais” em destaque. */
+  const dashboardCompact = variant === "compact" && accountKind != null;
 
   return (
     <div className="kz-site-drawer-root" ref={rootRef}>
@@ -65,7 +67,7 @@ export function SiteNavDrawer({ variant, backHref, backLabel, accountKind }: Pro
           <div className="kz-site-drawer-backdrop" aria-hidden onClick={() => setOpen(false)} />
           <div id="kz-site-drawer-panel" className="kz-site-drawer-panel" role="dialog" aria-modal="true" aria-label="Menu">
             <div className="kz-site-drawer-head">
-              <span className="kz-site-drawer-title">Menu</span>
+              <span className="kz-site-drawer-title">{dashboardCompact && isProNav ? "Dashboard" : "Menu"}</span>
               <button type="button" className="kz-site-drawer-close" onClick={() => setOpen(false)} aria-label="Fechar">
                 ×
               </button>
@@ -77,34 +79,14 @@ export function SiteNavDrawer({ variant, backHref, backLabel, accountKind }: Pro
               </Link>
             ) : null}
 
-            <div className="kz-site-drawer-section">Site</div>
-            <Link href="/#servicos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-              Serviços
-            </Link>
-            <Link href="/#como-funciona" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-              Como funciona
-            </Link>
-            <Link href="/para-profissionais" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-              Para profissionais
-            </Link>
-            <Link href="/search" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-              Buscar profissionais
-            </Link>
-
-            <div className="kz-site-drawer-section">Conta</div>
-            {accountKind == null ? (
+            {dashboardCompact && isProNav ? (
               <>
-                <Link href="/entrar" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-                  Entrar
-                </Link>
-                <Link href="/criar-conta" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-                  Criar conta
-                </Link>
-              </>
-            ) : isProNav ? (
-              <>
+                <div className="kz-site-drawer-section">Painel</div>
                 <Link href="/dashboard" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-                  Dashboard
+                  Visão geral
+                </Link>
+                <Link href="/dashboard/agenda" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Agenda
                 </Link>
                 <Link href="/dashboard/servicos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
                   Meus serviços
@@ -121,9 +103,20 @@ export function SiteNavDrawer({ variant, backHref, backLabel, accountKind }: Pro
                 <Link href="/dashboard/configuracoes" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
                   Configurações
                 </Link>
+                <div className="kz-site-drawer-section">Explorar o Kazaro</div>
+                <Link href="/" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Página inicial
+                </Link>
+                <Link href="/search" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Buscar profissionais
+                </Link>
               </>
-            ) : (
+            ) : dashboardCompact && !isProNav ? (
               <>
+                <div className="kz-site-drawer-section">Minha conta</div>
+                <Link href="/search" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Buscar profissionais
+                </Link>
                 <Link href="/dashboard/historico" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
                   Histórico de serviços
                 </Link>
@@ -133,12 +126,92 @@ export function SiteNavDrawer({ variant, backHref, backLabel, accountKind }: Pro
                 <Link href="/dashboard/suporte" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
                   Suporte
                 </Link>
-                <Link href="/dashboard" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
-                  Visão geral
-                </Link>
                 <Link href="/dashboard/configuracoes" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
                   Configurações
                 </Link>
+                <div className="kz-site-drawer-section">Site</div>
+                <Link href="/" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Página inicial
+                </Link>
+                <Link href="/#servicos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Serviços
+                </Link>
+                <Link href="/#como-funciona" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Como funciona
+                </Link>
+                <Link href="/para-profissionais" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Para profissionais
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="kz-site-drawer-section">Site</div>
+                <Link href="/#servicos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Serviços
+                </Link>
+                <Link href="/#como-funciona" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Como funciona
+                </Link>
+                <Link href="/para-profissionais" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Para profissionais
+                </Link>
+                <Link href="/search" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                  Buscar profissionais
+                </Link>
+
+                <div className="kz-site-drawer-section">Conta</div>
+                {accountKind == null ? (
+                  <>
+                    <Link href="/entrar" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Entrar
+                    </Link>
+                    <Link href="/criar-conta" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Criar conta
+                    </Link>
+                  </>
+                ) : isProNav ? (
+                  <>
+                    <Link href="/dashboard" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Dashboard
+                    </Link>
+                    <Link href="/dashboard/agenda" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Agenda
+                    </Link>
+                    <Link href="/dashboard/servicos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Meus serviços
+                    </Link>
+                    <Link href="/dashboard/mensagens" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Mensagens
+                    </Link>
+                    <Link href="/dashboard/suporte" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Suporte
+                    </Link>
+                    <Link href="/dashboard/ganhos" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Ganhos
+                    </Link>
+                    <Link href="/dashboard/configuracoes" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Configurações
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/dashboard/historico" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Histórico de serviços
+                    </Link>
+                    <Link href="/dashboard/mensagens" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Mensagens
+                    </Link>
+                    <Link href="/dashboard/suporte" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Suporte
+                    </Link>
+                    <Link href="/dashboard" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Visão geral
+                    </Link>
+                    <Link href="/dashboard/configuracoes" className="kz-site-drawer-link" onClick={() => setOpen(false)}>
+                      Configurações
+                    </Link>
+                  </>
+                )}
               </>
             )}
 

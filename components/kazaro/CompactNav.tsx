@@ -1,8 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { CompactNavProNotifications } from "@/components/dashboard/CompactNavProNotifications";
 import { CompactNavContextChip } from "@/components/kazaro/CompactNavContextChip";
-import { PublicNavRight } from "@/components/kazaro/PublicNavRight";
+import { CompactNavAccountCluster } from "@/components/kazaro/PublicNavRight";
 
 type Props = {
   backHref: string;
@@ -28,9 +27,8 @@ export function CompactNav({ backHref, backLabel }: Props) {
           <CompactNavContextChip backHref={backHref} backLabel={backLabel} />
         </div>
         <div className="nav-right">
-          <CompactNavProNotifications />
           <Suspense fallback={<NavRightFallback />}>
-            <PublicNavRight variant="compact" backHref={backHref} backLabel={backLabel} />
+            <CompactNavAccountCluster backHref={backHref} backLabel={backLabel} />
           </Suspense>
           <Link className="btn-ghost nav-compact-back-desktop" href={backHref}>
             {backLabel}
