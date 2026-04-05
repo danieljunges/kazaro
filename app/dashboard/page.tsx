@@ -268,8 +268,8 @@ export default async function DashboardPage({
                   </Link>
                 </p>
               ) : (
-                <div className="kz-table-scroll">
-                  <table className="orders-table">
+                <div className="kz-table-scroll kz-table-scroll--natural">
+                  <table className="orders-table orders-table--dashboard-narrow">
                     <thead>
                       <tr>
                         <th>Serviço</th>

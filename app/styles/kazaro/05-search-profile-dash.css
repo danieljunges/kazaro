@@ -505,7 +505,11 @@ a.btn-book-now:visited {
   min-height: 100vh;
   min-height: 100dvh;
   background: var(--cream);
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+  box-sizing: border-box;
 }
 
 .dash-sidebar {
@@ -617,7 +621,16 @@ a.btn-book-now:visited {
   justify-content: center;
 }
 
-.dash-body { margin-left: 232px; flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.dash-body {
+  margin-left: 232px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 
 .dash-topbar {
   background: var(--white);
@@ -1167,6 +1180,8 @@ a.btn-book-now:visited {
   min-width: 0;
   box-sizing: border-box;
   width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
   animation: kz-dash-route-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 @keyframes kz-dash-route-in {
@@ -1198,14 +1213,29 @@ a.btn-book-now:visited {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
   gap: 14px;
   margin-bottom: 18px;
+  width: 100%;
+  min-width: 0;
+}
+.kpi-grid > * {
+  min-width: 0;
 }
 .kpi-card {
   background: var(--white);
   border: 1.5px solid var(--border);
   border-radius: var(--r-md);
   padding: 18px 20px;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
-.kpi-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 13px; }
+.kpi-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 13px;
+  min-width: 0;
+}
 .kpi-icon {
   width: 36px;
   height: 36px;
@@ -1242,6 +1272,9 @@ a.btn-book-now:visited {
   border: 1.5px solid var(--border);
   border-radius: var(--r-md);
   padding: 20px 22px;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 .dc-head {
   font-size: 14px;
@@ -1282,7 +1315,13 @@ a.btn-book-now:visited {
 .bar-label { font-size: 10px; color: var(--ink60); font-weight: 500; }
 .bar-val { font-size: 10px; color: var(--ink60); font-weight: 500; height: 13px; }
 
-.msg-list { display: flex; flex-direction: column; gap: 2px; }
+.msg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  max-width: 100%;
+}
 .msg-item {
   display: flex;
   align-items: center;
@@ -1291,6 +1330,11 @@ a.btn-book-now:visited {
   border-radius: 10px;
   cursor: pointer;
   transition: background .16s;
+  min-width: 0;
+  max-width: 100%;
+}
+.msg-item > div {
+  min-width: 0;
 }
 .msg-item:hover { background: var(--cream); }
 .msg-ava { position: relative; flex-shrink: 0; }
@@ -1310,7 +1354,15 @@ a.btn-book-now:visited {
   border: 2px solid var(--white);
 }
 .msg-name { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: -.01em; }
-.msg-text { font-size: 12px; color: var(--ink60); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px; font-weight: 400; }
+.msg-text {
+  font-size: 12px;
+  color: var(--ink60);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  font-weight: 400;
+}
 .msg-time { font-size: 11px; color: var(--ink40); margin-left: auto; flex-shrink: 0; font-weight: 500; }
 
 /* ─── Mensagens (Dashboard) ─── */
@@ -2512,6 +2564,29 @@ a.btn-book-now:visited {
   min-width: 820px;
   border-collapse: collapse;
   table-layout: auto;
+}
+
+/* Tabelas poucas colunas no dashboard: cabe no telefone sem forçar 820px */
+.orders-table--dashboard-narrow {
+  min-width: 0;
+  table-layout: fixed;
+}
+.orders-table--dashboard-narrow th:nth-child(1),
+.orders-table--dashboard-narrow td:nth-child(1) {
+  width: 46%;
+}
+.orders-table--dashboard-narrow th:nth-child(2),
+.orders-table--dashboard-narrow td:nth-child(2) {
+  width: 28%;
+}
+.orders-table--dashboard-narrow th:nth-child(3),
+.orders-table--dashboard-narrow td:nth-child(3) {
+  width: 26%;
+}
+.orders-table--dashboard-narrow .o-status {
+  white-space: normal;
+  text-align: center;
+  max-width: 100%;
 }
 .orders-table th {
   text-align: left;

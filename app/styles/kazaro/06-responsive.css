@@ -121,8 +121,15 @@
   -webkit-overflow-scrolling: touch;
   max-width: 100%;
   width: 100%;
+  min-width: 0;
   overflow-x: auto;
   overscroll-behavior-x: contain;
+  box-sizing: border-box;
+}
+
+/* Wrapper só quando a tabela já tem largura “natural” (sem min-width 820px) */
+.kz-table-scroll--natural {
+  overflow-x: visible;
 }
 
 /* ========== Refino mobile (conta, admin, páginas públicas utilitárias) ========== */
@@ -180,6 +187,22 @@
     justify-content: flex-start;
     flex-wrap: wrap;
     gap: 8px;
+    min-width: 0;
+  }
+
+  .dt-right .kz-notif-wrap,
+  .dt-right .kz-dash-user {
+    flex-shrink: 0;
+  }
+
+  .home-editorial .dc-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .home-editorial .dc-head .dc-link {
+    align-self: flex-start;
   }
 
   .home-editorial .kpi-val {
@@ -268,5 +291,30 @@
 
   .home-editorial .nav-user-btn {
     padding: 6px 8px;
+  }
+}
+
+/* Painel de notificações: não cortar à direita no telefone */
+@media (max-width: 520px) {
+  .kz-notif-panel {
+    position: fixed;
+    z-index: 400;
+    left: max(10px, env(safe-area-inset-left, 0px));
+    right: max(10px, env(safe-area-inset-right, 0px));
+    top: max(56px, calc(env(safe-area-inset-top, 0px) + 48px));
+    width: auto;
+    max-height: min(72vh, 480px);
+  }
+
+  .kz-dash-user-pop {
+    position: fixed;
+    z-index: 400;
+    left: max(10px, env(safe-area-inset-left, 0px));
+    right: max(10px, env(safe-area-inset-right, 0px));
+    top: max(56px, calc(env(safe-area-inset-top, 0px) + 48px));
+    width: auto;
+    max-width: none;
+    max-height: min(80vh, 560px);
+    overflow-y: auto;
   }
 }
