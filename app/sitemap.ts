@@ -1,9 +1,20 @@
 import type { MetadataRoute } from "next";
+import { getAllBlogPostsSorted } from "@/lib/blog/posts";
 import { getSiteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = getSiteUrl();
   const lastModified = new Date();
+  const posts = getAllBlogPostsSorted();
+  const blogEntries: MetadataRoute.Sitemap = [
+    { url: `${base}/blog`, lastModified, changeFrequency: "weekly", priority: 0.75 },
+    ...posts.map((p) => ({
+      url: `${base}/blog/${p.slug}`,
+      lastModified: new Date(`${p.updatedAt ?? p.publishedAt}T12:00:00`),
+      changeFrequency: "monthly" as const,
+      priority: 0.65,
+    })),
+  ];
   return [
     { url: base, lastModified, changeFrequency: "weekly", priority: 1 },
     { url: `${base}/search`, lastModified, changeFrequency: "daily", priority: 0.9 },
@@ -19,5 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/privacidade`, lastModified, changeFrequency: "yearly", priority: 0.35 },
     { url: `${base}/cookies`, lastModified, changeFrequency: "yearly", priority: 0.35 },
     { url: `${base}/termos`, lastModified, changeFrequency: "yearly", priority: 0.35 },
+    ...blogEntries,
   ];
 }

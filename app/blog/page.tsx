@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { InfoPage } from "@/components/kazaro/InfoPage";
+import { CompactNav } from "@/components/kazaro/CompactNav";
+import { getAllBlogPostsSorted } from "@/lib/blog/posts";
 import {
   getSiteUrl,
   INSTAGRAM_URL,
@@ -11,7 +13,7 @@ import {
 const url = `${getSiteUrl()}/blog`;
 
 const blogDescription =
-  "Artigos e guias sobre contratação de serviços para casa em Florianópolis, precificação e reputação para prestadores no Kazaro.";
+  "20 artigos sobre contratação de serviços para casa em Florianópolis, precificação e reputação para prestadores no Kazaro.";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -30,7 +32,7 @@ export const metadata: Metadata = {
     locale: "pt_BR",
     url,
     siteName: SITE_NAME,
-    title: `Blog — dicas para clientes e prestadores | ${SITE_NAME}`,
+    title: `Blog — 20 guias para clientes e prestadores | ${SITE_NAME}`,
     description: blogDescription,
   },
   twitter: {
@@ -47,8 +49,21 @@ export const metadata: Metadata = {
   },
 };
 
+function categoryLabel(c: "clientes" | "prestadores") {
+  return c === "clientes" ? "Clientes" : "Prestadores";
+}
+
 export default function BlogPage() {
   const site = getSiteUrl();
+  const posts = getAllBlogPostsSorted();
+
+  const itemListElements = posts.map((post, i) => ({
+    "@type": "ListItem" as const,
+    position: i + 1,
+    name: post.title,
+    url: `${site}/blog/${post.slug}`,
+  }));
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -68,7 +83,19 @@ export default function BlogPage() {
         url,
         inLanguage: "pt-BR",
         publisher: { "@id": `${site}/#organization` },
-        isPartOf: { "@type": "WebSite", name: SITE_NAME, url: site },
+        blogPost: posts.map((p) => ({
+          "@type": "BlogPosting",
+          headline: p.title,
+          url: `${site}/blog/${p.slug}`,
+          datePublished: `${p.publishedAt}T08:00:00-03:00`,
+        })),
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${url}#itemlist`,
+        name: `Artigos do blog ${SITE_NAME}`,
+        numberOfItems: posts.length,
+        itemListElement: itemListElements,
       },
       {
         "@type": "WebPage",
@@ -92,21 +119,54 @@ export default function BlogPage() {
   return (
     <>
       <JsonLd data={jsonLd} />
-      <InfoPage
-        eyebrow="Conteúdo"
-        title="Blog Kazaro"
-        subtitle="Guias práticos para contratar melhor e para prestadores melhorarem operação, reputação e receita."
-        sections={[
-          {
-            heading: "Para clientes",
-            body: "Checklists de contratação, estimativa de valores e boas práticas para evitar surpresas.",
-          },
-          {
-            heading: "Para prestadores",
-            body: "Estratégias de perfil, precificação e atendimento para gerar recorrência e avaliações 5 estrelas.",
-          },
-        ]}
-      />
+      <div className="home-editorial public-page">
+        <CompactNav backHref="/" backLabel="← Início" />
+        <div className="section">
+          <div style={{ maxWidth: 780 }}>
+            <span className="sec-eyebrow">Conteúdo</span>
+            <h1 className="sec-title" style={{ marginBottom: 14 }}>
+              Blog Kazaro
+            </h1>
+            <p className="sec-sub" style={{ maxWidth: 680, marginBottom: 8 }}>
+              {posts.length} artigos com dicas práticas para quem contrata serviços em casa em Florianópolis e para prestadores que
+              querem perfil forte, preço justo e avaliações reais.
+            </p>
+          </div>
+          <div className="pro-page-card" style={{ maxWidth: 860 }}>
+            <div className="kz-blog-filters" aria-hidden>
+              <span className="kz-blog-filter">Guias por tema</span>
+            </div>
+            <div className="kz-blog-list">
+              {posts.map((post) => (
+                <Link key={post.slug} href={`/blog/${post.slug}`} className="kz-blog-row">
+                  <div className="kz-blog-row-title">{post.title}</div>
+                  <p className="kz-blog-row-excerpt">{post.excerpt}</p>
+                  <div className="kz-blog-row-meta">
+                    <span
+                      className={`kz-blog-pill${post.category === "prestadores" ? " kz-blog-pill--prestadores" : ""}`}
+                    >
+                      {categoryLabel(post.category)}
+                    </span>
+                    <span>
+                      {new Intl.DateTimeFormat("pt-BR", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      }).format(new Date(`${post.publishedAt}T12:00:00`))}
+                    </span>
+                    <span>{post.readTimeMin} min</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div style={{ marginTop: 28 }}>
+              <Link href="/search" className="btn-cta">
+                Buscar profissionais →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
