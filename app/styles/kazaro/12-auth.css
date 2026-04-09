@@ -120,6 +120,12 @@
   box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.22);
 }
 
+@media (max-width: 768px) {
+  .home-editorial .auth-input {
+    font-size: 16px;
+  }
+}
+
 .home-editorial .auth-input::placeholder {
   color: var(--ink30);
 }
@@ -129,6 +135,13 @@
   font-size: 13px;
   color: #a33b2f;
   line-height: 1.45;
+}
+
+.home-editorial .auth-password-hint {
+  margin: -4px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink50);
 }
 
 .home-editorial .auth-banner {
@@ -182,6 +195,43 @@
   background: rgba(196, 92, 74, 0.08);
   color: var(--ink70);
   border: 1px solid rgba(196, 92, 74, 0.25);
+}
+
+.home-editorial .auth-banner--wrap strong {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.home-editorial .auth-resend-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 0 4px;
+  border-top: 1px solid var(--border-md);
+  margin-top: 2px;
+}
+
+.home-editorial .auth-resend-label {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink50);
+}
+
+.home-editorial .auth-resend-btn {
+  align-self: flex-start;
+  max-width: 100%;
+  font-size: 13.5px;
+  padding: 10px 16px;
+}
+
+.home-editorial .auth-resend-feedback {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink50);
 }
 
 /* Toast global — deslogar (?saiu=1), qualquer rota */

@@ -8,3 +8,11 @@ export function getAuthSiteOrigin(): string {
 export function getAuthCallbackUrl(): string {
   return `${getSiteUrl()}/auth/callback`;
 }
+
+/** Mesmo destino após confirmar e-mail no link (precisa bater com signUp e com resend). */
+export const AUTH_EMAIL_CONFIRM_NEXT_PATH = "/dashboard?conta=ativada";
+
+/** URL completa em emailRedirectTo (confirmação de cadastro / reenvio). */
+export function getEmailConfirmationRedirectUrl(): string {
+  return `${getAuthCallbackUrl()}?next=${encodeURIComponent(AUTH_EMAIL_CONFIRM_NEXT_PATH)}`;
+}
