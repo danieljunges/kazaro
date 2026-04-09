@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, FormEvent } from "react";
 import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
-import { getEmailConfirmationRedirectUrlClient } from "@/lib/auth/redirect";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { AuthSpinner } from "@/components/auth/AuthSpinner";
 
@@ -33,6 +32,7 @@ export function LoginForm() {
   const next = safeInternalPath(searchParams.get("next") ?? "/dashboard");
   const cadastroOk = searchParams.get("cadastro") === "ok";
   const erroCallback = searchParams.get("erro") === "callback";
+  const erroMotivo = searchParams.get("motivo")?.trim() || null;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -128,16 +128,14 @@ export function LoginForm() {
     setResendHint(null);
     setResendBusy(true);
     try {
-      const supabase = getSupabaseBrowserClient();
-      const { error: resendError } = await supabase.auth.resend({
-        type: "signup",
-        email: em,
-        options: {
-          emailRedirectTo: getEmailConfirmationRedirectUrlClient(),
-        },
+      const res = await fetch("/api/auth/resend-confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: em }),
       });
-      if (resendError) {
-        setResendHint(ptError(resendError.message));
+      const data = (await res.json()) as { ok?: boolean; message?: string };
+      if (!data.ok) {
+        setResendHint(data.message ?? "Não foi possível reenviar. Tente de novo.");
         return;
       }
       try {
@@ -145,7 +143,9 @@ export function LoginForm() {
       } catch {
         /* ignore */
       }
-      setResendHint("Enviamos outro e-mail. Abra o link no celular; se usar Gmail ou Outlook, pode ser preciso tocar em “visitar site” em vez de abrir o preview automático.");
+      setResendHint(
+        "Enviamos outro e-mail. No Gmail/Outlook, use “Abrir no navegador” ou copie o link e cole no Safari/Chrome — o preview do app de e-mail às vezes gasta o link antes da hora.",
+      );
       setResendCooldown(AFTER_RESEND_COOLDOWN_SEC);
     } catch {
       setResendHint("Não foi possível reenviar. Tente de novo em instantes.");
@@ -160,18 +160,31 @@ export function LoginForm() {
         {cadastroOk || searchParams.get("conta") === "ativada" || erroCallback || searchParams.get("requer") === "admin" ? (
           <div className="auth-alerts" aria-live="polite">
             {cadastroOk ? (
-              <p className="auth-banner auth-banner--ok">
-                Confirmação enviada por e-mail. Use o link da mensagem para ativar a conta (verifique spam).
-              </p>
+              <div className="auth-banner auth-banner--ok">
+                <strong style={{ display: "block", marginBottom: 8 }}>Confirmação enviada.</strong>
+                Abra o e-mail e use o <strong>código de 6 números</strong> em{" "}
+                <Link href="/confirmar-email" className="auth-banner-link" style={{ fontWeight: 800 }}>
+                  confirmar e-mail
+                </Link>{" "}
+                — funciona melhor no Gmail e no Outlook. O botão do e-mail também serve se abrir no navegador.
+              </div>
             ) : null}
             {searchParams.get("conta") === "ativada" ? (
               <p className="auth-banner auth-banner--ok">E-mail confirmado.</p>
             ) : null}
             {erroCallback ? (
               <div className="auth-banner auth-banner--err auth-banner--wrap">
-                <strong>Não foi possível usar o link.</strong> Isso é comum quando o app de e-mail abre o link sozinho
-                (só vale uma vez) ou quando ele já foi usado. Peça outro e-mail abaixo e, ao abrir, use “abrir no
-                navegador” se aparecer.
+                <strong>Não foi possível usar o link.</strong> Muito comum no Gmail/Outlook: o preview do e-mail gasta o
+                token. <strong>Mais simples:</strong> use o <strong>código de 6 números</strong> do mesmo e-mail em{" "}
+                <Link href="/confirmar-email" style={{ fontWeight: 800, textDecoration: "underline" }}>
+                  confirmar e-mail
+                </Link>
+                . Ou abra o link com <strong>Abrir no navegador</strong> / peça reenvio abaixo.
+                {erroMotivo ? (
+                  <span style={{ display: "block", marginTop: 10, fontSize: 13, fontWeight: 600, opacity: 0.92 }}>
+                    Detalhe: {erroMotivo}
+                  </span>
+                ) : null}
               </div>
             ) : null}
             {searchParams.get("requer") === "admin" ? (
@@ -216,7 +229,7 @@ export function LoginForm() {
 
         {showResendBlock ? (
           <div className="auth-resend-block">
-            <p className="auth-resend-label">Precisa de um novo link de confirmação?</p>
+            <p className="auth-resend-label">Precisa de um novo e-mail? (Chega de novo o código e o link.)</p>
             <button
               type="button"
               className="btn-ghost auth-resend-btn"
@@ -234,6 +247,12 @@ export function LoginForm() {
                 "Reenviar e-mail de confirmação"
               )}
             </button>
+            <p className="auth-resend-label" style={{ marginTop: 6, fontSize: 12.5 }}>
+              Tem o código de 6 números?{" "}
+              <Link href="/confirmar-email" className="auth-link">
+                Confirmar por código
+              </Link>
+            </p>
             {resendHint ? <p className="auth-resend-feedback">{resendHint}</p> : null}
           </div>
         ) : null}

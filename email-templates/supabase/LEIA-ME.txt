@@ -12,8 +12,11 @@ Variáveis do Supabase (não apague)
 ----------------------------------
 O Supabase substitui automaticamente, por exemplo:
   {{ .ConfirmationURL }}  → link completo do botão
+  {{ .Token }}             → código de 6 dígitos (use no confirm_signup.html para quem não consegue pelo link)
   {{ .Email }}            → e-mail do usuário
   {{ .SiteURL }}          → URL do projeto (Site URL)
+
+Depois de colar confirm_signup.html no painel, o usuário pode confirmar em /confirmar-email no site sem depender do botão do e-mail.
 
 Se o editor mostrar erro, confira se as chaves estão exatamente como no modelo original do Supabase para aquele template.
 
