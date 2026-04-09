@@ -1,0 +1,184 @@
+/* Hub do painel admin — visão geral com módulos e filas */
+
+.admin-app .admin-hub-alert {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 90, 44, 0.28);
+  background: rgba(255, 90, 44, 0.07);
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.admin-app .admin-hub-alert strong {
+  font-weight: 700;
+}
+
+.admin-app .admin-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.admin-app .admin-hub-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 20px 18px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.22s ease, transform 0.22s ease, border-color 0.18s ease;
+  min-height: 128px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-app .admin-hub-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--border2);
+  opacity: 0.9;
+}
+
+.admin-app .admin-hub-card--servicos::before {
+  background: linear-gradient(90deg, var(--lime), var(--lime-deep));
+}
+.admin-app .admin-hub-card--usuarios::before {
+  background: linear-gradient(90deg, #14b8a6, #0f766e);
+}
+.admin-app .admin-hub-card--agenda::before {
+  background: linear-gradient(90deg, #0ea5e9, #0284c7);
+}
+.admin-app .admin-hub-card--suporte::before {
+  background: linear-gradient(90deg, #f97316, #ea580c);
+}
+.admin-app .admin-hub-card--relatorios::before {
+  background: linear-gradient(90deg, var(--ink50), var(--ink));
+}
+
+.admin-app .admin-hub-card:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.admin-app .admin-hub-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.admin-app .admin-hub-card-desc {
+  font-size: 13px;
+  color: var(--ink60);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.admin-app .admin-hub-card-meta {
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink50);
+}
+
+.admin-app .admin-hub-card-meta--warn {
+  color: var(--coral);
+}
+
+.admin-app .admin-hub-card-arrow {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  font-size: 18px;
+  color: var(--ink30);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.admin-app .admin-hub-card:hover .admin-hub-card-arrow {
+  transform: translateX(4px);
+  color: var(--ink);
+}
+
+.admin-app .admin-hub-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .admin-app .admin-hub-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-app .admin-hub-table-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink40);
+  margin-bottom: 10px;
+}
+
+.admin-app .admin-hub-mini-table {
+  width: 100%;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+
+.admin-app .admin-hub-mini-table th,
+.admin-app .admin-hub-mini-table td {
+  padding: 8px 10px 8px 0;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.admin-app .admin-hub-mini-table .kz-admin-nowrap {
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.admin-app .admin-hub-mini-table th {
+  color: var(--ink40);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-app .admin-hub-mini-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-app .admin-hub-checklist {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--ink60);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+.admin-app .admin-hub-checklist li {
+  margin-bottom: 4px;
+}

@@ -1,0 +1,103 @@
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   RESET & BASE
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  scroll-behavior: auto;
+  font-size: 16px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* Barra inferior (gesto) no iOS — sem cortar CTAs no fundo */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+img { display: block; max-width: 100%; }
+
+/* Evita arrastar a página horizontalmente em qualquer rota */
+.public-page,
+.home-editorial {
+  max-width: 100%;
+  overflow-x: clip;
+}
+button { cursor: pointer; font-family: inherit; }
+a { text-decoration: none; color: inherit; }
+
+/* ---------------------------------------------------------------------------
+   DESIGN TOKENS — papel quente · stone · teal (marca / CTA)
+--------------------------------------------------------------------------- */
+:root {
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-display: var(--font-sans);
+  --serif: var(--font-sans);
+
+  --paper:   #faf8f5;
+  --cream:   #f3eee8;
+  --cream2:  #e7dfd8;
+  --cream3:  #d6cec4;
+  --white:   #fffefb;
+  --ink:     #1c1917;
+  --ink70:   #44403c;
+  --ink60:   #57534e;
+  --ink40:   #78716c;
+  --ink20:   #d6d3d1;
+  --border:  #e7e5e4;
+  --border2: #d6d3d1;
+
+  /* Acento principal — teal */
+  --lime:        #0f766e;
+  --lime-deep:   #115e59;
+  --lime-bright: #2dd4bf;
+  --lime-dim:    rgba(15, 118, 110, 0.12);
+  --lime-muted:  rgba(15, 118, 110, 0.07);
+  --on-lime:     #ffffff;
+
+  /* Aliases legados (ember â†’ lime no produto) */
+  --ember:   var(--lime);
+  --ember2:  var(--lime-bright);
+  --ember-bg: var(--lime-dim);
+
+  /* SecundÃ¡rio quente â€” destaques humanos (ref. Momentum) */
+  --coral:     #FF5A2C;
+  --coral-bg:  rgba(255, 90, 44, 0.09);
+
+  /* Verde sÃ³ para â€œok / verificadoâ€ â€” mais escuro, menos genÃ©rico */
+  --sage:      #1E3D2A;
+  --sage2:     #2D5A3D;
+  --sage3:     #3D7A53;
+  --sage-bg:   #E8F0EA;
+  --sage-bg2:  #D4E8DB;
+
+  --gold:    #C9A227;
+  --gold-bg: #F9F3E4;
+
+  --success: #126b5f;
+  --success-bg: #e8f5f3;
+
+  --gap: clamp(16px, 2vw, 24px);
+  --page-x: clamp(16px, 5vw, 80px);
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-2xl: 36px;
+
+  --shadow-sm: 0 1px 2px rgba(10,10,10,.04), 0 4px 12px rgba(10,10,10,.05);
+  --shadow-md: 0 4px 12px rgba(10,10,10,.06), 0 16px 40px rgba(10,10,10,.08);
+  --shadow-lg: 0 6px 20px rgba(10,10,10,.07), 0 24px 48px rgba(10,10,10,.05);
+  --shadow-lime: 0 8px 28px rgba(15, 118, 110, 0.2);
+  --shadow-ember: var(--shadow-lime);
+  --glass: rgba(255, 255, 255, 0.72);
+}
+

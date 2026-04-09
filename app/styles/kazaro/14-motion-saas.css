@@ -1,0 +1,321 @@
+/* ─── Kazaro — movimento global (SaaS) ───
+   Hover, foco e entrada ao scroll. Respeita prefers-reduced-motion. */
+
+:root {
+  --kz-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --kz-ease-spring: cubic-bezier(0.34, 1.2, 0.64, 1);
+  --kz-hover-shift: -2px;
+  --kz-duration: 0.38s;
+  --kz-duration-fast: 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --kz-duration: 0.01ms;
+    --kz-duration-fast: 0.01ms;
+  }
+
+  .kz-sv,
+  .kz-sv.kz-sv--in {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .kz-hover-lift,
+  .rail-row,
+  .kz-grid-card,
+  .pro-page-card,
+  .kpi-card,
+  .dash-card,
+  .service-item,
+  .testim-card,
+  .btn-primary,
+  .btn-ghost,
+  .btn-cta,
+  .btn-white,
+  .btn-ver,
+  .btn-outline-ink,
+  .btn-book-now {
+    transform: none !important;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
+  }
+}
+
+/* ─── Scroll reveal (classe aplicada por KzSaasMotion) ─── */
+.kz-sv {
+  opacity: 0.86;
+  transform: translateY(22px) scale(0.992);
+  filter: blur(0.25px);
+  transition:
+    opacity 0.65s var(--kz-ease-out),
+    transform 0.7s var(--kz-ease-out),
+    filter 0.55s ease;
+  transition-delay: calc(var(--kz-sv, 0) * 52ms);
+  will-change: opacity, transform;
+}
+
+.kz-sv.kz-sv--in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  will-change: auto;
+}
+
+/* ─── Links e botões (site inteiro) ─── */
+a[href]:where(:not([aria-current="page"])) {
+  transition: color var(--kz-duration-fast) ease, opacity var(--kz-duration-fast) ease,
+    transform var(--kz-duration-fast) var(--kz-ease-out);
+}
+
+button:not(:disabled),
+.btn-primary,
+.btn-ghost,
+.btn-cta,
+.btn-white,
+.btn-ver,
+.btn-outline-ink,
+.btn-book-now,
+.search-btn,
+.pill,
+.kz-sh-btn,
+.kz-filter-chip,
+.kz-page-btn {
+  transition:
+    background var(--kz-duration-fast) ease,
+    border-color var(--kz-duration-fast) ease,
+    color var(--kz-duration-fast) ease,
+    box-shadow var(--kz-duration-fast) ease,
+    transform 0.22s var(--kz-ease-spring),
+    filter 0.25s ease;
+}
+
+button:not(:disabled):active,
+.btn-primary:active,
+.btn-ghost:active,
+.btn-cta:active,
+.search-btn:active,
+.kz-sh-btn:active {
+  transform: scale(0.98);
+}
+
+.home-editorial .nav-links a:hover,
+.home-editorial .footer-links a:hover {
+  color: var(--ink);
+  transform: translateY(var(--kz-hover-shift));
+}
+
+.home-editorial .logo {
+  transition: transform 0.25s var(--kz-ease-spring), opacity 0.2s ease;
+}
+
+.home-editorial .logo:hover {
+  transform: scale(1.03);
+}
+
+.home-editorial .logo:active {
+  transform: scale(0.98);
+}
+
+/* Cards e linhas clicáveis — “vida” no hover */
+.rail-row {
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.3s var(--kz-ease-out),
+    box-shadow 0.35s ease;
+}
+
+.rail-row:hover {
+  transform: translateX(4px);
+  box-shadow: 0 12px 36px rgba(22, 22, 14, 0.08);
+}
+
+.home-editorial.kz-busca .kz-grid-card {
+  transition:
+    transform 0.35s var(--kz-ease-out),
+    box-shadow 0.4s ease,
+    border-color 0.25s ease;
+}
+
+.home-editorial.kz-busca .kz-grid-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 48px rgba(22, 22, 14, 0.12);
+}
+
+.pro-page-card {
+  transition: transform 0.35s var(--kz-ease-out), box-shadow 0.4s ease, border-color 0.25s ease;
+}
+
+.pro-page-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 50px rgba(22, 22, 14, 0.1);
+}
+
+.kpi-card {
+  transition: transform 0.3s var(--kz-ease-out), box-shadow 0.35s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(22, 22, 14, 0.09);
+}
+
+.dash-card {
+  transition: transform 0.3s var(--kz-ease-out), box-shadow 0.35s ease;
+}
+
+.dash-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(22, 22, 14, 0.08);
+}
+
+.service-item {
+  transition: transform 0.28s var(--kz-ease-out), box-shadow 0.32s ease, border-color 0.2s ease;
+}
+
+.service-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(22, 22, 14, 0.1);
+}
+
+.testim-card {
+  transition: transform 0.3s var(--kz-ease-out), box-shadow 0.35s ease;
+}
+
+.testim-card:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 16px 44px rgba(22, 22, 14, 0.1);
+}
+
+.hero-card-main {
+  transition: transform 0.45s var(--kz-ease-out), box-shadow 0.5s ease;
+}
+
+.hero-card-main:hover {
+  transform: translateY(-4px) rotate(-0.25deg);
+  box-shadow: 0 24px 56px rgba(22, 22, 14, 0.14);
+}
+
+.how-grid > div {
+  transition: transform 0.35s var(--kz-ease-out), opacity 0.3s ease;
+}
+
+.how-grid > div:hover {
+  transform: translateY(-4px);
+}
+
+.msg-item {
+  transition: background 0.2s ease, transform 0.22s ease;
+}
+
+.msg-item:hover {
+  transform: translateX(4px);
+}
+
+.orders-table tbody tr {
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.orders-table tbody tr:hover {
+  background: rgba(15, 118, 110, 0.06);
+  box-shadow: inset 3px 0 0 var(--lime, #0f766e);
+}
+
+.dash-sidebar .ds-link {
+  transition: background 0.18s ease, transform 0.2s ease, color 0.15s ease;
+}
+
+.dash-sidebar .ds-link:hover {
+  transform: translateX(3px);
+}
+
+input:not([type="hidden"]),
+textarea,
+select {
+  transition: border-color 0.2s ease, box-shadow 0.25s ease;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--lime, #0f766e);
+  outline-offset: 2px;
+}
+
+.pp-header {
+  transition: box-shadow 0.4s ease;
+}
+
+.pp-header:hover {
+  box-shadow: 0 20px 50px rgba(22, 22, 14, 0.08);
+}
+
+.pp-stat {
+  transition: transform 0.25s ease;
+}
+
+.pp-stat:hover {
+  transform: scale(1.04);
+}
+
+.kz-site-drawer-link {
+  transition: transform 0.2s ease, background 0.2s ease !important;
+}
+
+.kz-site-drawer-link:hover {
+  transform: translateX(4px);
+}
+
+.legal-doc-nav a {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.legal-doc-nav a:hover {
+  transform: translateY(-1px);
+}
+
+/* Sem “hover preso” em touch — efeitos de elevação só com ponteiro fino */
+@media (hover: none) {
+  .rail-row:hover,
+  .home-editorial.kz-busca .kz-grid-card:hover,
+  .pro-page-card:hover,
+  .kpi-card:hover,
+  .dash-card:hover,
+  .service-item:hover,
+  .testim-card:hover,
+  .hero-card-main:hover,
+  .how-grid > div:hover,
+  .msg-item:hover,
+  .pp-header:hover,
+  .pp-stat:hover {
+    transform: none;
+  }
+
+  .rail-row:hover,
+  .home-editorial.kz-busca .kz-grid-card:hover,
+  .pro-page-card:hover,
+  .kpi-card:hover,
+  .dash-card:hover,
+  .service-item:hover,
+  .testim-card:hover,
+  .hero-card-main:hover {
+    box-shadow: none;
+  }
+
+  .home-editorial .nav-links a:hover,
+  .home-editorial .footer-links a:hover,
+  .dash-sidebar .ds-link:hover,
+  .kz-site-drawer-link:hover,
+  .legal-doc-nav a:hover {
+    transform: none;
+  }
+
+  .orders-table tbody tr:hover {
+    background: transparent;
+    box-shadow: none;
+  }
+}

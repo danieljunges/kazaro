@@ -1,0 +1,580 @@
+/* Mockups: busca, perfil, como funciona / para profissionais â€” escopo por pÃ¡gina */
+
+/* â”€â”€â”€ BUSCA â”€â”€â”€ */
+.home-editorial.kz-busca .kz-search-header {
+  background: var(--ink);
+  padding: max(84px, calc(48px + env(safe-area-inset-top, 0px))) max(44px, env(safe-area-inset-right, 0px)) 0 max(44px, env(safe-area-inset-left, 0px));
+}
+.home-editorial.kz-busca .kz-sh-inner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+.home-editorial.kz-busca .kz-sh-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 16px;
+}
+.home-editorial.kz-busca .kz-sh-title {
+  font-family: var(--display);
+  font-size: clamp(40px, 5vw, 52px);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -1.5px;
+  color: #fff;
+  margin-bottom: 28px;
+}
+.home-editorial.kz-busca .kz-sh-title em {
+  font-style: italic;
+  color: var(--lime);
+}
+.home-editorial.kz-busca .kz-sh-searchbar {
+  display: flex;
+  align-items: center;
+  background: var(--white);
+  border-radius: 12px 12px 0 0;
+  padding: 8px 8px 8px 20px;
+  gap: 0;
+  max-width: 800px;
+}
+.home-editorial.kz-busca .kz-sh-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--ink);
+  margin-left: 10px;
+}
+.home-editorial.kz-busca .kz-sh-input::placeholder {
+  color: var(--ink30);
+}
+.home-editorial.kz-busca .kz-sh-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--border-md);
+  margin: 0 16px;
+}
+.home-editorial.kz-busca .kz-sh-loc {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink50);
+  white-space: nowrap;
+  margin-right: 12px;
+}
+.home-editorial.kz-busca .kz-sh-loc-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lime-deep);
+}
+.home-editorial.kz-busca .kz-sh-btn {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--on-lime, #fff);
+  background: var(--lime);
+  border: none;
+  border-radius: 8px;
+  padding: 11px 24px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.home-editorial.kz-busca .kz-sh-btn:hover {
+  background: var(--lime-deep);
+}
+
+.home-editorial.kz-busca .kz-filters-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: static;
+}
+.home-editorial.kz-busca .kz-fb-inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 max(44px, env(safe-area-inset-right, 0px)) 0 max(44px, env(safe-area-inset-left, 0px));
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.home-editorial.kz-busca .kz-filter-chip {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--ink50);
+  background: transparent;
+  border: 1px solid var(--border-md);
+  border-radius: 20px;
+  padding: 6px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.home-editorial.kz-busca .kz-filter-chip:hover {
+  border-color: var(--ink50);
+  color: var(--ink);
+}
+.home-editorial.kz-busca .kz-filter-chip.active {
+  background: var(--ink);
+  color: var(--lime);
+  border-color: var(--ink);
+}
+.home-editorial.kz-busca .kz-filter-sep {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+.home-editorial.kz-busca .kz-filter-sort {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: var(--ink50);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  font-family: var(--sans);
+}
+.home-editorial.kz-busca .kz-filter-sort:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.home-editorial.kz-busca .kz-busca-main {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 40px max(44px, env(safe-area-inset-right, 0px)) max(80px, env(safe-area-inset-bottom, 0px)) max(44px, env(safe-area-inset-left, 0px));
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 40px;
+  align-items: start;
+  min-width: 0;
+}
+
+.home-editorial.kz-busca .kz-sidebar-section {
+  margin-bottom: 32px;
+}
+.home-editorial.kz-busca .kz-sidebar-title {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink30);
+  margin-bottom: 16px;
+}
+.home-editorial.kz-busca .kz-sidebar-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.home-editorial.kz-busca .kz-sidebar-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.home-editorial.kz-busca .kz-sidebar-opt input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ink);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.home-editorial.kz-busca .kz-sidebar-opt-label {
+  font-size: 13.5px;
+  color: var(--ink70);
+}
+.home-editorial.kz-busca .kz-sidebar-opt-count {
+  font-size: 12px;
+  color: var(--ink30);
+  margin-left: auto;
+}
+.home-editorial.kz-busca .kz-price-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 4px;
+}
+.home-editorial.kz-busca .kz-price-input {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--border-md);
+  border-radius: 7px;
+  padding: 9px 12px;
+  outline: none;
+  width: 100%;
+}
+.home-editorial.kz-busca .kz-price-input:focus {
+  border-color: var(--ink50);
+}
+.home-editorial.kz-busca .kz-avail-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.home-editorial.kz-busca .kz-avail-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.home-editorial.kz-busca .kz-avail-opt:hover {
+  border-color: var(--ink30);
+  background: var(--white);
+}
+.home-editorial.kz-busca .kz-avail-opt.selected {
+  border-color: var(--lime-deep);
+  background: rgba(15, 118, 110, 0.07);
+}
+.home-editorial.kz-busca .kz-avail-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.home-editorial.kz-busca .kz-avail-dot.green {
+  background: var(--lime-deep);
+}
+.home-editorial.kz-busca .kz-avail-dot.gray {
+  background: var(--ink30);
+}
+.home-editorial.kz-busca .kz-avail-label {
+  font-size: 13px;
+  color: var(--ink70);
+}
+.home-editorial.kz-busca .kz-rating-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.home-editorial.kz-busca .kz-rating-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+.home-editorial.kz-busca .kz-stars-mini {
+  color: var(--ink);
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.home-editorial.kz-busca .kz-rating-label {
+  font-size: 13px;
+  color: var(--ink70);
+}
+
+.home-editorial.kz-busca .kz-results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.home-editorial.kz-busca .kz-results-count {
+  font-size: 13.5px;
+  color: var(--ink50);
+}
+.home-editorial.kz-busca .kz-results-count strong {
+  font-family: var(--sans);
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.home-editorial.kz-busca .kz-results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.home-editorial.kz-busca .kz-results-grid .kz-grid-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.home-editorial.kz-busca .kz-results-grid .kz-grid-card:hover {
+  box-shadow: 0 12px 40px rgba(22, 22, 14, 0.1);
+  transform: translateY(-2px);
+}
+.home-editorial.kz-busca .kz-pro-img {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+}
+.home-editorial.kz-busca .kz-pro-img-ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.6);
+}
+.home-editorial.kz-busca .kz-ph-1 {
+  background: linear-gradient(140deg, #8a9e7a, #5e7a4e);
+}
+.home-editorial.kz-busca .kz-ph-2 {
+  background: linear-gradient(140deg, #7a8a9e, #4e5e7a);
+}
+.home-editorial.kz-busca .kz-ph-3 {
+  background: linear-gradient(140deg, #9e8a7a, #7a5e4e);
+}
+.home-editorial.kz-busca .kz-ph-4 {
+  background: linear-gradient(140deg, #8a7a9e, #5e4e7a);
+}
+.home-editorial.kz-busca .kz-ph-5 {
+  background: linear-gradient(140deg, #9e9a7a, #7a764e);
+}
+.home-editorial.kz-busca .kz-ph-6 {
+  background: linear-gradient(140deg, #7a9e8a, #4e7a5e);
+}
+.home-editorial.kz-busca .kz-avail-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(10, 10, 10, 0.12);
+}
+.home-editorial.kz-busca .kz-avail-today {
+  background: #dafb4a;
+  color: #101008;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.home-editorial.kz-busca .kz-avail-tom {
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--ink50);
+}
+.home-editorial.kz-busca .kz-verified-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--ink);
+  color: var(--lime);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+}
+.home-editorial.kz-busca .kz-grid-body {
+  padding: 16px 18px 18px;
+}
+.home-editorial.kz-busca .kz-grid-name {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.home-editorial.kz-busca .kz-grid-role {
+  font-size: 12px;
+  color: var(--ink50);
+  margin-bottom: 10px;
+}
+.home-editorial.kz-busca .kz-grid-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink50);
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  font-variant-numeric: tabular-nums;
+}
+.home-editorial.kz-busca .kz-grid-rating {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.home-editorial.kz-busca .kz-grid-sep {
+  color: var(--ink10);
+}
+.home-editorial.kz-busca .kz-grid-verified-txt {
+  color: var(--lime-deep);
+  font-weight: 500;
+}
+.home-editorial.kz-busca .kz-grid-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 12px;
+}
+.home-editorial.kz-busca .kz-grid-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.home-editorial.kz-busca .kz-grid-price-from {
+  font-size: 10px;
+  color: var(--ink30);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 2px;
+}
+.home-editorial.kz-busca .kz-grid-price {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.home-editorial.kz-busca .kz-btn-ver-grid {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1px solid var(--border-md);
+  border-radius: 7px;
+  padding: 7px 14px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.home-editorial.kz-busca .kz-btn-ver-grid:hover {
+  background: var(--cream-alt);
+}
+
+.home-editorial.kz-busca .kz-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 48px;
+  grid-column: 1 / -1;
+}
+.home-editorial.kz-busca .kz-page-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13.5px;
+  color: var(--ink50);
+  background: transparent;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.home-editorial.kz-busca .kz-page-btn:hover {
+  border-color: var(--ink30);
+  color: var(--ink);
+}
+.home-editorial.kz-busca .kz-page-btn--disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  cursor: default;
+}
+.home-editorial.kz-busca .kz-page-btn.active {
+  background: var(--ink);
+  color: var(--lime);
+  border-color: var(--ink);
+}
+
+@media (max-width: 1024px) {
+  .home-editorial.kz-busca .kz-busca-main {
+    grid-template-columns: 1fr;
+    padding: 28px max(20px, env(safe-area-inset-right, 0px)) max(64px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+  }
+  .home-editorial.kz-busca .kz-results-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .home-editorial.kz-busca .kz-fb-inner,
+  .home-editorial.kz-busca .kz-search-header {
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+}
+@media (max-width: 520px) {
+  .home-editorial.kz-busca .kz-search-header {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+  .home-editorial.kz-busca .kz-fb-inner {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+  .home-editorial.kz-busca .kz-busca-main {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+}
+
+@media (max-width: 640px) {
+  .home-editorial.kz-busca .kz-results-grid {
+    grid-template-columns: 1fr;
+  }
+  .home-editorial.kz-busca .kz-sh-searchbar {
+    flex-wrap: wrap;
+    border-radius: 12px;
+    max-width: 100%;
+    align-items: stretch;
+  }
+  .home-editorial.kz-busca .kz-sh-sep {
+    display: none;
+  }
+  .home-editorial.kz-busca .kz-sh-loc {
+    width: 100%;
+    order: 3;
+    white-space: normal;
+    margin: 4px 0 0;
+    padding-left: 26px;
+  }
+  .home-editorial.kz-busca .kz-sh-btn {
+    width: 100%;
+    margin-top: 8px;
+    order: 4;
+  }
+  .home-editorial.kz-busca .kz-sh-title {
+    font-size: clamp(28px, 9vw, 44px);
+  }
+}
+
+.home-editorial.kz-busca .kz-sidebar-soon {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink40);
+  margin-bottom: 20px;
+  padding: 10px 12px;
+  background: var(--cream);
+  border-radius: 8px;
+}
+

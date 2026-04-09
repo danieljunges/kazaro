@@ -1,0 +1,375 @@
+/* ─────────────────────────────────────────
+   RESPONSIVE — tablets e desktop médio
+───────────────────────────────────────── */
+@media (max-width: 980px) {
+  .hero-inner,
+  .trust-split,
+  .pro-banner-inner {
+    grid-template-columns: 1fr;
+  }
+  .hero-right {
+    display: none;
+  }
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pros-grid,
+  .how-grid,
+  .testim-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sp-sidebar {
+    display: none;
+  }
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dash-row {
+    grid-template-columns: 1fr;
+  }
+  .dash-sidebar {
+    display: none;
+  }
+  .dash-body {
+    margin-left: 0;
+  }
+  .services-list {
+    grid-template-columns: 1fr;
+  }
+  .pp-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: -40px;
+  }
+  .pp-actions {
+    margin-top: 12px;
+    width: 100%;
+  }
+  .pp-main {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .trust-visual {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────
+   Mobile — uma coluna, grids e tipografia
+───────────────────────────────────────── */
+@media (max-width: 720px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .pros-grid,
+  .how-grid,
+  .testim-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .sp-body {
+    flex-direction: column;
+    padding-top: 20px;
+    gap: 20px;
+  }
+  .sp-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .sp-item {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .sp-item-price {
+    width: 100%;
+    text-align: left;
+    margin-top: 8px;
+  }
+  .sp-item-val {
+    font-size: 22px;
+  }
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .dash-card {
+    padding: 16px 14px;
+  }
+  .chart {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sec-title {
+    font-size: clamp(22px, 6.5vw, 32px);
+  }
+  .btn-primary,
+  .btn-ghost {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+/* Scroll horizontal suave em tabelas (wrapper em dashboard/admin) */
+.kz-table-scroll {
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  box-sizing: border-box;
+}
+
+/* Wrapper só quando a tabela já tem largura “natural” (sem min-width 820px) */
+.kz-table-scroll--natural {
+  overflow-x: visible;
+}
+
+/* ========== Refino mobile (conta, admin, páginas públicas utilitárias) ========== */
+.admin-app {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* Loadings de rota (search, perfil) — mesmo cuidado de largura que o restante do app */
+.kz-route-loading {
+  max-width: 100%;
+  overflow-x: clip;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/*
+  ≤640px: mesmo “modo telefone” da home (safe area, topbar empilhada, sem estourar largura).
+  - Dash com sidebar: /dashboard, /dashboard/pedidos/…
+  - Shell CompactNav: /dashboard/configuracoes, mensagens, suporte, servicos, etc. (.public-page)
+*/
+@media (max-width: 640px) {
+  /*
+    Shell comum: rotas /dashboard/* e qualquer página home-editorial sem .public-page
+    (ex.: visão geral com sidebar) — evita largura mínima implícita estourando a viewport.
+  */
+  .kz-dashboard-route-root {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: clip;
+    box-sizing: border-box;
+  }
+
+  .public-page__intro {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  /*
+    404 e páginas que usam <main class="public-page"> só por dentro do .home-editorial
+    (o bloco .home-editorial.public-page .section não se aplica ao wrapper).
+  */
+  .home-editorial > main.public-page {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  /* Cartões com maxWidth inline no TSX — útil também fora de .public-page */
+  .home-editorial .section > .pro-page-card[style],
+  .home-editorial .section .pro-page-card[style] {
+    max-width: 100% !important;
+  }
+
+  .dash {
+    overflow-x: clip;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .dash-body {
+    min-width: 0;
+  }
+
+  /* Topbar do dashboard/admin: título e ações empilham */
+  .dash-topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .dash-topbar-lead {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .dash-topbar-titles {
+    min-width: 0;
+  }
+
+  .home-editorial .dash-topbar .dt-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  .dt-right {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .dt-right .kz-notif-wrap,
+  .dt-right .kz-dash-user {
+    flex-shrink: 0;
+  }
+
+  .home-editorial .dc-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .home-editorial .dc-head .dc-link {
+    align-self: flex-start;
+  }
+
+  .home-editorial .kpi-val {
+    font-size: clamp(22px, 6.5vw, 27px);
+  }
+
+  .orders-table {
+    font-size: 12px;
+  }
+
+  .orders-table th,
+  .orders-table td {
+    padding: 10px 8px;
+  }
+
+  /* Linha clicável na lista de pedidos: área de toque mais confortável */
+  .orders-table tbody tr.kz-inbooking-row td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .dash-row > * {
+    min-width: 0;
+  }
+
+  .admin-app .admin-hub-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-app .admin-hub-card {
+    min-height: 0;
+  }
+
+  /* Internas do painel (Configurações, Ganhos, Mensagens, Suporte, Histórico, Serviços, Agenda…) */
+  .home-editorial.public-page {
+    min-width: 0;
+    overflow-x: clip;
+  }
+
+  .home-editorial.public-page .section {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    padding-left: max(14px, env(safe-area-inset-left, 0px));
+    padding-right: max(14px, env(safe-area-inset-right, 0px));
+    padding-top: clamp(22px, 6vw, 36px);
+    padding-bottom: clamp(32px, 9vw, 52px);
+  }
+
+  .home-editorial.public-page .section > .pro-page-card {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .kz-admin-actions {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .kz-admin-actions > div {
+    justify-content: flex-start !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-editorial .nav-inner {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+  }
+
+  .btn-cta,
+  .btn-ghost {
+    padding-left: 12px;
+    padding-right: 12px;
+    font-size: 13px;
+  }
+}
+
+/* Barra compacta: só avatar no menu da conta (evita empurrar Agendar) */
+@media (max-width: 400px) {
+  .home-editorial .nav-user-name,
+  .home-editorial .nav-user-caret {
+    display: none;
+  }
+
+  .home-editorial .nav-user-btn {
+    padding: 6px 8px;
+  }
+}
+
+/* Painel de notificações: não cortar à direita no telefone */
+@media (max-width: 520px) {
+  .kz-notif-panel {
+    position: fixed;
+    z-index: 1050;
+    left: max(10px, env(safe-area-inset-left, 0px));
+    right: max(10px, env(safe-area-inset-right, 0px));
+    /* Nav em duas linhas no ≤720px — offset maior para não ficar por baixo do header */
+    top: max(100px, calc(env(safe-area-inset-top, 0px) + 84px));
+    width: auto;
+    max-height: min(72vh, 480px);
+  }
+
+  .kz-dash-user-pop {
+    position: fixed;
+    z-index: 1050;
+    left: max(10px, env(safe-area-inset-left, 0px));
+    right: max(10px, env(safe-area-inset-right, 0px));
+    top: max(100px, calc(env(safe-area-inset-top, 0px) + 84px));
+    width: auto;
+    max-width: none;
+    max-height: min(80vh, 560px);
+    overflow-y: auto;
+  }
+
+  /*
+    Popover da conta na barra pública/compacta: absolute + overflow-x clip no .home-editorial
+    cortava o menu (Sair sumia). Mesmo padrão fixo do painel.
+  */
+  .home-editorial .nav-user-pop {
+    position: fixed;
+    z-index: 1050;
+    left: max(10px, env(safe-area-inset-left, 0px));
+    right: max(10px, env(safe-area-inset-right, 0px));
+    top: max(100px, calc(env(safe-area-inset-top, 0px) + 84px));
+    width: auto;
+    max-width: none;
+    max-height: min(80vh, 560px);
+    overflow-y: auto;
+  }
+}

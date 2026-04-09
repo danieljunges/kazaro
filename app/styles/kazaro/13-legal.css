@@ -1,0 +1,175 @@
+/* LGPD / cookies / navegação estável */
+
+body:has(.kz-cookie-bar) {
+  padding-bottom: 108px;
+}
+
+@media (max-width: 520px) {
+  body:has(.kz-cookie-bar) {
+    /* Botões empilhados: evita conteúdo escondido atrás do banner */
+    padding-bottom: max(168px, calc(env(safe-area-inset-bottom, 0px) + 152px));
+  }
+}
+
+.home-editorial .legal-doc-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 28px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+}
+.home-editorial .legal-doc-nav a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.home-editorial .legal-doc-nav a:hover {
+  color: var(--ink70);
+}
+.home-editorial .legal-doc-nav-sep {
+  color: var(--ink30);
+  user-select: none;
+}
+.home-editorial .legal-last-updated {
+  margin: 0 0 20px;
+  font-size: 13px;
+  color: var(--ink50);
+  line-height: 1.5;
+}
+
+/* Banner de cookies — fixo no rodapé da viewport */
+.kz-cookie-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500;
+  padding: max(12px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: rgba(22, 22, 14, 0.94);
+  color: #f6f5f0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15);
+}
+.kz-cookie-bar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+}
+.kz-cookie-bar-title {
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+.kz-cookie-bar-desc {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: rgba(246, 245, 240, 0.82);
+  max-width: 720px;
+}
+.kz-cookie-bar-link {
+  color: var(--lime, #0f766e);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+}
+.kz-cookie-bar-link:hover {
+  color: #e4ff7a;
+}
+.kz-cookie-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.kz-cookie-bar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.kz-cookie-bar-btn--primary {
+  background: var(--lime, #0f766e);
+  color: var(--on-lime, #fff);
+}
+.kz-cookie-bar-btn--primary:hover {
+  filter: brightness(1.05);
+}
+.kz-cookie-bar-btn--ghost {
+  background: transparent;
+  color: rgba(246, 245, 240, 0.9);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+}
+.kz-cookie-bar-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 520px) {
+  .kz-cookie-bar-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .kz-cookie-bar-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .kz-cookie-bar-btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+/* Fallback Suspense do menu da conta — evita “pulo” do botão Agendar */
+.home-editorial .nav-right--pending {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: min(260px, 42vw);
+  min-height: 40px;
+}
+.home-editorial .nav-pending-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink40);
+  letter-spacing: 0.02em;
+}
+
+/* NavUserMenu: até getSession alinhar com o servidor (evita flash de nome logado) */
+.home-editorial .nav-user.nav-user--hydrating {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 40px;
+  min-width: min(100px, 28vw);
+}
+
+.home-editorial .legal-section-body {
+  margin: 0;
+  color: var(--ink50);
+  line-height: 1.75;
+}
+.home-editorial .legal-section-body + .legal-section-body {
+  margin-top: 12px;
+}
