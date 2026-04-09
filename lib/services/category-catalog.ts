@@ -106,3 +106,25 @@ export function searchBlobForCategoryKey(key: string | null | undefined): string
   }
   return SERVICE_CATEGORIES.find((c) => c.key === key)?.searchBlob ?? "";
 }
+
+/** Ordem estável = ordem dos chips da busca. */
+export function normalizeFocusCategoryKeys(raw: string[]): ServiceCategoryKey[] {
+  const set = new Set<string>();
+  for (const x of raw) {
+    if (isServiceCategoryKey(x)) set.add(x);
+  }
+  return SERVICE_CATEGORIES.filter((c) => set.has(c.key)).map((c) => c.key);
+}
+
+export function focusFilterExtraFromKeys(keys: string[] | null | undefined): string {
+  if (!keys?.length) return "";
+  return normalizeFocusCategoryKeys(keys)
+    .map((k) => searchBlobForCategoryKey(k))
+    .join(" ")
+    .trim();
+}
+
+export function focusLabelsFromKeys(keys: string[] | null | undefined): string[] {
+  if (!keys?.length) return [];
+  return normalizeFocusCategoryKeys(keys).map((k) => labelForCategoryKey(k));
+}

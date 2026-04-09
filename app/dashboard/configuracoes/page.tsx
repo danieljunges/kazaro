@@ -11,6 +11,7 @@ import { ProfessionalScheduleForm } from "@/components/settings/ProfessionalSche
 import { DEFAULT_WORK_WEEKDAYS_ALL } from "@/lib/booking/schedule-defaults";
 import { ProfileSettingsForm } from "@/components/settings/ProfileSettingsForm";
 import { ProfessionalProfileSharePanel } from "@/components/settings/ProfessionalProfileSharePanel";
+import { ProPortfolioSection } from "@/components/settings/ProPortfolioSection";
 import { getSiteUrl } from "@/lib/site";
 
 export default async function DashboardConfiguracoesPage() {
@@ -27,6 +28,7 @@ export default async function DashboardConfiguracoesPage() {
     display_name: string;
     service_region: string | null;
     slug: string | null;
+    focus_category_keys: string[] | null;
     work_day_start: string | null;
     work_day_end: string | null;
     work_weekdays: number[] | null;
@@ -35,15 +37,25 @@ export default async function DashboardConfiguracoesPage() {
   };
 
   let pro: ProSettingsRow | null = null;
+  let portfolioPhotos: { id: string; image_url: string }[] = [];
   if (role === "professional") {
     const { data } = await supabase
       .from("professionals")
       .select(
-        "display_name, service_region, slug, work_day_start, work_day_end, work_weekdays, booking_slot_step_minutes, booking_default_duration_minutes",
+        "display_name, service_region, slug, focus_category_keys, work_day_start, work_day_end, work_weekdays, booking_slot_step_minutes, booking_default_duration_minutes",
       )
       .eq("id", user.id)
       .maybeSingle();
     pro = (data ?? null) as ProSettingsRow | null;
+
+    if (pro) {
+      const { data: pf } = await supabase
+        .from("pro_portfolio_photos")
+        .select("id, image_url")
+        .eq("professional_id", user.id)
+        .order("sort_order", { ascending: true });
+      portfolioPhotos = (pf ?? []) as { id: string; image_url: string }[];
+    }
   }
 
   const siteBase = getSiteUrl();
@@ -82,8 +94,11 @@ export default async function DashboardConfiguracoesPage() {
             <ProfessionalPublicSettingsForm
               initialDisplayName={(pro.display_name as string)?.trim() || ""}
               initialServiceRegion={(pro.service_region as string | null)?.trim() || ""}
+              initialFocusCategoryKeys={Array.isArray(pro.focus_category_keys) ? pro.focus_category_keys : []}
             />
           ) : null}
+
+          {role === "professional" && pro ? <ProPortfolioSection initialPhotos={portfolioPhotos} /> : null}
 
           {role === "professional" && pro ? (
             <ProfessionalScheduleForm

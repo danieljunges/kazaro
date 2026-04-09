@@ -212,6 +212,92 @@ button.chip { -webkit-appearance: none; appearance: none; }
 /* ─────────────────────────────────────────
    PROFILE PAGE
 ───────────────────────────────────────── */
+.pp-page--nocab {
+  background: var(--paper);
+  min-height: 100vh;
+}
+.pp-main--nocab {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 20px 24px 80px;
+}
+.pp-page--nocab .pp-header {
+  margin-top: 0;
+  align-items: flex-start;
+  margin-bottom: 28px;
+}
+.pp-avatar-photo {
+  width: 128px;
+  height: 128px;
+  border-radius: 22px;
+  object-fit: cover;
+  border: 3px solid var(--white);
+  box-shadow: var(--shadow-lg);
+  display: block;
+  background: var(--cream2);
+}
+.pp-focus-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pp-focus-pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--success);
+  background: rgba(15, 118, 110, 0.1);
+  border: 1px solid rgba(15, 118, 110, 0.22);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+.pp-about-expand {
+  margin: 0 0 24px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+  overflow: hidden;
+}
+.pp-about-expand__summary {
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  padding: 14px 18px;
+  list-style: none;
+  color: var(--ink);
+}
+.pp-about-expand__summary::-webkit-details-marker {
+  display: none;
+}
+.pp-about-expand__summary::after {
+  content: "▾";
+  float: right;
+  font-size: 12px;
+  color: var(--ink50);
+  transition: transform 0.2s ease;
+}
+.pp-about-expand[open] .pp-about-expand__summary::after {
+  transform: rotate(-180deg);
+}
+.pp-about-expand__body {
+  padding: 0 18px 16px;
+  border-top: 1px solid var(--border);
+}
+.pp-about-expand__text {
+  margin: 0;
+  padding-top: 12px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--ink70);
+}
+
 .pp-bg { background: var(--paper); min-height: 100vh; }
 .pp-band {
   height: 200px;
@@ -513,6 +599,56 @@ a.btn-book-now:visited {
   text-underline-offset: 3px;
 }
 .btn-contratar:hover { color: var(--ink); text-decoration-color: var(--ink); }
+
+.pp-portfolio {
+  margin: 28px 0 8px;
+}
+.pp-portfolio__title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink40);
+  margin: 0 0 14px;
+  text-transform: uppercase;
+}
+.pp-portfolio__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.pp-portfolio__cell {
+  margin: 0;
+  padding: 0;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--cream2);
+}
+.pp-portfolio__link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: 0;
+}
+.pp-portfolio__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s ease;
+}
+.pp-portfolio__link:hover .pp-portfolio__img {
+  transform: scale(1.04);
+}
+@media (max-width: 720px) {
+  .pp-portfolio__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
 /* ─────────────────────────────────────────
    DASHBOARD (segmento /dashboard)
@@ -1269,6 +1405,13 @@ a.btn-book-now:visited {
 .kz-crop-btn {
   min-width: 108px;
   justify-content: center;
+}
+
+.home-editorial .kz-dash-servico-analise {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .dash-content {

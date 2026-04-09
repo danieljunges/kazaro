@@ -4,11 +4,12 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { deleteMyAccount } from "@/app/dashboard/configuracoes/actions";
 import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
+import { getPasswordPolicyError, PASSWORD_POLICY_HINT } from "@/lib/auth/password-policy";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 function ptPasswordError(message: string): string {
   const m = message.toLowerCase();
-  if (m.includes("password")) return "A nova senha não atende às regras (mín. 6 caracteres).";
+  if (m.includes("password")) return `A nova senha não atende às regras. ${PASSWORD_POLICY_HINT}`;
   if (m.includes("same")) return "A nova senha deve ser diferente da atual.";
   return message;
 }
@@ -47,8 +48,9 @@ export function AccountSecuritySection({
     e.preventDefault();
     setPassErr(null);
     setPassOk(null);
-    if (newPass.length < 6) {
-      setPassErr("A nova senha deve ter pelo menos 6 caracteres.");
+    const policyErr = getPasswordPolicyError(newPass);
+    if (policyErr) {
+      setPassErr(policyErr);
       return;
     }
     if (newPass !== newPass2) {
@@ -150,8 +152,9 @@ export function AccountSecuritySection({
                 value={newPass}
                 onChange={(ev) => setNewPass(ev.target.value)}
                 disabled={passBusy}
-                minLength={6}
+                minLength={8}
               />
+              <p className="auth-password-hint">{PASSWORD_POLICY_HINT}</p>
             </label>
             <label className="auth-field">
               <span className="auth-label">Confirmar nova senha</span>
@@ -162,7 +165,7 @@ export function AccountSecuritySection({
                 value={newPass2}
                 onChange={(ev) => setNewPass2(ev.target.value)}
                 disabled={passBusy}
-                minLength={6}
+                minLength={8}
               />
             </label>
           </div>

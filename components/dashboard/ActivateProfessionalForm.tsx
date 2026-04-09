@@ -2,7 +2,8 @@
 
 import { FormEvent, useState } from "react";
 import { activateProfessionalProfile } from "@/app/dashboard/ativar-perfil/actions";
-import { SERVICE_CATEGORIES } from "@/lib/services/category-catalog";
+import { ProFocusCategoriesChecklist } from "@/components/dashboard/ProFocusCategoriesChecklist";
+import { SERVICE_CATEGORIES, type ServiceCategoryKey } from "@/lib/services/category-catalog";
 
 type Props = {
   initialDisplayName: string;
@@ -12,6 +13,7 @@ export function ActivateProfessionalForm({ initialDisplayName }: Props) {
   const [displayName, setDisplayName] = useState(initialDisplayName);
   const [serviceRegion, setServiceRegion] = useState("");
   const [taxDocument, setTaxDocument] = useState("");
+  const [focusKeys, setFocusKeys] = useState<ServiceCategoryKey[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,18 +25,21 @@ export function ActivateProfessionalForm({ initialDisplayName }: Props) {
       displayName,
       serviceRegion,
       taxDocument,
+      focusCategoryKeys: focusKeys,
     });
     setBusy(false);
     if (!res.ok) setError(res.message);
   }
 
   return (
-    <form className="auth-form" onSubmit={onSubmit} style={{ maxWidth: 520 }}>
-      <p className="sec-sub" style={{ margin: "0 0 20px" }}>
+    <form className="auth-form auth-form--activate" onSubmit={onSubmit}>
+      <p className="sec-sub auth-flow-intro">
         Essas informações definem como você aparece na busca e registram seu documento para uso interno do Kazaro (não
-        aparece no perfil público). Depois, em &quot;Meus serviços&quot;, cada cadastro usa{" "}
-        <strong>uma das mesmas áreas dos filtros da busca</strong>: {SERVICE_CATEGORIES.map((c) => c.label).join(", ")}.
+        aparece no perfil público). Em &quot;Meus serviços&quot;, cada serviço também escolhe{" "}
+        <strong>uma dessas mesmas áreas</strong>: {SERVICE_CATEGORIES.map((c) => c.label).join(", ")}.
       </p>
+
+      <ProFocusCategoriesChecklist value={focusKeys} onChange={setFocusKeys} disabled={busy} />
 
       <label className="auth-field">
         <span className="auth-label">Nome no perfil público</span>

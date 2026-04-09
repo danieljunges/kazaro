@@ -16,14 +16,28 @@ function availClass(avail: ProfessionalDetail["avail"]) {
 
 export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail }) {
   const stats = detail.statRow.slice(0, 3);
+  const focusLabels = detail.focusLabels ?? [];
+  const avatarUrl = detail.avatarPublicUrl?.trim() || null;
 
   return (
     <>
       <div className="pp-header">
         <div className="pp-pic">
-          <div className={`pp-avatar-initials ${detail.phClass}`} aria-hidden>
-            {detail.initials}
-          </div>
+          {avatarUrl ? (
+            <img
+              className="pp-avatar-photo"
+              src={avatarUrl}
+              alt={`Foto de ${detail.name}`}
+              width={128}
+              height={128}
+              loading="eager"
+              decoding="async"
+            />
+          ) : (
+            <div className={`pp-avatar-initials ${detail.phClass}`} aria-hidden>
+              {detail.initials}
+            </div>
+          )}
           {detail.verified ? <span className="pp-verified-pill">✓ Verificado</span> : null}
         </div>
         <div className="pp-info">
@@ -51,6 +65,15 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
             </svg>
             {detail.roleLine}
           </div>
+          {focusLabels.length > 0 ? (
+            <ul className="pp-focus-list" aria-label="Funções e áreas de atuação">
+              {focusLabels.map((label) => (
+                <li key={label}>
+                  <span className="pp-focus-pill">{label}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
           <div className="pp-pills">
             <span style={{ fontSize: 13, fontWeight: 800, color: "var(--ink)" }}>{detail.rating}</span>
             <span style={{ fontSize: 12.5, color: "var(--ink60)" }}>
@@ -91,6 +114,15 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
 
       <ProfileTabs reviewsCount={detail.reviewsCount} />
 
+      {detail.about?.trim() ? (
+        <details className="pp-about-expand">
+          <summary className="pp-about-expand__summary">Sobre</summary>
+          <div className="pp-about-expand__body">
+            <p className="pp-about-expand__text">{detail.about}</p>
+          </div>
+        </details>
+      ) : null}
+
       <div className="services-list">
         {detail.services.length === 0 ? (
           <p style={{ color: "var(--ink60)", fontSize: 14, padding: "12px 0" }}>
@@ -119,6 +151,27 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
           ))
         )}
       </div>
+
+      {detail.portfolioPhotos && detail.portfolioPhotos.length > 0 ? (
+        <section className="pp-portfolio" aria-label="Portfólio do trabalho">
+          <h2 className="pp-portfolio__title">Portfólio</h2>
+          <ul className="pp-portfolio__grid">
+            {detail.portfolioPhotos.map((p) => (
+              <li key={p.id} className="pp-portfolio__cell">
+                <a
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pp-portfolio__link"
+                  aria-label="Abrir foto em nova aba"
+                >
+                  <img src={p.url} alt="" className="pp-portfolio__img" loading="lazy" decoding="async" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {detail.reviews.length > 0 ? (
         <div style={{ marginTop: 32 }}>

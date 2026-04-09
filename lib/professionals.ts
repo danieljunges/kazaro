@@ -13,6 +13,10 @@ export type ProfessionalCard = {
   phClass: "ph-1" | "ph-2" | "ph-3" | "ph-4" | "ph-5" | "ph-6";
   /** Texto extra para filtro na busca (categorias dos serviços aprovados). */
   filterExtra?: string;
+  /** Rótulos das funções marcadas na ativação (aparecem na busca e no perfil). */
+  focusLabels?: string[];
+  /** Foto pública (espelho do avatar em Configurações). */
+  avatarPublicUrl?: string | null;
 };
 
 export type ServiceRow = {
@@ -26,6 +30,8 @@ export type ServiceRow = {
 
 export type ReviewRow = { id: string; score: string; text: string; author: string; info: string };
 
+export type PortfolioPhoto = { id: string; url: string };
+
 export type ProfessionalDetail = ProfessionalCard & {
   nameLine1: string;
   nameLine2: string;
@@ -36,6 +42,8 @@ export type ProfessionalDetail = ProfessionalCard & {
   reviews: ReviewRow[];
   statRow: { val: string; label: string }[];
   bookingTimes: string[];
+  /** Trabalhos publicados pelo prestador. */
+  portfolioPhotos?: PortfolioPhoto[];
 };
 
 const COMMON_TIMES = [
@@ -58,6 +66,7 @@ export const SEARCH_GRID_PROS: ProfessionalCard[] = [
     verified: true,
     phClass: "ph-1",
     filterExtra: "barbearia barbeiro barba corte degradê fade navalha",
+    focusLabels: ["Barbearia"],
   },
   {
     slug: "rodrigo-bittencourt",
@@ -71,6 +80,7 @@ export const SEARCH_GRID_PROS: ProfessionalCard[] = [
     verified: true,
     phClass: "ph-2",
     filterExtra: "manicure nails unha esmalte gel alongamento nail art fibra banho de gel",
+    focusLabels: ["Manicure & nails"],
   },
   {
     slug: "beatriz-nogueira",
@@ -85,6 +95,7 @@ export const SEARCH_GRID_PROS: ProfessionalCard[] = [
     phClass: "ph-3",
     filterExtra:
       "sobrancelha design sobrancelhas henna brow micropigmentação microblading pinça mapeamento lamination",
+    focusLabels: ["Design de sobrancelha"],
   },
   {
     slug: "ana-paula-ferreira",
@@ -99,6 +110,7 @@ export const SEARCH_GRID_PROS: ProfessionalCard[] = [
     phClass: "ph-4",
     filterExtra:
       "cílios cilios extensão extensão de cílios lash fio a fio volume russo híbrido lifting manutenção lash designer",
+    focusLabels: ["Extensão de cílios"],
   },
   {
     slug: "marcos-silva",
@@ -112,6 +124,7 @@ export const SEARCH_GRID_PROS: ProfessionalCard[] = [
     verified: true,
     phClass: "ph-5",
     filterExtra: "tatuagem tatuador tattoo flash blackwork fineline sombras",
+    focusLabels: ["Tatuagem"],
   },
   {
     slug: "juliana-oliveira",
@@ -125,6 +138,7 @@ export const SEARCH_GRID_PROS: ProfessionalCard[] = [
     verified: false,
     phClass: "ph-6",
     filterExtra: "podologia podólogo podóloga pé unha encravada calo spa dos pés",
+    focusLabels: ["Podologia"],
   },
   {
     slug: "felipe-lima",
@@ -138,6 +152,7 @@ export const SEARCH_GRID_PROS: ProfessionalCard[] = [
     verified: true,
     phClass: "ph-1",
     filterExtra: "cabeleireiro cabelo corte coloração mechas tratamento escova salão",
+    focusLabels: ["Cabelo"],
   },
   {
     slug: "laura-mendes",
@@ -151,6 +166,7 @@ export const SEARCH_GRID_PROS: ProfessionalCard[] = [
     verified: true,
     phClass: "ph-4",
     filterExtra: "maquiagem make social noiva editorial beauty",
+    focusLabels: ["Maquiagem"],
   },
 ];
 
@@ -268,6 +284,8 @@ export function fallbackDetailFromSlug(slug: string): ProfessionalDetail {
       { val: "-", label: "Jobs concluídos" },
     ],
     bookingTimes: COMMON_TIMES,
+    avatarPublicUrl: null,
+    portfolioPhotos: [],
   };
 }
 

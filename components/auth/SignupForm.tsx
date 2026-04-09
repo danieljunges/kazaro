@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState, FormEvent } from "react";
 import { checkSignupEmailAvailable } from "@/app/criar-conta/actions";
 import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
-import { getAuthCallbackUrl } from "@/lib/auth/redirect";
+import { getPasswordPolicyError, PASSWORD_POLICY_HINT } from "@/lib/auth/password-policy";
+import { getEmailConfirmationRedirectUrl } from "@/lib/auth/redirect";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { AuthSpinner } from "@/components/auth/AuthSpinner";
 
@@ -24,7 +25,7 @@ function ptError(message: string): string {
   ) {
     return "E-mail já cadastrado.";
   }
-  if (m.includes("password")) return "Senha inválida (mín. 6 caracteres).";
+  if (m.includes("password")) return `Senha inválida. ${PASSWORD_POLICY_HINT}`;
   if (m.includes("invalid email")) return "E-mail inválido.";
   return message;
 }
@@ -47,8 +48,9 @@ export function SignupForm({ defaultRole = "client" as AccountRole }: { defaultR
       setError("As senhas não coincidem.");
       return;
     }
-    if (password.length < 6) {
-      setError("A senha deve ter pelo menos 6 caracteres.");
+    const policyErr = getPasswordPolicyError(password);
+    if (policyErr) {
+      setError(policyErr);
       return;
     }
 
@@ -65,12 +67,11 @@ export function SignupForm({ defaultRole = "client" as AccountRole }: { defaultR
       }
 
       const supabase = getSupabaseBrowserClient();
-      const nextAfterEmailConfirm = encodeURIComponent("/dashboard?conta=ativada");
       const { data, error: signError } = await supabase.auth.signUp({
         email: emailTrim,
         password,
         options: {
-          emailRedirectTo: `${getAuthCallbackUrl()}?next=${nextAfterEmailConfirm}`,
+          emailRedirectTo: getEmailConfirmationRedirectUrl(),
           data: {
             full_name: fullName.trim() || undefined,
             role: accountRole,
@@ -92,6 +93,11 @@ export function SignupForm({ defaultRole = "client" as AccountRole }: { defaultR
       }
 
       await ensureMinElapsedSince(t0);
+      try {
+        sessionStorage.setItem("kz_pending_confirm_email", emailTrim);
+      } catch {
+        /* ignore */
+      }
       navigated = true;
       router.push("/entrar?cadastro=ok");
       router.refresh();
@@ -169,12 +175,13 @@ export function SignupForm({ defaultRole = "client" as AccountRole }: { defaultR
             type="password"
             autoComplete="new-password"
             required
-            minLength={6}
+            minLength={8}
             value={password}
             onChange={(ev) => setPassword(ev.target.value)}
-            placeholder="mínimo 6 caracteres"
+            placeholder="ex.: Kazaro2026!"
             disabled={loading}
           />
+          <p className="auth-password-hint">{PASSWORD_POLICY_HINT}</p>
         </label>
 
         <label className="auth-field">
@@ -184,7 +191,7 @@ export function SignupForm({ defaultRole = "client" as AccountRole }: { defaultR
             type="password"
             autoComplete="new-password"
             required
-            minLength={6}
+            minLength={8}
             value={password2}
             onChange={(ev) => setPassword2(ev.target.value)}
             placeholder="repita a senha"
