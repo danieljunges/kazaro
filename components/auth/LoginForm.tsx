@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, FormEvent } from "react";
 import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
-import { getEmailConfirmationRedirectUrl } from "@/lib/auth/redirect";
+import { getEmailConfirmationRedirectUrlClient } from "@/lib/auth/redirect";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { AuthSpinner } from "@/components/auth/AuthSpinner";
 
@@ -133,7 +133,7 @@ export function LoginForm() {
         type: "signup",
         email: em,
         options: {
-          emailRedirectTo: getEmailConfirmationRedirectUrl(),
+          emailRedirectTo: getEmailConfirmationRedirectUrlClient(),
         },
       });
       if (resendError) {

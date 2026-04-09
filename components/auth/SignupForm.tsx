@@ -6,7 +6,7 @@ import { useState, FormEvent } from "react";
 import { checkSignupEmailAvailable } from "@/app/criar-conta/actions";
 import { ensureMinElapsedSince } from "@/lib/auth/auth-ui-timing";
 import { getPasswordPolicyError, PASSWORD_POLICY_HINT } from "@/lib/auth/password-policy";
-import { getEmailConfirmationRedirectUrl } from "@/lib/auth/redirect";
+import { getEmailConfirmationRedirectUrlClient } from "@/lib/auth/redirect";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { AuthSpinner } from "@/components/auth/AuthSpinner";
 
@@ -71,7 +71,7 @@ export function SignupForm({ defaultRole = "client" as AccountRole }: { defaultR
         email: emailTrim,
         password,
         options: {
-          emailRedirectTo: getEmailConfirmationRedirectUrl(),
+          emailRedirectTo: getEmailConfirmationRedirectUrlClient(),
           data: {
             full_name: fullName.trim() || undefined,
             role: accountRole,

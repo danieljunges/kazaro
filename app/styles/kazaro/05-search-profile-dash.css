@@ -2365,6 +2365,70 @@ a.btn-book-now:visited {
 .kz-agenda-availability__link:hover {
   color: var(--ink);
 }
+
+.kz-agenda-schedule-details {
+  margin-top: 14px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  overflow: hidden;
+}
+.kz-agenda-schedule-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--sans);
+  user-select: none;
+}
+.kz-agenda-schedule-summary::-webkit-details-marker {
+  display: none;
+}
+.kz-agenda-schedule-summary__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.kz-agenda-schedule-summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--lime-deep);
+  border-bottom: 2px solid var(--lime-deep);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.kz-agenda-schedule-details[open] .kz-agenda-schedule-summary::after {
+  transform: rotate(-135deg);
+  margin-top: 4px;
+}
+.kz-agenda-schedule-summary__label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lime-deep);
+}
+.kz-agenda-schedule-summary__hint {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink50);
+}
+.kz-agenda-schedule-details__body {
+  padding: 0 14px 16px;
+  border-top: 1px solid var(--border);
+}
+.kz-agenda-schedule-details__body .kz-prof-form {
+  margin-top: 0;
+  padding-top: 16px;
+  border-top: none;
+}
+
 .kz-agenda-nav {
   display: flex;
   flex-wrap: wrap;
