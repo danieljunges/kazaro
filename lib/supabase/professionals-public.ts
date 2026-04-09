@@ -97,11 +97,18 @@ function availFromDb(h: string): AvailTag {
 }
 
 function roleLineFromRow(row: ProRow): string {
-  if (row.headline?.trim()) return row.headline.trim();
-  const reg = row.service_region?.trim();
-  if (reg) return reg;
+  const labels = focusLabelsFromKeys(row.focus_category_keys);
+  const serviceReg = row.service_region?.trim();
   const nb = row.neighborhood?.trim();
   const city = row.city?.trim() || "Florianópolis";
+  const regionPart = serviceReg || (nb ? `${nb} · ${city}` : city);
+
+  if (labels.length > 0) {
+    return `${labels.join(" · ")} · ${regionPart}`;
+  }
+
+  if (row.headline?.trim()) return row.headline.trim();
+  if (serviceReg) return serviceReg;
   if (nb) return `${nb} · ${city}`;
   return city;
 }
@@ -289,7 +296,8 @@ export async function fetchProfessionalDetailFromDb(slug: string): Promise<Profe
       nameLine1: line1,
       nameLine2: line2,
       categoryHref: "/search",
-      categoryLabel: row.headline?.split("·")[0]?.trim() || "Serviços",
+      categoryLabel:
+        focusLabelsFromKeys(row.focus_category_keys)[0] ?? row.headline?.split("·")[0]?.trim() ?? "Serviços",
       about:
         row.bio?.trim() ||
         "Este profissional ainda não preencheu a descrição completa. Entre em contato pelo Kazaro para saber mais.",

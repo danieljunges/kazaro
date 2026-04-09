@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ProfessionalDetail } from "@/lib/professionals";
 import { ProfileTabs } from "@/components/kazaro/ProfileTabs";
+import { PublicProfileOwnerPortfolio } from "@/components/profissional/PublicProfileOwnerPortfolio";
 
 function availLabel(avail: ProfessionalDetail["avail"]) {
   if (avail === "today") return "Disponível hoje";
@@ -14,7 +15,18 @@ function availClass(avail: ProfessionalDetail["avail"]) {
   return "avail-badge avail-tom";
 }
 
-export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail }) {
+type OwnerPortfolioRow = { id: string; image_url: string };
+
+export function ProfessionalPublicView({
+  detail,
+  isOwner = false,
+  ownerPortfolioPhotos = null,
+}: {
+  detail: ProfessionalDetail;
+  /** Quando true e `ownerPortfolioPhotos` definido, mostra edição de portfólio no lugar da galeria só-leitura. */
+  isOwner?: boolean;
+  ownerPortfolioPhotos?: OwnerPortfolioRow[] | null;
+}) {
   const stats = detail.statRow.slice(0, 3);
   const focusLabels = detail.focusLabels ?? [];
   const avatarUrl = detail.avatarPublicUrl?.trim() || null;
@@ -152,7 +164,9 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
         )}
       </div>
 
-      {detail.portfolioPhotos && detail.portfolioPhotos.length > 0 ? (
+      {isOwner && ownerPortfolioPhotos ? (
+        <PublicProfileOwnerPortfolio initialPhotos={ownerPortfolioPhotos} />
+      ) : detail.portfolioPhotos && detail.portfolioPhotos.length > 0 ? (
         <section className="pp-portfolio" aria-label="Portfólio do trabalho">
           <h2 className="pp-portfolio__title">Portfólio</h2>
           <ul className="pp-portfolio__grid">

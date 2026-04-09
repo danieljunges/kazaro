@@ -7,6 +7,7 @@ import {
   fetchProfessionalDisplayTitle,
 } from "@/lib/supabase/professionals-public";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -43,11 +44,35 @@ export default async function ProfissionalPage({ params }: Props) {
   const fromDb = await fetchProfessionalDetailFromDb(id);
   const detail = fromDb ?? resolveProfessionalDetail(id);
 
+  const supabase = await getSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let isOwner = false;
+  let ownerPortfolioPhotos: { id: string; image_url: string }[] | null = null;
+  if (user?.id && fromDb) {
+    const { data: proRow } = await supabase.from("professionals").select("id").eq("slug", id).maybeSingle();
+    if (proRow?.id === user.id) {
+      isOwner = true;
+      const { data: pf } = await supabase
+        .from("pro_portfolio_photos")
+        .select("id, image_url")
+        .eq("professional_id", user.id)
+        .order("sort_order", { ascending: true });
+      ownerPortfolioPhotos = (pf ?? []) as { id: string; image_url: string }[];
+    }
+  }
+
   return (
     <div className="home-editorial public-page pp-page--nocab">
       <CompactNav backHref="/search" backLabel="← Busca" />
       <div className="pp-main pp-main--nocab">
-        <ProfessionalPublicView detail={detail} />
+        <ProfessionalPublicView
+          detail={detail}
+          isOwner={isOwner}
+          ownerPortfolioPhotos={ownerPortfolioPhotos}
+        />
       </div>
     </div>
   );

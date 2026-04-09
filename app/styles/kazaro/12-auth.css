@@ -297,6 +297,21 @@
   color: var(--ink);
 }
 
+/* Link dentro do banner: mesma fonte/peso do texto (evita .dc-link 12px “estranho”) */
+.home-editorial .auth-banner .auth-banner-link {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(15, 118, 110, 0.55);
+  text-underline-offset: 3px;
+}
+.home-editorial .auth-banner .auth-banner-link:hover {
+  color: var(--ink);
+  text-decoration-color: var(--lime-deep);
+}
+
 .home-editorial .auth-resend-block {
   display: flex;
   flex-direction: column;
