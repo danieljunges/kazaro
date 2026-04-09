@@ -144,6 +144,58 @@
   color: var(--ink50);
 }
 
+.home-editorial .kz-focus-fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.home-editorial .kz-focus-fieldset__intro {
+  margin-bottom: 12px;
+}
+.home-editorial .kz-focus-cats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.home-editorial .kz-focus-cat-opt {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-md);
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.home-editorial .kz-focus-cat-opt:has(input:focus-visible) {
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+}
+.home-editorial .kz-focus-cat-opt input {
+  margin-top: 3px;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--lime-deep, #0f766e);
+}
+.home-editorial .kz-focus-cat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.home-editorial .kz-focus-cat-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.home-editorial .kz-focus-cat-hint {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--ink50);
+}
+
 .home-editorial .auth-banner {
   margin: 0;
   font-size: 13.5px;

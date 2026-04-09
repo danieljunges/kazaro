@@ -304,15 +304,34 @@ export default async function SearchPage({ searchParams }: PageProps) {
                 {pageRows.map((r) => (
                   <Link key={r.slug} href={`/profissional/${r.slug}`} className="kz-grid-card">
                     <div className="kz-pro-img">
-                      <div className={`kz-pro-img-ph ${phClass(r.phClass)}`}>
-                        {r.initials}
-                        <AvailBadge avail={r.avail} />
-                        {r.verified ? <span className="kz-verified-badge">Verificado</span> : null}
-                      </div>
+                      {r.avatarPublicUrl ? (
+                        <>
+                          <img className="kz-pro-img-photo" src={r.avatarPublicUrl} alt="" loading="lazy" />
+                          <div className="kz-pro-img-overlay">
+                            <AvailBadge avail={r.avail} />
+                            {r.verified ? <span className="kz-verified-badge">Verificado</span> : null}
+                          </div>
+                        </>
+                      ) : (
+                        <div className={`kz-pro-img-ph ${phClass(r.phClass)}`}>
+                          {r.initials}
+                          <AvailBadge avail={r.avail} />
+                          {r.verified ? <span className="kz-verified-badge">Verificado</span> : null}
+                        </div>
+                      )}
                     </div>
                     <div className="kz-grid-body">
                       <div className="kz-grid-name">{r.name}</div>
                       <div className="kz-grid-role">{r.roleLine}</div>
+                      {r.focusLabels && r.focusLabels.length > 0 ? (
+                        <div className="kz-grid-focus" aria-label="Funções">
+                          {r.focusLabels.map((label) => (
+                            <span key={label} className="kz-grid-focus-pill">
+                              {label}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
                       <div className="kz-grid-meta">
                         <span className="kz-grid-rating">{r.rating}</span>
                         <span className="kz-grid-sep">·</span>

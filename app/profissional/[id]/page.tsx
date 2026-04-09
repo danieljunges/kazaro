@@ -44,15 +44,10 @@ export default async function ProfissionalPage({ params }: Props) {
   const detail = fromDb ?? resolveProfessionalDetail(id);
 
   return (
-    <div className="home-editorial public-page">
+    <div className="home-editorial public-page pp-page--nocab">
       <CompactNav backHref="/search" backLabel="← Busca" />
-      <div className="pp-bg">
-        <div className="pp-band">
-          <div className="pp-band-fade" />
-        </div>
-        <div className="pp-main">
-          <ProfessionalPublicView detail={detail} />
-        </div>
+      <div className="pp-main pp-main--nocab">
+        <ProfessionalPublicView detail={detail} />
       </div>
     </div>
   );

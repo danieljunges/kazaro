@@ -3,16 +3,26 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateMyProfessionalPublic } from "@/app/dashboard/configuracoes/actions";
+import { ProFocusCategoriesChecklist } from "@/components/dashboard/ProFocusCategoriesChecklist";
+import { normalizeFocusCategoryKeys, type ServiceCategoryKey } from "@/lib/services/category-catalog";
 
 type Props = {
   initialDisplayName: string;
   initialServiceRegion: string;
+  initialFocusCategoryKeys: string[];
 };
 
-export function ProfessionalPublicSettingsForm({ initialDisplayName, initialServiceRegion }: Props) {
+export function ProfessionalPublicSettingsForm({
+  initialDisplayName,
+  initialServiceRegion,
+  initialFocusCategoryKeys,
+}: Props) {
   const router = useRouter();
   const [displayName, setDisplayName] = useState(initialDisplayName);
   const [serviceRegion, setServiceRegion] = useState(initialServiceRegion);
+  const [focusKeys, setFocusKeys] = useState<ServiceCategoryKey[]>(() =>
+    normalizeFocusCategoryKeys(initialFocusCategoryKeys),
+  );
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
@@ -27,7 +37,11 @@ export function ProfessionalPublicSettingsForm({ initialDisplayName, initialServ
         setOk(null);
         setBusy(true);
         try {
-          const res = await updateMyProfessionalPublic({ displayName, serviceRegion });
+          const res = await updateMyProfessionalPublic({
+            displayName,
+            serviceRegion,
+            focusCategoryKeys: focusKeys,
+          });
           if (!res.ok) {
             setErr(res.message);
             return;
@@ -45,6 +59,8 @@ export function ProfessionalPublicSettingsForm({ initialDisplayName, initialServ
           <div className="kz-prof-sub">Nome na vitrine e região em que você atende (aparecem na busca e no perfil).</div>
         </div>
       </div>
+
+      <ProFocusCategoriesChecklist value={focusKeys} onChange={setFocusKeys} disabled={busy} />
 
       <div className="kz-prof-row kz-prof-grid">
         <label className="auth-field">

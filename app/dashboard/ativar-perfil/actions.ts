@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { displayNameToSlugBase, pickUniqueProfessionalSlug } from "@/lib/professional/slug";
+import { normalizeFocusCategoryKeys } from "@/lib/services/category-catalog";
 import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -19,6 +20,7 @@ export async function activateProfessionalProfile(input: {
   displayName: string;
   serviceRegion: string;
   taxDocument: string;
+  focusCategoryKeys: string[];
 }): Promise<{ ok: true } | { ok: false; message: string }> {
   const supabase = await getSupabaseServerClient();
   const {
@@ -50,6 +52,11 @@ export async function activateProfessionalProfile(input: {
   const taxErr = validateTaxId(taxDigits);
   if (taxErr) return { ok: false, message: taxErr };
 
+  const focusKeys = normalizeFocusCategoryKeys(input.focusCategoryKeys ?? []);
+  if (focusKeys.length === 0) {
+    return { ok: false, message: "Marque pelo menos uma função ou área em que você atua." };
+  }
+
   const slugBase = displayNameToSlugBase(display_name);
   const slug = await pickUniqueProfessionalSlug(supabase, slugBase);
 
@@ -67,6 +74,7 @@ export async function activateProfessionalProfile(input: {
     display_name,
     service_region,
     city: "Florianópolis",
+    focus_category_keys: focusKeys,
   });
 
   if (proErr) {

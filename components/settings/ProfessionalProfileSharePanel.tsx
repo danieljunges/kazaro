@@ -51,7 +51,8 @@ export function ProfessionalProfileSharePanel({ profileUrl, slug, variant = "set
         <div>
           <div className="kz-prof-title">Link do seu perfil público</div>
           <p className="kz-share-profile__lead">
-            Envie para clientes verem seus{" "}
+            O trecho após <strong>/profissional/</strong> no link é o seu identificador único no Kazaro (como um
+            &quot;nome de usuário&quot; na URL): não repete entre prestadores. Envie para clientes verem seus{" "}
             <Link className="kz-share-profile__inline-link" href={`/profissional/${slug}`}>
               serviços e avaliações
             </Link>
@@ -59,7 +60,7 @@ export function ProfessionalProfileSharePanel({ profileUrl, slug, variant = "set
             <Link className="kz-share-profile__inline-link" href={`/profissional/${slug}/agendar`}>
               escolher data e horário
             </Link>{" "}
-            conforme a sua agenda e mandar mensagem. Portfólio por serviço ainda vem em uma próxima versão.
+            conforme a sua agenda e mandar mensagem.
           </p>
         </div>
       </div>

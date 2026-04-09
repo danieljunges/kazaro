@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { getSupabaseServiceRoleClient } from "@/lib/supabase/admin";
 import { getSupabaseEnv } from "@/lib/supabase/env";
+import { normalizeFocusCategoryKeys } from "@/lib/services/category-catalog";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function updateMyProfile(input: {
@@ -24,6 +25,14 @@ export async function updateMyProfile(input: {
   const { error } = await supabase.from("profiles").update({ full_name, phone, avatar_url }).eq("id", user.id);
   if (error) return { ok: false, message: error.message || "Não foi possível salvar." };
 
+  const { data: proRow } = await supabase.from("professionals").select("id").eq("id", user.id).maybeSingle();
+  if (proRow) {
+    await supabase.from("professionals").update({ avatar_public_url: avatar_url }).eq("id", user.id);
+    const { data: slugRow } = await supabase.from("professionals").select("slug").eq("id", user.id).maybeSingle();
+    const slug = slugRow?.slug as string | undefined;
+    if (slug) revalidatePath(`/profissional/${slug}`);
+  }
+
   revalidatePath("/dashboard/configuracoes");
   revalidatePath("/dashboard");
   revalidatePath("/search");
@@ -33,6 +42,7 @@ export async function updateMyProfile(input: {
 export async function updateMyProfessionalPublic(input: {
   displayName: string;
   serviceRegion: string;
+  focusCategoryKeys: string[];
 }): Promise<{ ok: true } | { ok: false; message: string }> {
   const supabase = await getSupabaseServerClient();
   const {
@@ -49,9 +59,14 @@ export async function updateMyProfessionalPublic(input: {
     return { ok: false, message: "Descreva a região ou bairros em que você atende." };
   }
 
+  const focusKeys = normalizeFocusCategoryKeys(input.focusCategoryKeys ?? []);
+  if (focusKeys.length === 0) {
+    return { ok: false, message: "Marque pelo menos uma função ou área em que você atua." };
+  }
+
   const { error } = await supabase
     .from("professionals")
-    .update({ display_name, service_region })
+    .update({ display_name, service_region, focus_category_keys: focusKeys })
     .eq("id", user.id);
 
   if (error) return { ok: false, message: error.message || "Não foi possível salvar." };

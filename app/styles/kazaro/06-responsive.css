@@ -44,6 +44,9 @@
     align-items: flex-start;
     margin-top: -40px;
   }
+  .pp-page--nocab .pp-header {
+    margin-top: 0;
+  }
   .pp-actions {
     margin-top: 12px;
     width: 100%;
