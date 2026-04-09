@@ -50,7 +50,7 @@ export default async function EntrarPage({
     <div className="home-editorial public-page">
       <CompactNav backHref="/" backLabel="← Início" />
       <div className="section">
-        <div className="pro-page-card" style={{ maxWidth: 480, margin: "0 auto" }}>
+        <div className="pro-page-card auth-flow-card">
           <span className="sec-eyebrow">Conta</span>
           <h1 className="sec-title" style={{ fontSize: "clamp(32px,4vw,42px)", marginBottom: 8 }}>
             Entrar no Kazaro

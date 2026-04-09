@@ -37,7 +37,7 @@ export default async function AtivarPerfilPage({
     <div className="home-editorial public-page">
       <CompactNav backHref="/para-profissionais" backLabel="← Área do prestador" />
       <div className="section">
-        <div className="pro-page-card" style={{ maxWidth: 640, margin: "0 auto" }}>
+        <div className="pro-page-card auth-flow-card auth-flow-card--wide">
           <span className="sec-eyebrow">Prestador</span>
           <h1 className="sec-title" style={{ fontSize: "clamp(28px,4vw,40px)", marginBottom: 12 }}>
             Ativar seu perfil

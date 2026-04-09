@@ -107,8 +107,8 @@ export default async function SearchPage({ searchParams }: PageProps) {
       <MarketingNav />
 
       {sp.conta === "ativada" ? (
-        <div className="kz-sh-inner" style={{ paddingBottom: 0 }}>
-          <div className="auth-banner auth-banner--ok" style={{ margin: "0 0 16px", textAlign: "left", lineHeight: 1.55 }}>
+        <div className="kz-busca-account-banner-wrap">
+          <div className="auth-banner auth-banner--ok kz-busca-account-banner">
             <strong>Conta confirmada.</strong> Tudo certo com seu e-mail: já pode buscar profissionais e agendar com
             tranquilidade.
           </div>

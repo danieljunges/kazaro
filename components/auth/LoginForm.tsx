@@ -59,20 +59,27 @@ export function LoginForm() {
   return (
     <div className={`auth-form-shell${loading ? " auth-form-shell--busy" : ""}`}>
       <form className="auth-form" onSubmit={onSubmit} aria-busy={loading}>
-        {searchParams.get("cadastro") === "ok" ? (
-          <p className="auth-banner auth-banner--ok">Confirmação enviada por e-mail.</p>
-        ) : null}
-        {searchParams.get("conta") === "ativada" ? (
-          <p className="auth-banner auth-banner--ok">E-mail confirmado.</p>
-        ) : null}
-        {searchParams.get("erro") === "callback" ? (
-          <p className="auth-banner auth-banner--err">Link inválido ou expirado.</p>
-        ) : null}
-        {searchParams.get("requer") === "admin" ? (
-          <p className="auth-banner auth-banner--err">
-            Acesso administrativo: entre com uma conta autorizada. Se você já está logado com outro perfil, use outro
-            e-mail ou saia da conta atual.
-          </p>
+        {searchParams.get("cadastro") === "ok" ||
+        searchParams.get("conta") === "ativada" ||
+        searchParams.get("erro") === "callback" ||
+        searchParams.get("requer") === "admin" ? (
+          <div className="auth-alerts" aria-live="polite">
+            {searchParams.get("cadastro") === "ok" ? (
+              <p className="auth-banner auth-banner--ok">Confirmação enviada por e-mail.</p>
+            ) : null}
+            {searchParams.get("conta") === "ativada" ? (
+              <p className="auth-banner auth-banner--ok">E-mail confirmado.</p>
+            ) : null}
+            {searchParams.get("erro") === "callback" ? (
+              <p className="auth-banner auth-banner--err">Link inválido ou expirado.</p>
+            ) : null}
+            {searchParams.get("requer") === "admin" ? (
+              <p className="auth-banner auth-banner--err">
+                Acesso administrativo: use uma conta autorizada. Se já estiver logado com outro perfil, troque o e-mail ou
+                saia da conta.
+              </p>
+            ) : null}
+          </div>
         ) : null}
 
         <label className="auth-field">

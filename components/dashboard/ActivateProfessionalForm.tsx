@@ -29,8 +29,8 @@ export function ActivateProfessionalForm({ initialDisplayName }: Props) {
   }
 
   return (
-    <form className="auth-form" onSubmit={onSubmit} style={{ maxWidth: 520 }}>
-      <p className="sec-sub" style={{ margin: "0 0 20px" }}>
+    <form className="auth-form auth-form--activate" onSubmit={onSubmit}>
+      <p className="sec-sub auth-flow-intro">
         Essas informações definem como você aparece na busca e registram seu documento para uso interno do Kazaro (não
         aparece no perfil público). Depois, em &quot;Meus serviços&quot;, cada cadastro usa{" "}
         <strong>uma das mesmas áreas dos filtros da busca</strong>: {SERVICE_CATEGORIES.map((c) => c.label).join(", ")}.

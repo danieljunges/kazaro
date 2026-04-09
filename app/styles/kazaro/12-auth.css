@@ -11,6 +11,9 @@
 
 .home-editorial .auth-form-shell {
   position: relative;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 .home-editorial .auth-form-shell--busy {
@@ -30,6 +33,14 @@
   pointer-events: none;
 }
 
+@media (max-width: 520px) {
+  /* Evita “esticar” a largura da página no celular quando o overlay aparece */
+  .home-editorial .auth-form-shell--busy::after {
+    margin: 0;
+    inset: 0;
+  }
+}
+
 .home-editorial .auth-form {
   display: flex;
   flex-direction: column;
@@ -37,6 +48,12 @@
   margin-top: 8px;
   position: relative;
   z-index: 1;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.home-editorial .auth-form--activate {
+  max-width: 100%;
 }
 
 .home-editorial .auth-submit-inner {
@@ -120,6 +137,39 @@
   line-height: 1.5;
   padding: 12px 14px;
   border-radius: 10px;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Cartão das telas Entrar / Criar conta / Ativar perfil: sempre cabe na largura do telefone */
+.home-editorial .auth-flow-card {
+  width: 100%;
+  max-width: min(480px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.home-editorial .auth-flow-card--wide {
+  max-width: min(640px, 100%);
+}
+
+.home-editorial .auth-flow-intro {
+  margin: 0 0 20px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.home-editorial .auth-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .home-editorial .auth-banner--ok {
