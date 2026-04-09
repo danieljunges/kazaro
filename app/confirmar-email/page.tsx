@@ -13,10 +13,12 @@ export const metadata: Metadata = {
 export default async function ConfirmarEmailPage({
   searchParams,
 }: {
-  searchParams: Promise<{ email?: string }>;
+  searchParams: Promise<{ email?: string; enviado?: string; reenvio?: string }>;
 }) {
   const sp = await searchParams;
   const defaultEmail = typeof sp.email === "string" ? decodeURIComponent(sp.email).trim() : "";
+  const notice =
+    sp.reenvio === "1" ? ("reenvio" as const) : sp.enviado === "1" || sp.enviado === "ok" ? ("enviado" as const) : null;
 
   return (
     <div className="home-editorial public-page">
@@ -27,7 +29,7 @@ export default async function ConfirmarEmailPage({
           <h1 className="sec-title" style={{ fontSize: "clamp(32px,4vw,42px)", marginBottom: 8 }}>
             Confirmar e-mail
           </h1>
-          <ConfirmEmailCodeForm defaultEmail={defaultEmail} />
+          <ConfirmEmailCodeForm defaultEmail={defaultEmail} notice={notice} />
         </div>
       </div>
     </div>

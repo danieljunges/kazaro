@@ -65,6 +65,19 @@ export function LoginForm() {
     }
   }, [cadastroOk, erroCallback]);
 
+  /** Links antigos ?cadastro=ok: vai direto pra tela do código se soubermos o e-mail. */
+  useEffect(() => {
+    if (!cadastroOk) return;
+    try {
+      const pending = sessionStorage.getItem(PENDING_EMAIL_KEY)?.trim();
+      if (pending) {
+        router.replace(`/confirmar-email?email=${encodeURIComponent(pending)}&enviado=1`);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [cadastroOk, router]);
+
   useEffect(() => {
     if (error !== EMAIL_NOT_CONFIRMED_PT || cadastroOk || erroCallback) return;
     setResendCooldown((c) => (c === 0 ? 22 : c));
@@ -143,10 +156,8 @@ export function LoginForm() {
       } catch {
         /* ignore */
       }
-      setResendHint(
-        "Enviamos outro e-mail. No Gmail/Outlook, use “Abrir no navegador” ou copie o link e cole no Safari/Chrome — o preview do app de e-mail às vezes gasta o link antes da hora.",
-      );
-      setResendCooldown(AFTER_RESEND_COOLDOWN_SEC);
+      router.push(`/confirmar-email?email=${encodeURIComponent(em)}&reenvio=1`);
+      router.refresh();
     } catch {
       setResendHint("Não foi possível reenviar. Tente de novo em instantes.");
     } finally {

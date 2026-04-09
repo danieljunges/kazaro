@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { AuthSpinner } from "@/components/auth/AuthSpinner";
 
@@ -15,15 +15,23 @@ function ptVerifyError(message: string): string {
   return message;
 }
 
-type Props = { defaultEmail?: string };
+type Props = {
+  defaultEmail?: string;
+  /** Vindo da URL após cadastro ou reenvio — mostra que o código foi mandado por e-mail. */
+  notice?: "enviado" | "reenvio" | null;
+};
 
 /**
  * Confirmação sem depender do link do e-mail (Gmail/Outlook queimam o token no preview).
  * O código de 6 dígitos vem no e-mail (variável {{ .Token }} no template do Supabase).
  */
-export function ConfirmEmailCodeForm({ defaultEmail = "" }: Props) {
+export function ConfirmEmailCodeForm({ defaultEmail = "", notice = null }: Props) {
   const router = useRouter();
   const [email, setEmail] = useState(defaultEmail);
+
+  useEffect(() => {
+    if (defaultEmail.trim()) setEmail(defaultEmail.trim());
+  }, [defaultEmail]);
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -66,10 +74,40 @@ export function ConfirmEmailCodeForm({ defaultEmail = "" }: Props) {
 
   return (
     <form className="auth-form" onSubmit={onSubmit} aria-busy={busy}>
-      <p className="sec-sub" style={{ margin: "0 0 18px", lineHeight: 1.55 }}>
-        Cole abaixo o <strong>código de 6 números</strong> do e-mail de confirmação. Funciona mesmo quando o botão do
-        e-mail não abre direito no celular.
-      </p>
+      {notice === "enviado" ? (
+        <div className="auth-banner auth-banner--ok" style={{ marginBottom: 18, textAlign: "left", lineHeight: 1.55 }}>
+          <strong>Mandamos um código para o seu e-mail.</strong>{" "}
+          {email.trim() ? (
+            <>
+              Confira a caixa de entrada de <strong>{email.trim()}</strong> (e o spam). Digite os <strong>6 números</strong>{" "}
+              abaixo — não precisa clicar em nenhum link.
+            </>
+          ) : (
+            <>
+              Confira sua caixa de entrada (e o spam). Digite os <strong>6 números</strong> abaixo — não precisa clicar em
+              nenhum link.
+            </>
+          )}
+        </div>
+      ) : null}
+      {notice === "reenvio" ? (
+        <div className="auth-banner auth-banner--ok" style={{ marginBottom: 18, textAlign: "left", lineHeight: 1.55 }}>
+          <strong>Enviamos outro e-mail</strong> com um código novo
+          {email.trim() ? (
+            <>
+              {" "}
+              para <strong>{email.trim()}</strong>
+            </>
+          ) : null}
+          . Use os 6 números da mensagem abaixo.
+        </div>
+      ) : null}
+      {!notice ? (
+        <p className="sec-sub" style={{ margin: "0 0 18px", lineHeight: 1.55 }}>
+          Digite o <strong>código de 6 números</strong> que veio no e-mail de confirmação do Kazaro. Não precisa abrir
+          link no app de e-mail.
+        </p>
+      ) : null}
 
       <label className="auth-field">
         <span className="auth-label">E-mail cadastrado</span>

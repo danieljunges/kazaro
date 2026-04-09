@@ -99,7 +99,7 @@ export function SignupForm({ defaultRole = "client" as AccountRole }: { defaultR
         /* ignore */
       }
       navigated = true;
-      router.push("/entrar?cadastro=ok");
+      router.push(`/confirmar-email?email=${encodeURIComponent(emailTrim)}&enviado=1`);
       router.refresh();
     } catch {
       setError("Falha na conexão. Tente de novo.");
