@@ -17,6 +17,9 @@ import {
   fetchIncomingBookingsForProOnCalendarDay,
   fetchProfessionalScheduleForDashboard,
 } from "@/lib/supabase/bookings";
+import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { ProfessionalScheduleForm } from "@/components/settings/ProfessionalScheduleForm";
+import { DEFAULT_WORK_WEEKDAYS_ALL } from "@/lib/booking/schedule-defaults";
 
 export const metadata: Metadata = {
   title: `Agenda | ${SITE_NAME}`,
@@ -59,6 +62,15 @@ export default async function DashboardAgendaPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const { user } = await requireProfessionalTools("/dashboard/agenda");
   const day = normalizeAgendaDayParam(sp.dia);
+  const supabase = await getSupabaseServerClient();
+  const { data: proScheduleRow } = await supabase
+    .from("professionals")
+    .select(
+      "work_day_start, work_day_end, work_weekdays, booking_slot_step_minutes, booking_default_duration_minutes",
+    )
+    .eq("id", user.id)
+    .maybeSingle();
+
   const [rows, schedule] = await Promise.all([
     fetchIncomingBookingsForProOnCalendarDay(user.id, day),
     fetchProfessionalScheduleForDashboard(user.id),
@@ -95,9 +107,24 @@ export default async function DashboardAgendaPage({ searchParams }: PageProps) {
                 oferta de horários a cada <strong>{schedule.bookingSlotStepMinutes} min</strong>. Vale para{" "}
                 <strong>todos os serviços</strong>. Um pedido bloqueia o horário na agenda inteira.
               </p>
-              <Link href="/dashboard/configuracoes" className="kz-agenda-availability__link">
-                Alterar horário de trabalho em Configurações →
-              </Link>
+              {proScheduleRow ? (
+                <div className="kz-agenda-schedule-form" id="editar-expediente">
+                  <p className="kz-agenda-availability__title" style={{ marginTop: 22 }}>
+                    Ajustar expediente e regras de horário
+                  </p>
+                  <ProfessionalScheduleForm
+                    initialWorkDayStart={(proScheduleRow.work_day_start as string | null) ?? undefined}
+                    initialWorkDayEnd={(proScheduleRow.work_day_end as string | null) ?? undefined}
+                    initialWorkWeekdays={
+                      Array.isArray(proScheduleRow.work_weekdays) && proScheduleRow.work_weekdays.length
+                        ? (proScheduleRow.work_weekdays as unknown[]).map((x) => Number(x)).filter((n) => n >= 1 && n <= 7)
+                        : [...DEFAULT_WORK_WEEKDAYS_ALL]
+                    }
+                    initialSlotStep={proScheduleRow.booking_slot_step_minutes ?? 60}
+                    initialDefaultDuration={proScheduleRow.booking_default_duration_minutes ?? 120}
+                  />
+                </div>
+              ) : null}
             </section>
           ) : null}
 

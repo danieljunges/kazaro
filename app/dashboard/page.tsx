@@ -210,7 +210,7 @@ export default async function DashboardPage({
                 style={{ marginBottom: 18, textAlign: "left", lineHeight: 1.55 }}
               >
                 <strong>Serviço enviado para análise.</strong> Enquanto a moderação não aprovar, só você vê o cadastro em{" "}
-                <Link href="/dashboard/servicos" className="dc-link" style={{ fontWeight: 700 }}>
+                <Link href="/dashboard/servicos" className="auth-banner-link">
                   Meus serviços
                 </Link>
                 . Depois de aprovado, ele aparece no perfil público com preço fixo para agendamento.

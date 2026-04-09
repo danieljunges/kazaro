@@ -7,9 +7,8 @@ import { fetchMyProfileRole } from "@/lib/supabase/profile";
 import { isAccountDeletionConfigured } from "@/lib/supabase/admin";
 import { AccountSecuritySection } from "@/components/settings/AccountSecuritySection";
 import { ProfessionalPublicSettingsForm } from "@/components/settings/ProfessionalPublicSettingsForm";
-import { ProfessionalScheduleForm } from "@/components/settings/ProfessionalScheduleForm";
-import { DEFAULT_WORK_WEEKDAYS_ALL } from "@/lib/booking/schedule-defaults";
 import { ProfileSettingsForm } from "@/components/settings/ProfileSettingsForm";
+import Link from "next/link";
 import { ProfessionalProfileSharePanel } from "@/components/settings/ProfessionalProfileSharePanel";
 import { ProPortfolioSection } from "@/components/settings/ProPortfolioSection";
 import { getSiteUrl } from "@/lib/site";
@@ -29,11 +28,6 @@ export default async function DashboardConfiguracoesPage() {
     service_region: string | null;
     slug: string | null;
     focus_category_keys: string[] | null;
-    work_day_start: string | null;
-    work_day_end: string | null;
-    work_weekdays: number[] | null;
-    booking_slot_step_minutes: number | null;
-    booking_default_duration_minutes: number | null;
   };
 
   let pro: ProSettingsRow | null = null;
@@ -41,9 +35,7 @@ export default async function DashboardConfiguracoesPage() {
   if (role === "professional") {
     const { data } = await supabase
       .from("professionals")
-      .select(
-        "display_name, service_region, slug, focus_category_keys, work_day_start, work_day_end, work_weekdays, booking_slot_step_minutes, booking_default_duration_minutes",
-      )
+      .select("display_name, service_region, slug, focus_category_keys")
       .eq("id", user.id)
       .maybeSingle();
     pro = (data ?? null) as ProSettingsRow | null;
@@ -76,7 +68,12 @@ export default async function DashboardConfiguracoesPage() {
             Configurações
           </h1>
           <p className="sec-sub" style={{ marginBottom: 18 }}>
-            Perfil público, segurança da conta e exclusão de dados.
+            Dados da conta, nome na vitrine e portfólio.{" "}
+            <strong>Horários em que clientes podem marcar</strong> ficam na{" "}
+            <Link href="/dashboard/agenda" className="dc-link" style={{ fontSize: "inherit", fontWeight: 700 }}>
+              Agenda
+            </Link>{" "}
+            (faz mais sentido junto do calendário).
           </p>
 
           <ProfileSettingsForm
@@ -98,20 +95,21 @@ export default async function DashboardConfiguracoesPage() {
             />
           ) : null}
 
-          {role === "professional" && pro ? <ProPortfolioSection initialPhotos={portfolioPhotos} /> : null}
-
           {role === "professional" && pro ? (
-            <ProfessionalScheduleForm
-              initialWorkDayStart={(pro.work_day_start as string | null) ?? undefined}
-              initialWorkDayEnd={(pro.work_day_end as string | null) ?? undefined}
-              initialWorkWeekdays={
-                Array.isArray(pro.work_weekdays) && pro.work_weekdays.length
-                  ? (pro.work_weekdays as unknown[]).map((x) => Number(x)).filter((n) => n >= 1 && n <= 7)
-                  : [...DEFAULT_WORK_WEEKDAYS_ALL]
-              }
-              initialSlotStep={pro.booking_slot_step_minutes ?? 60}
-              initialDefaultDuration={pro.booking_default_duration_minutes ?? 120}
-            />
+            <>
+              <ProPortfolioSection initialPhotos={portfolioPhotos} />
+              <p className="sec-sub" style={{ margin: "-8px 0 0", fontSize: 13, color: "var(--ink50)" }}>
+                Com a conta logada, você pode gerenciar as mesmas fotos também em{" "}
+                {proSlug ? (
+                  <Link href={`/profissional/${proSlug}`} className="dc-link" style={{ fontSize: "inherit" }}>
+                    ver meu perfil público
+                  </Link>
+                ) : (
+                  "seu perfil público"
+                )}
+                .
+              </p>
+            </>
           ) : null}
 
           <AccountSecuritySection
