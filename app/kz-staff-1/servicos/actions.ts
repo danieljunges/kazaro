@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { adminPath } from "@/lib/admin/panel-path";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
-import { sendTextEmail } from "@/lib/email/resend";
+import { notifyProfessionalOfServiceReview } from "@/lib/email/serviceReviewNotify";
 import { labelForCategoryKey } from "@/lib/services/category-catalog";
-import { getSiteUrl } from "@/lib/site";
+import { getSupabaseServiceRoleClient } from "@/lib/supabase/admin";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function reviewService(input: {
@@ -36,42 +36,35 @@ export async function reviewService(input: {
 
   if (error) return { ok: false, message: error.message || "Não foi possível atualizar." };
 
-  // email pro prestador (texto básico)
+  // E-mail ao prestador (Resend + HTML). E-mail: profiles.email ou, em fallback, auth.users via service role.
   try {
     const proId = (svc?.professional_id as string | undefined) ?? null;
     if (proId) {
       const { data: prof } = await supabase.from("profiles").select("email, full_name").eq("id", proId).maybeSingle();
-      const to = (prof?.email as string | null)?.trim();
+      let to = (prof?.email as string | null)?.trim() || "";
+      if (!to) {
+        const admin = getSupabaseServiceRoleClient();
+        if (admin) {
+          const { data: u } = await admin.auth.admin.getUserById(proId);
+          to = (u.user?.email ?? "").trim();
+        }
+      }
       if (to) {
         const who = ((prof?.full_name as string | null) ?? "").trim() || "Olá";
         const serviceName = ((svc?.name as string | null) ?? "").trim() || "seu serviço";
         const area = labelForCategoryKey((svc?.category_key as string | null) ?? undefined);
-        const subject =
-          status === "approved" ? "Seu serviço foi aprovado no Kazaro" : "Seu serviço foi revisado no Kazaro";
-        const dashUrl = `${getSiteUrl()}/dashboard/servicos`;
-        const text = [
-          `${who},`,
-          "",
-          area ? `Área: ${area}.` : "",
-          "",
-          status === "approved"
-            ? `Boa notícia: "${serviceName}" foi aprovado e já pode aparecer no seu perfil.`
-            : `Atualização: "${serviceName}" foi rejeitado na revisão.`,
-          note ? "" : "",
-          note ? `Nota do admin: ${note}` : "",
-          "",
-          "Abra o dashboard para ver os detalhes:",
-          dashUrl,
-          "",
-          "- Kazaro",
-        ]
-          .filter(Boolean)
-          .join("\n");
-        await sendTextEmail({ to, subject, text });
+        await notifyProfessionalOfServiceReview({
+          to,
+          recipientName: who,
+          serviceName,
+          areaLabel: area,
+          status,
+          note: note || null,
+        });
       }
     }
   } catch {
-    // Não bloqueia a aprovação se o e-mail falhar
+    // Não bloqueia a moderação se o e-mail falhar
   }
 
   revalidatePath(adminPath("/servicos"));

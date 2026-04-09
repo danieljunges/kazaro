@@ -1,0 +1,31 @@
+Templates de e-mail para colar no Supabase Auth
+==============================================
+
+Onde colar
+----------
+1. Supabase → Authentication → Email Templates
+2. Escolha o tipo (Confirm signup, Reset password, Magic link, etc.)
+3. Cole o HTML no corpo do e-mail (aba HTML / Body)
+4. Ajuste o Assunto (Subject) se quiser
+
+Variáveis do Supabase (não apague)
+----------------------------------
+O Supabase substitui automaticamente, por exemplo:
+  {{ .ConfirmationURL }}  → link completo do botão
+  {{ .Email }}            → e-mail do usuário
+  {{ .SiteURL }}          → URL do projeto (Site URL)
+
+Se o editor mostrar erro, confira se as chaves estão exatamente como no modelo original do Supabase para aquele template.
+
+Sugestão de assuntos (Subject) em português
+-------------------------------------------
+  Confirm signup     → Confirme seu e-mail no Kazaro
+  Reset password     → Redefinir sua senha no Kazaro
+  Magic link         → Seu link para entrar no Kazaro
+  Change email       → Confirme seu novo e-mail no Kazaro
+  Invite user        → Convite para o Kazaro
+
+Resend x Supabase
+-----------------
+E-mails do APP (serviço aprovado, suporte, etc.) usam Resend → precisa de RESEND_API_KEY na Vercel.
+E-mails de confirmação de conta e senha saem do SMTP do Supabase: siga a doc deles para SPF/DKIM e reputação.

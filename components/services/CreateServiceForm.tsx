@@ -38,12 +38,10 @@ export function CreateServiceForm({ occupiedCategoryKeys }: Props) {
   const [durationMinutes, setDurationMinutes] = useState("120");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [ok, setOk] = useState<string | null>(null);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setErr(null);
-    setOk(null);
     if (!categoryKey) {
       setErr("Selecione a área em que este serviço se enquadra.");
       return;
@@ -77,14 +75,7 @@ export function CreateServiceForm({ occupiedCategoryKeys }: Props) {
         setErr(res.message);
         return;
       }
-      setOk("Serviço enviado para análise. Assim que aprovado, aparece no seu perfil público com preço fixo.");
-      setName("");
-      setDescription("");
-      setPrice("");
-      setDurationMinutes("120");
-      setCategoryKey("");
-      setAttendanceMode("at_venue");
-      router.refresh();
+      router.replace("/dashboard?servico=analise");
     } finally {
       setLoading(false);
     }
@@ -207,7 +198,6 @@ export function CreateServiceForm({ occupiedCategoryKeys }: Props) {
       </label>
 
       {err ? <p className="auth-error">{err}</p> : null}
-      {ok ? <p className="auth-banner auth-banner--ok">{ok}</p> : null}
 
       <button type="submit" className="btn-cta auth-submit" disabled={loading}>
         {loading ? "Enviando…" : "Criar serviço"}

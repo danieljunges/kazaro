@@ -65,11 +65,12 @@ function msgTimePt(iso: string): string {
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ conta?: string; admin?: string }>;
+  searchParams: Promise<{ conta?: string; admin?: string; servico?: string }>;
 }) {
   const sp = await searchParams;
   const showAccountActivated = sp.conta === "ativada";
   const showAdminDenied = sp.admin === "negado";
+  const showServiceSentForReview = sp.servico === "analise";
   const subtitle = formatTodayPtBR();
   const supabase = await getSupabaseServerClient();
   const {
@@ -202,6 +203,18 @@ export default async function DashboardPage({
               <p className="auth-banner auth-banner--err" style={{ marginBottom: 18 }}>
                 Esta área é exclusiva de administradores. Use o menu para navegar no seu painel.
               </p>
+            ) : null}
+            {showServiceSentForReview ? (
+              <div
+                className="auth-banner auth-banner--ok kz-dash-servico-analise"
+                style={{ marginBottom: 18, textAlign: "left", lineHeight: 1.55 }}
+              >
+                <strong>Serviço enviado para análise.</strong> Enquanto a moderação não aprovar, só você vê o cadastro em{" "}
+                <Link href="/dashboard/servicos" className="dc-link" style={{ fontWeight: 700 }}>
+                  Meus serviços
+                </Link>
+                . Depois de aprovado, ele aparece no perfil público com preço fixo para agendamento.
+              </div>
             ) : null}
 
             {publicProfileUrl && proSlug ? (

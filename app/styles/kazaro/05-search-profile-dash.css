@@ -1271,6 +1271,13 @@ a.btn-book-now:visited {
   justify-content: center;
 }
 
+.home-editorial .kz-dash-servico-analise {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .dash-content {
   padding: 24px max(26px, env(safe-area-inset-right, 0px)) 24px max(26px, env(safe-area-inset-left, 0px));
   min-width: 0;
