@@ -196,6 +196,47 @@
   color: var(--ink50);
 }
 
+.home-editorial .kz-portfolio-manage-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+.home-editorial .kz-portfolio-manage-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-md);
+  background: var(--cream2);
+}
+.home-editorial .kz-portfolio-manage-img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  vertical-align: middle;
+}
+.home-editorial .kz-portfolio-manage-remove {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border: none;
+  background: rgba(10, 10, 10, 0.75);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 8px;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+.home-editorial .kz-portfolio-manage-remove:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .home-editorial .auth-banner {
   margin: 0;
   font-size: 13.5px;

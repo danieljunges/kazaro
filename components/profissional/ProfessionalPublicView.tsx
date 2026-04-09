@@ -152,6 +152,27 @@ export function ProfessionalPublicView({ detail }: { detail: ProfessionalDetail 
         )}
       </div>
 
+      {detail.portfolioPhotos && detail.portfolioPhotos.length > 0 ? (
+        <section className="pp-portfolio" aria-label="Portfólio do trabalho">
+          <h2 className="pp-portfolio__title">Portfólio</h2>
+          <ul className="pp-portfolio__grid">
+            {detail.portfolioPhotos.map((p) => (
+              <li key={p.id} className="pp-portfolio__cell">
+                <a
+                  href={p.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pp-portfolio__link"
+                  aria-label="Abrir foto em nova aba"
+                >
+                  <img src={p.url} alt="" className="pp-portfolio__img" loading="lazy" decoding="async" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {detail.reviews.length > 0 ? (
         <div style={{ marginTop: 32 }}>
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", color: "var(--ink40)", marginBottom: 16 }}>

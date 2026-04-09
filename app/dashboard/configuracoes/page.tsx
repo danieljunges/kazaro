@@ -11,6 +11,7 @@ import { ProfessionalScheduleForm } from "@/components/settings/ProfessionalSche
 import { DEFAULT_WORK_WEEKDAYS_ALL } from "@/lib/booking/schedule-defaults";
 import { ProfileSettingsForm } from "@/components/settings/ProfileSettingsForm";
 import { ProfessionalProfileSharePanel } from "@/components/settings/ProfessionalProfileSharePanel";
+import { ProPortfolioSection } from "@/components/settings/ProPortfolioSection";
 import { getSiteUrl } from "@/lib/site";
 
 export default async function DashboardConfiguracoesPage() {
@@ -36,6 +37,7 @@ export default async function DashboardConfiguracoesPage() {
   };
 
   let pro: ProSettingsRow | null = null;
+  let portfolioPhotos: { id: string; image_url: string }[] = [];
   if (role === "professional") {
     const { data } = await supabase
       .from("professionals")
@@ -45,6 +47,15 @@ export default async function DashboardConfiguracoesPage() {
       .eq("id", user.id)
       .maybeSingle();
     pro = (data ?? null) as ProSettingsRow | null;
+
+    if (pro) {
+      const { data: pf } = await supabase
+        .from("pro_portfolio_photos")
+        .select("id, image_url")
+        .eq("professional_id", user.id)
+        .order("sort_order", { ascending: true });
+      portfolioPhotos = (pf ?? []) as { id: string; image_url: string }[];
+    }
   }
 
   const siteBase = getSiteUrl();
@@ -86,6 +97,8 @@ export default async function DashboardConfiguracoesPage() {
               initialFocusCategoryKeys={Array.isArray(pro.focus_category_keys) ? pro.focus_category_keys : []}
             />
           ) : null}
+
+          {role === "professional" && pro ? <ProPortfolioSection initialPhotos={portfolioPhotos} /> : null}
 
           {role === "professional" && pro ? (
             <ProfessionalScheduleForm

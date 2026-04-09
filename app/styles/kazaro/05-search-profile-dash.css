@@ -600,6 +600,56 @@ a.btn-book-now:visited {
 }
 .btn-contratar:hover { color: var(--ink); text-decoration-color: var(--ink); }
 
+.pp-portfolio {
+  margin: 28px 0 8px;
+}
+.pp-portfolio__title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink40);
+  margin: 0 0 14px;
+  text-transform: uppercase;
+}
+.pp-portfolio__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.pp-portfolio__cell {
+  margin: 0;
+  padding: 0;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--cream2);
+}
+.pp-portfolio__link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: 0;
+}
+.pp-portfolio__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s ease;
+}
+.pp-portfolio__link:hover .pp-portfolio__img {
+  transform: scale(1.04);
+}
+@media (max-width: 720px) {
+  .pp-portfolio__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /* ─────────────────────────────────────────
    DASHBOARD (segmento /dashboard)
 ───────────────────────────────────────── */

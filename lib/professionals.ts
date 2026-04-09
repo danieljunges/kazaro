@@ -30,6 +30,8 @@ export type ServiceRow = {
 
 export type ReviewRow = { id: string; score: string; text: string; author: string; info: string };
 
+export type PortfolioPhoto = { id: string; url: string };
+
 export type ProfessionalDetail = ProfessionalCard & {
   nameLine1: string;
   nameLine2: string;
@@ -40,6 +42,8 @@ export type ProfessionalDetail = ProfessionalCard & {
   reviews: ReviewRow[];
   statRow: { val: string; label: string }[];
   bookingTimes: string[];
+  /** Trabalhos publicados pelo prestador. */
+  portfolioPhotos?: PortfolioPhoto[];
 };
 
 const COMMON_TIMES = [
@@ -281,6 +285,7 @@ export function fallbackDetailFromSlug(slug: string): ProfessionalDetail {
     ],
     bookingTimes: COMMON_TIMES,
     avatarPublicUrl: null,
+    portfolioPhotos: [],
   };
 }
 

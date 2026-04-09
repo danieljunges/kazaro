@@ -1,4 +1,11 @@
-import type { ProfessionalCard, ProfessionalDetail, ReviewRow, ServiceRow, AvailTag } from "@/lib/professionals";
+import type {
+  PortfolioPhoto,
+  ProfessionalCard,
+  ProfessionalDetail,
+  ReviewRow,
+  ServiceRow,
+  AvailTag,
+} from "@/lib/professionals";
 import {
   focusFilterExtraFromKeys,
   focusLabelsFromKeys,
@@ -263,7 +270,19 @@ export async function fetchProfessionalDetailFromDb(slug: string): Promise<Profe
     const { line1, line2 } = splitDisplayName(row.display_name);
     const ratingAvg = typeof row.rating_avg === "string" ? parseFloat(row.rating_avg) : row.rating_avg;
     const card = mapProRowToCard(row, 0, serviceSearchParts.join(" "));
-    const reviewRows = mapDbReviewsToRows(await fetchPublicReviewsForProfessional(row.id));
+    const [reviewRows, portfolioRes] = await Promise.all([
+      fetchPublicReviewsForProfessional(row.id),
+      supabase
+        .from("pro_portfolio_photos")
+        .select("id, image_url")
+        .eq("professional_id", row.id)
+        .order("sort_order", { ascending: true }),
+    ]);
+
+    const portfolioPhotos: PortfolioPhoto[] = (portfolioRes.data ?? []).map((p) => ({
+      id: p.id as string,
+      url: (p.image_url as string).trim(),
+    }));
 
     return {
       ...card,
@@ -275,7 +294,7 @@ export async function fetchProfessionalDetailFromDb(slug: string): Promise<Profe
         row.bio?.trim() ||
         "Este profissional ainda não preencheu a descrição completa. Entre em contato pelo Kazaro para saber mais.",
       services,
-      reviews: reviewRows,
+      reviews: mapDbReviewsToRows(reviewRows),
       statRow: [
         { val: String(row.reviews_count ?? 0), label: "Avaliações" },
         { val: formatRating(ratingAvg), label: "Nota média" },
@@ -283,6 +302,7 @@ export async function fetchProfessionalDetailFromDb(slug: string): Promise<Profe
         { val: "-", label: "Jobs concluídos" },
       ],
       bookingTimes: BOOKING_TIMES,
+      ...(portfolioPhotos.length ? { portfolioPhotos } : {}),
     };
   } catch {
     return null;

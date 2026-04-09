@@ -57,7 +57,7 @@ const HOW_STEPS: { num: string; title: string; desc: string }[] = [
   {
     num: "01",
     title: "Escolhe o estúdio",
-    desc: "Perfil com serviços, valores de entrada, avaliações e, em breve, portfólio por procedimento, sem caixa-preta.",
+    desc: "Perfil com foto, portfólio do trabalho, serviços com preço e avaliações — sem caixa-preta.",
   },
   {
     num: "02",
@@ -106,36 +106,37 @@ export function HomeView({
       <section>
         <div className="hero">
           <div>
-            <h1 className="hero-headline">Agende em Floripa com preço e horário claros no perfil.</h1>
+            <h1 className="hero-headline">Beleza e barbearia em Floripa: encontre quem faz o seu estilo.</h1>
             <p className="hero-sub">
-              Barbearia, manicure, design de sobrancelha, cílios, cabelo, maquiagem, tatuagem e podologia. Compare
-              valores, veja disponibilidade e feche com confirmação. Pagamento pelo Kazaro quando couber.
+              Busque por tipo de serviço, veja preços no perfil e agende com data e horário combinados.
             </p>
-            <div className="search-wrap">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                style={{ color: "#a8a29e", flexShrink: 0 }}
-                aria-hidden
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-              <input placeholder="O que você quer agendar?" aria-label="Buscar serviço" />
-              <div className="search-sep" />
-              <div className="search-loc">
-                <span className="loc-pin" aria-hidden>
-                  ⦿
-                </span>
-                Florianópolis, SC
+            <div className="hero-search-stack">
+              <div className="search-wrap">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ color: "#a8a29e", flexShrink: 0 }}
+                  aria-hidden
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input placeholder="O que você quer agendar?" aria-label="Buscar serviço" />
+                <div className="search-sep" />
+                <div className="search-loc">
+                  <span className="loc-pin" aria-hidden>
+                    ⦿
+                  </span>
+                  Florianópolis, SC
+                </div>
               </div>
-              <Link href="/search" className="search-btn">
+              <Link href="/search" className="hero-search-cta">
                 Ver profissionais
               </Link>
             </div>
@@ -161,57 +162,57 @@ export function HomeView({
           <div className="hero-right">
             <div className="hero-card-main">
               {featured ? (
-                <>
-                  <div className="hcm-img">
-                    <div className={`hcm-img-placeholder ${heroSurface}`}>
-                      <span className="avail-tag">{heroAvail?.label}</span>
-                    </div>
-                  </div>
-                  <div className="hcm-body">
-                    <div className="hcm-top">
-                      <div className="hcm-ava-fallback" aria-hidden>
+                <div className="hcm-body hcm-body--spotlight">
+                  <div className="hcm-photo-block">
+                    {featured.avatarPublicUrl ? (
+                      <img
+                        src={featured.avatarPublicUrl}
+                        alt=""
+                        className="hcm-photo-main"
+                        width={112}
+                        height={112}
+                      />
+                    ) : (
+                      <div className={`hcm-photo-fallback ${heroSurface}`} aria-hidden>
                         {featured.initials}
                       </div>
-                      <div>
-                        <div className="hcm-name">{featured.name}</div>
-                        <div className="hcm-role">{featured.roleLine}</div>
-                      </div>
-                    </div>
-                    <div className="hcm-stars">
-                      <span className="stars">{starsFromRatingPt(featured.rating)}</span>
-                      <span className="hcm-rating">{featured.rating}</span>
-                      <span className="hcm-count">· {featured.reviewsCount} avaliações</span>
-                    </div>
-                    <div className="hcm-divider" />
-                    <div className="hcm-footer">
-                      <div>
-                        <div className="hcm-price-label">a partir de</div>
-                        <div className="hcm-price">{featured.price}</div>
-                      </div>
-                      <Link href={`/profissional/${featured.slug}`} className="btn-ver">
-                        Ver perfil →
-                      </Link>
-                    </div>
+                    )}
+                    {heroAvail ? <span className="hcm-avail-pill">{heroAvail.label}</span> : null}
                   </div>
-                </>
-              ) : (
-                <>
-                  <div className="hcm-img">
-                    <div className="hcm-img-placeholder ph-green">
-                      <span className="avail-tag">Rede Kazaro</span>
-                    </div>
+                  <div className="hcm-name">{featured.name}</div>
+                  <div className="hcm-role">{featured.roleLine}</div>
+                  <div className="hcm-stars">
+                    <span className="stars">{starsFromRatingPt(featured.rating)}</span>
+                    <span className="hcm-rating">{featured.rating}</span>
+                    <span className="hcm-count">· {featured.reviewsCount} avaliações</span>
                   </div>
-                  <div className="hcm-body">
-                    <p className="sec-sub" style={{ margin: 0, lineHeight: 1.55 }}>
-                      Ainda não há perfis públicos na vitrine. Se você atende beleza, barbearia ou estética em Florianópolis,
-                      pode ser o primeiro a aparecer aqui.
-                    </p>
-                    <div className="hcm-divider" style={{ margin: "16px 0" }} />
-                    <Link href="/para-profissionais" className="btn-ver" style={{ width: "100%", justifyContent: "center" }}>
-                      Criar perfil profissional →
+                  <div className="hcm-divider" />
+                  <div className="hcm-footer">
+                    <div>
+                      <div className="hcm-price-label">a partir de</div>
+                      <div className="hcm-price">{featured.price}</div>
+                    </div>
+                    <Link href={`/profissional/${featured.slug}`} className="btn-ver">
+                      Ver perfil →
                     </Link>
                   </div>
-                </>
+                </div>
+              ) : (
+                <div className="hcm-body hcm-body--spotlight">
+                  <div className="hcm-photo-block">
+                    <div className="hcm-photo-fallback ph-green" aria-hidden>
+                      K
+                    </div>
+                    <span className="hcm-avail-pill">Rede Kazaro</span>
+                  </div>
+                  <p className="sec-sub hcm-empty-copy">
+                    Ainda não há perfis na vitrine. Se você atende em Florianópolis, pode ser o primeiro.
+                  </p>
+                  <div className="hcm-divider" />
+                  <Link href="/para-profissionais" className="btn-ver hcm-empty-cta">
+                    Criar perfil profissional →
+                  </Link>
+                </div>
               )}
             </div>
             <div className="float-badge">

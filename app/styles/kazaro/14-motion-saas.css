@@ -78,6 +78,7 @@ button:not(:disabled),
 .btn-outline-ink,
 .btn-book-now,
 .search-btn,
+.hero-search-cta,
 .pill,
 .kz-sh-btn,
 .kz-filter-chip,
@@ -96,6 +97,7 @@ button:not(:disabled):active,
 .btn-ghost:active,
 .btn-cta:active,
 .search-btn:active,
+.hero-search-cta:active,
 .kz-sh-btn:active {
   transform: scale(0.98);
 }
