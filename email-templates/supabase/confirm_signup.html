@@ -19,24 +19,21 @@
           <tr>
             <td style="padding:8px 32px 28px 32px;color:#44403c;font-size:15px;line-height:1.65;">
               <p style="margin:0;">Você criou uma conta no Kazaro com o e-mail <strong style="color:#1c1917;">{{ .Email }}</strong>.</p>
-              <p style="margin:16px 0 0;">Confirme para ativar o acesso e começar a usar a plataforma.</p>
+              <p style="margin:16px 0 0;">Use o <strong>código numérico</strong> abaixo no site — é o jeito que funciona no Gmail e no Outlook (links “mágicos” costumam ser abertos pelo app de e-mail e <strong>invalidam</strong> a confirmação).</p>
               <div style="margin:24px 0 0;padding:18px 20px;border-radius:14px;background:#f0fdfa;border:1.5px solid #99f6e4;text-align:center;">
-                <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#0f766e;">Jeito mais fácil (recomendado)</p>
-                <p style="margin:10px 0 0;font-size:15px;font-weight:600;color:#44403c;line-height:1.5;">Digite no site o código abaixo:</p>
+                <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#0f766e;">Seu código</p>
                 <p style="margin:14px 0 0;font-size:34px;font-weight:800;letter-spacing:0.28em;color:#1c1917;font-family:ui-monospace,monospace;">{{ .Token }}</p>
-                <p style="margin:14px 0 0;font-size:14px;color:#57534e;line-height:1.55;">Abra <a href="{{ .SiteURL }}/confirmar-email" style="color:#0f766e;font-weight:700;">{{ .SiteURL }}/confirmar-email</a>, informe seu e-mail e esse código. Assim você não depende do botão abrir certo no Gmail ou Outlook.</p>
+                <p style="margin:14px 0 0;font-size:14px;color:#57534e;line-height:1.55;">Válido por poucos minutos. Digite no Kazaro em:</p>
+                <p style="margin:10px 0 0;font-size:14px;"><a href="{{ .SiteURL }}/confirmar-email?enviado=1" style="color:#0f766e;font-weight:700;">{{ .SiteURL }}/confirmar-email</a></p>
               </div>
-              <p style="margin:22px 0 0;font-size:14px;color:#57534e;">Ou use o botão (se o app de e-mail abrir no navegador):</p>
-              <table role="presentation" cellspacing="0" cellpadding="0" style="margin:28px 0 0;">
+              <table role="presentation" cellspacing="0" cellpadding="0" style="margin:28px auto 0;">
                 <tr>
                   <td style="border-radius:999px;background:#0f766e;">
-                    <a href="{{ .ConfirmationURL }}" target="_blank" rel="noopener" style="display:inline-block;padding:15px 32px;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:999px;">Confirmar meu e-mail</a>
+                    <a href="{{ .SiteURL }}/confirmar-email?enviado=1" target="_blank" rel="noopener" style="display:inline-block;padding:15px 32px;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:999px;">Abrir página para digitar o código</a>
                   </td>
                 </tr>
               </table>
-              <p style="margin:24px 0 0;font-size:13px;color:#78716c;line-height:1.5;">Se o botão não funcionar, copie e cole este link no navegador:</p>
-              <p style="margin:8px 0 0;font-size:12px;word-break:break-all;color:#57534e;line-height:1.45;">{{ .ConfirmationURL }}</p>
-              <p style="margin:24px 0 0;font-size:12px;color:#a8a29e;">Se você não pediu esta conta, pode ignorar este e-mail.</p>
+              <p style="margin:22px 0 0;font-size:12px;color:#a8a29e;line-height:1.5;">Não incluímos o link automático de confirmação aqui de propósito: serviços de e-mail abriam esse link sozinhos e faziam o código “expirar”. Se você não pediu esta conta, ignore este e-mail.</p>
             </td>
           </tr>
           <tr>

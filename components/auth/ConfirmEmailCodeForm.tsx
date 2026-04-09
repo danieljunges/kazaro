@@ -8,8 +8,8 @@ import { AuthSpinner } from "@/components/auth/AuthSpinner";
 
 function ptVerifyError(message: string): string {
   const m = message.toLowerCase();
-  if (m.includes("expired") || m.includes("invalid")) {
-    return "Código inválido ou expirado. Peça um novo e-mail em Entrar → Reenviar confirmação.";
+  if (m.includes("expired") || m.includes("invalid") || m.includes("otp")) {
+    return "Esse código não vale mais — muito comum quando o Gmail/Outlook abriu algum link do e-mail sozinho, ou quando passou do tempo. Toque em “Enviar novo código” abaixo e use só os números do e-mail novo.";
   }
   if (m.includes("too many")) return "Muitas tentativas. Aguarde alguns minutos.";
   return message;
@@ -34,26 +34,66 @@ export function ConfirmEmailCodeForm({ defaultEmail = "", notice = null }: Props
   }, [defaultEmail]);
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
+  const [resendBusy, setResendBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  function normalizeOtpToken(raw: string): string {
+    const compact = raw.trim().replace(/\s/g, "");
+    const digits = compact.replace(/\D/g, "");
+    if (digits.length >= 6) return digits.slice(0, 8);
+    const alnum = compact.replace(/[^a-zA-Z0-9]/g, "");
+    if (alnum.length >= 6) return alnum.slice(0, 8);
+    return digits.slice(0, 8);
+  }
+
+  async function onResendCode() {
+    const em = email.trim().toLowerCase();
+    if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+      setErr("Preencha seu e-mail acima para reenviar o código.");
+      return;
+    }
+    setErr(null);
+    setResendBusy(true);
+    try {
+      const res = await fetch("/api/auth/resend-confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: em }),
+      });
+      const data = (await res.json()) as { ok?: boolean; message?: string };
+      if (!data.ok) {
+        setErr(data.message ?? "Não foi possível reenviar.");
+        return;
+      }
+      setCode("");
+      router.replace(`/confirmar-email?email=${encodeURIComponent(em)}&reenvio=1`);
+      router.refresh();
+    } catch {
+      setErr("Falha ao reenviar. Tente de novo.");
+    } finally {
+      setResendBusy(false);
+    }
+  }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setErr(null);
     const em = email.trim().toLowerCase();
-    const token = code.replace(/\D/g, "").slice(0, 6);
+    const token = normalizeOtpToken(code);
     if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
       setErr("Informe o e-mail cadastrado.");
       return;
     }
-    if (token.length !== 6) {
-      setErr("Digite os 6 números que aparecem no e-mail.");
+    if (token.length < 6) {
+      setErr("Digite o código completo que aparece no e-mail (geralmente 6 números).");
       return;
     }
 
     setBusy(true);
     try {
       const supabase = getSupabaseBrowserClient();
-      const tryTypes = ["signup", "email"] as const;
+      /** Doc Supabase (OTP no e-mail): `type: 'email'`; `signup` cobre projetos/configs antigas. */
+      const tryTypes = ["email", "signup"] as const;
       let lastError: string | null = null;
       for (const type of tryTypes) {
         const { error } = await supabase.auth.verifyOtp({ email: em, token, type });
@@ -131,20 +171,32 @@ export function ConfirmEmailCodeForm({ defaultEmail = "", notice = null }: Props
           inputMode="numeric"
           autoComplete="one-time-code"
           required
-          maxLength={8}
+          maxLength={10}
           value={code}
-          onChange={(ev) => setCode(ev.target.value.replace(/[^\d]/g, "").slice(0, 6))}
+          onChange={(ev) => setCode(ev.target.value.replace(/[^\d]/g, "").slice(0, 8))}
           placeholder="000000"
           style={{ letterSpacing: "0.2em", fontSize: 20, fontWeight: 700 }}
           disabled={busy}
           aria-describedby="confirm-code-hint"
         />
         <p id="confirm-code-hint" className="auth-password-hint" style={{ marginTop: 8 }}>
-          Está no assunto ou no corpo do e-mail &quot;Confirme seu e-mail&quot;, ao lado da frase de confirmação.
+          Use o código mais recente. Se o Gmail abriu algum link do e-mail sozinho, peça um código novo abaixo.
         </p>
       </label>
 
       {err ? <p className="auth-error">{err}</p> : null}
+
+      <div style={{ marginBottom: 14 }}>
+        <button
+          type="button"
+          className="btn-ghost auth-resend-btn"
+          style={{ width: "100%", justifyContent: "center" }}
+          disabled={busy || resendBusy}
+          onClick={() => void onResendCode()}
+        >
+          {resendBusy ? "Enviando…" : "Enviar novo código por e-mail"}
+        </button>
+      </div>
 
       <button type="submit" className="btn-cta auth-submit" disabled={busy}>
         <span className="auth-submit-inner">
