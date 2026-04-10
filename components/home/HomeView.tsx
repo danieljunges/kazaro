@@ -57,7 +57,7 @@ const HOW_STEPS: { num: string; title: string; desc: string }[] = [
   {
     num: "01",
     title: "Escolhe o estúdio",
-    desc: "Perfil com foto, portfólio do trabalho, serviços com preço e avaliações — sem caixa-preta.",
+    desc: "Perfil com foto, portfólio do trabalho, serviços com preço e avaliações, sem caixa-preta.",
   },
   {
     num: "02",
@@ -106,9 +106,10 @@ export function HomeView({
       <section>
         <div className="hero">
           <div>
-            <h1 className="hero-headline">Beleza e barbearia em Floripa: encontre quem faz o seu estilo.</h1>
+            <h1 className="hero-headline">O seu estilo merece quem entende o recado.</h1>
             <p className="hero-sub">
-              Busque por tipo de serviço, veja preços no perfil e agende com data e horário combinados.
+              Busque por serviço, veja preço no perfil e marque data e horário com tudo combinado na mesma conversa. Em
+              Florianópolis, no seu ritmo.
             </p>
             <div className="hero-search-stack">
               <div className="search-wrap">

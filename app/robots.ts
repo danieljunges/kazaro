@@ -7,8 +7,11 @@ export default function robots(): MetadataRoute.Robots {
   const staff = getAdminPanelBasePath();
   return {
     rules: [
-      { userAgent: "*", allow: "/" },
-      { userAgent: "*", disallow: [staff] },
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: [staff, "/dashboard", "/api/"],
+      },
     ],
     sitemap: `${base}/sitemap.xml`,
   };

@@ -12,6 +12,7 @@ export function CookieConsentBar() {
   useEffect(() => {
     try {
       if (typeof window === "undefined") return;
+      if ("ReactNativeWebView" in window) return;
       if (window.localStorage.getItem(STORAGE_KEY) === "1") return;
       setVisible(true);
     } catch {

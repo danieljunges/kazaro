@@ -4,14 +4,22 @@ import { MarketingNav } from "@/components/kazaro/MarketingNav";
 import { SiteFooter } from "@/components/kazaro/SiteFooter";
 import { fetchProfessionalsForHome } from "@/lib/supabase/professionals-public";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
-import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE_DEFAULT } from "@/lib/site";
+import { HomeJsonLd } from "@/components/seo/HomeJsonLd";
+import {
+  getSiteUrl,
+  SITE_DESCRIPTION,
+  SITE_HOME_SEO_TITLE,
+  SITE_NAME,
+} from "@/lib/site";
 
 const url = getSiteUrl();
 
 export const metadata: Metadata = {
-  title: { absolute: SITE_TITLE_DEFAULT },
+  title: { absolute: SITE_HOME_SEO_TITLE },
   description: SITE_DESCRIPTION,
   keywords: [
+    "encontrar profissional Florianópolis",
+    "agendamento online Florianópolis",
     "agendamento beleza Florianópolis",
     "barbearia Florianópolis",
     "manicure Florianópolis",
@@ -22,21 +30,29 @@ export const metadata: Metadata = {
     "maquiagem Florianópolis",
     "podologia Florianópolis",
     "profissionais verificados",
+    "vitrine de profissionais",
     SITE_NAME,
   ],
   openGraph: {
-    title: SITE_TITLE_DEFAULT,
+    title: SITE_HOME_SEO_TITLE,
     description: SITE_DESCRIPTION,
     url,
     type: "website",
+    locale: "pt_BR",
+    siteName: SITE_NAME,
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_TITLE_DEFAULT,
+    title: SITE_HOME_SEO_TITLE,
     description: SITE_DESCRIPTION,
   },
   alternates: {
     canonical: url,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
   },
 };
 
@@ -57,6 +73,7 @@ export default async function HomePage() {
 
   return (
     <div className="home-editorial">
+      <HomeJsonLd />
       <MarketingNav />
       <HomeView spotlightPros={spotlightPros} proTotalListed={proTotalListed} />
       <SiteFooter />

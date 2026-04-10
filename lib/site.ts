@@ -22,7 +22,10 @@ export const SITE_TITLE_DEFAULT = "Kazaro";
 export const SITE_TITLE_TEMPLATE = "%s | Kazaro";
 
 export const SITE_DESCRIPTION =
-  "Plataforma para encontrar profissionais de beleza e bem-estar, ver serviços e agendar em Florianópolis.";
+  "Encontre o profissional ideal para o seu estilo em Florianópolis: compare serviços, preços e avaliações e agende com horário marcado no Kazaro.";
+
+/** Título da home para busca (H1 do site fica mais amplo; aqui mantemos local + marca). */
+export const SITE_HOME_SEO_TITLE = "Kazaro | Profissionais e agendamento em Florianópolis";
 
 /** Perfil oficial no Instagram (link no rodapé). */
 export const INSTAGRAM_URL = "https://www.instagram.com/kazaro.app/";

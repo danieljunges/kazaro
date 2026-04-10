@@ -1,0 +1,9 @@
+/* App Kazaro (Expo WebView): menos “cara de navegador”, scroll mais contido */
+html.kz-webview-app {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html.kz-webview-app,
+html.kz-webview-app body {
+  overscroll-behavior-y: none;
+}
