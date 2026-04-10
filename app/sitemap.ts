@@ -19,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: base, lastModified, changeFrequency: "weekly", priority: 1 },
     { url: `${base}/search`, lastModified, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/para-profissionais`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/convite`, lastModified, changeFrequency: "weekly", priority: 0.82 },
     { url: `${base}/pro`, lastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/sobre`, lastModified, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/ajuda`, lastModified, changeFrequency: "monthly", priority: 0.6 },

@@ -2091,3 +2091,40 @@
 .home-editorial .kz-earn-sub {
   font-family: var(--sans);
 }
+
+/* Landing /convite (outreach profissionais) */
+.home-editorial .convite-hero-note {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--ink50, #78716c);
+  max-width: 28rem;
+}
+.home-editorial .convite-faq {
+  display: grid;
+  gap: 1rem;
+  max-width: 42rem;
+}
+.home-editorial .convite-faq__item {
+  margin: 0;
+}
+.home-editorial .convite-cta-inner {
+  text-align: center;
+}
+.home-editorial .convite-cta-title {
+  margin-bottom: 0.75rem;
+}
+.home-editorial .convite-cta-sub {
+  margin: 0 auto 1.25rem;
+  max-width: 36rem;
+}
+.home-editorial .convite-footer-links {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--ink50, #78716c);
+}
+.home-editorial .convite-footer-links a {
+  color: var(--ink70, #44403c);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
