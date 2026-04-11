@@ -17,7 +17,19 @@ const SUPABASE_HOST = (() => {
 export function buildSecurityHeaders(): { key: string; value: string }[] {
   const isProd = process.env.NODE_ENV === "production";
 
-  const connect = [`'self'`, `https://${SUPABASE_HOST}`, `wss://${SUPABASE_HOST}`].join(" ");
+  const connect = [
+    `'self'`,
+    `https://${SUPABASE_HOST}`,
+    `wss://${SUPABASE_HOST}`,
+    // GA4 / gtag (collect, debug, região)
+    "https://www.google-analytics.com",
+    "https://*.google-analytics.com",
+    "https://analytics.google.com",
+    "https://*.analytics.google.com",
+    "https://www.googletagmanager.com",
+    "https://*.googletagmanager.com",
+    "https://stats.g.doubleclick.net",
+  ].join(" ");
 
   const cspParts = [
     "default-src 'self'",
@@ -25,10 +37,10 @@ export function buildSecurityHeaders(): { key: string; value: string }[] {
     "form-action 'self'",
     "frame-ancestors 'none'",
     "object-src 'none'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-    "style-src 'self' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.googletagmanager.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' data: blob: https:",
-    "font-src 'self' data:",
+    "font-src 'self' data: https://fonts.gstatic.com",
     `connect-src ${connect}`,
   ];
   if (isProd) cspParts.push("upgrade-insecure-requests");
