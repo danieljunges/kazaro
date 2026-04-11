@@ -33,13 +33,20 @@ const PAINS = [
 const WINS = [
   "Perfil público com o que você faz, fotos e valores visíveis antes do contato.",
   "Cliente chega com intenção: já viu serviço, faixa de preço e pode seguir para o agendamento.",
-  "Painel para organizar pedidos, histórico e reputação em um só fluxo.",
+  "Painel para organizar pedidos, histórico e avaliações em um só fluxo.",
+  "Curadoria: serviços novos passam por análise antes de ir para a vitrine pública; há selo de perfil verificado após esse fluxo.",
 ];
 
 const STEPS = [
   { title: "Crie sua conta de prestador", desc: "Nome, foto, cidade e as categorias que você atende em Florianópolis." },
-  { title: "Publique seus serviços", desc: "Tempo, valor e descrição: quem busca entende na hora o que está contratando." },
-  { title: "Receba e confirme pedidos", desc: "Você confirma horário, conversa quando fizer sentido e fortalece seu histórico na plataforma." },
+  {
+    title: "Publique seus serviços",
+    desc: "Tempo, valor e descrição: quem busca entende na hora o que está contratando. Cada serviço novo entra em análise; aprovado, aparece no perfil público com preço para agendamento.",
+  },
+  {
+    title: "Receba e confirme pedidos",
+    desc: "Você confirma horário, prefira alinhar pelo chat do Kazaro (fica o histórico) e fortalece sua reputação com avaliações após o atendimento.",
+  },
 ];
 
 const FAQ = [
@@ -49,11 +56,23 @@ const FAQ = [
   },
   {
     q: "Quem pode ver meu perfil?",
-    a: "Qualquer pessoa que acesse o site pode ver seu perfil público, serviços e avaliações, como em um catálogo profissional.",
+    a: "Qualquer pessoa que acesse o site pode ver seu perfil público, serviços aprovados e avaliações, como em um catálogo profissional.",
   },
   {
     q: "Tem custo para entrar?",
-    a: "As condições comerciais são as que o Kazaro publicar no site e na hora de criar a conta. Não tem letra miúda escondida: o que importa aparece antes de você confirmar qualquer pagamento.",
+    a: "Para novos profissionais, o cadastro hoje é sem taxa de entrada — é o que a gente mostra na página inicial (0% custo de cadastro). Há condições comerciais favoráveis nos primeiros 90 dias. Se no futuro existir plano pago ou taxa nova, isso aparece claro na hora de criar a conta ou de aceitar cobrança, sem surpresa.",
+  },
+  {
+    q: "Meu serviço já aparece na busca na hora?",
+    a: "Cada serviço novo passa por uma análise do time. Enquanto estiver pendente, só você vê o cadastro no painel; depois de aprovado, ele entra no perfil público com preço fixo para agendamento, como no restante da plataforma.",
+  },
+  {
+    q: "O cliente paga pelo Kazaro?",
+    a: "Hoje o combinado financeiro costuma ser direto entre você e a cliente, conforme os termos. Quando a plataforma passar a processar pagamento, taxas e regras vêm explícitas no momento da contratação.",
+  },
+  {
+    q: "E alvará, normas da profissão, anúncio verdadeiro…?",
+    a: "Isso depende do que você oferece e da legislação aplicável. Nos termos de uso, o profissional responde pela qualidade do serviço, cumprimento de normas da atividade, alvarás quando exigidos e pela veracidade de anúncios e preços.",
   },
 ];
 
@@ -199,6 +218,8 @@ export default async function ConviteProfissionaisPage() {
           </Link>
           <p className="convite-footer-links">
             <Link href="/para-profissionais">Versão completa da área do prestador</Link>
+            {" · "}
+            <Link href="/termos">Termos de uso</Link>
             {" · "}
             <Link href="/contato">Falar com o time</Link>
           </p>
