@@ -12,12 +12,8 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#faf8f5",
     lang: "pt-BR",
     icons: [
-      {
-        src: "/kazaro-icon.svg",
-        type: "image/svg+xml",
-        sizes: "any",
-        purpose: "any",
-      },
+      { src: "/icon", type: "image/png", sizes: "32x32", purpose: "any" },
+      { src: "/apple-icon", type: "image/png", sizes: "180x180", purpose: "any" },
     ],
   };
 }

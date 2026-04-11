@@ -18,10 +18,6 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  icons: {
-    icon: [{ url: "/kazaro-icon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/kazaro-icon.svg", type: "image/svg+xml" }],
-  },
   openGraph: {
     type: "website",
     locale: "pt_BR",

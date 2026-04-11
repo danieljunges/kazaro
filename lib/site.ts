@@ -15,8 +15,8 @@ export function getSiteUrl(): string {
 
 export const SITE_NAME = "Kazaro";
 
-/** Título da guia na home e fallback do layout (SaaS, curto). */
-export const SITE_TITLE_DEFAULT = "Kazaro";
+/** Título padrão da guia (curto, com benefício). Ícones: `app/icon.tsx` + `app/apple-icon.tsx`. */
+export const SITE_TITLE_DEFAULT = "Kazaro · Profissionais e agenda";
 
 /** Demais páginas: `Página | Kazaro` */
 export const SITE_TITLE_TEMPLATE = "%s | Kazaro";
