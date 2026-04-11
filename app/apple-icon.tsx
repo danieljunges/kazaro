@@ -19,6 +19,8 @@ export default function AppleIcon() {
           justifyContent: "center",
           backgroundColor: BRAND_BG,
           color: BRAND_FG,
+          borderRadius: 40,
+          overflow: "hidden",
           fontSize: 112,
           fontWeight: 700,
           fontFamily: 'ui-sans-serif, system-ui, "Segoe UI", sans-serif',

@@ -19,6 +19,8 @@ export default function Icon() {
           justifyContent: "center",
           backgroundColor: BRAND_BG,
           color: BRAND_FG,
+          borderRadius: 8,
+          overflow: "hidden",
           fontSize: 20,
           fontWeight: 700,
           fontFamily: 'ui-sans-serif, system-ui, "Segoe UI", sans-serif',
