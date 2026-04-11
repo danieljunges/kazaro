@@ -2112,14 +2112,6 @@
   color: var(--ink50, #78716c);
   max-width: 28rem;
 }
-.home-editorial .convite-faq {
-  display: grid;
-  gap: 1rem;
-  max-width: 42rem;
-}
-.home-editorial .convite-faq__item {
-  margin: 0;
-}
 .home-editorial .convite-cta-inner {
   text-align: center;
 }

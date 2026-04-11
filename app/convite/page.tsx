@@ -49,33 +49,6 @@ const STEPS = [
   },
 ];
 
-const FAQ = [
-  {
-    q: "Isso substitui meu Instagram?",
-    a: "Não. O Kazaro é vitrine e agenda para quem já te encontrou ou te achou na busca. O Instagram continua sendo seu canal de autoridade e conteúdo.",
-  },
-  {
-    q: "Quem pode ver meu perfil?",
-    a: "Qualquer pessoa que acesse o site pode ver seu perfil público, serviços aprovados e avaliações, como em um catálogo profissional.",
-  },
-  {
-    q: "Tem custo para entrar?",
-    a: "Para novos profissionais, o cadastro hoje é sem taxa de entrada — é o que a gente mostra na página inicial (0% custo de cadastro). Há condições comerciais favoráveis nos primeiros 90 dias. Se no futuro existir plano pago ou taxa nova, isso aparece claro na hora de criar a conta ou de aceitar cobrança, sem surpresa.",
-  },
-  {
-    q: "Meu serviço já aparece na busca na hora?",
-    a: "Cada serviço novo passa por uma análise do time. Enquanto estiver pendente, só você vê o cadastro no painel; depois de aprovado, ele entra no perfil público com preço fixo para agendamento, como no restante da plataforma.",
-  },
-  {
-    q: "O cliente paga pelo Kazaro?",
-    a: "Hoje o combinado financeiro costuma ser direto entre você e a cliente, conforme os termos. Quando a plataforma passar a processar pagamento, taxas e regras vêm explícitas no momento da contratação.",
-  },
-  {
-    q: "E alvará, normas da profissão, anúncio verdadeiro…?",
-    a: "Isso depende do que você oferece e da legislação aplicável. Nos termos de uso, o profissional responde pela qualidade do serviço, cumprimento de normas da atividade, alvarás quando exigidos e pela veracidade de anúncios e preços.",
-  },
-];
-
 export default async function ConviteProfissionaisPage() {
   const supabase = await getSupabaseServerClient();
   const {
@@ -184,23 +157,6 @@ export default async function ConviteProfissionaisPage() {
               <div className="how-num">{`0${index + 1}`}</div>
               <div className="how-title">{step.title}</div>
               <p className="how-desc">{step.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="sec-header">
-          <div>
-            <span className="sec-eyebrow">Dúvidas comuns</span>
-            <h2 className="sec-title">Antes de clicar no botão</h2>
-          </div>
-        </div>
-        <div className="convite-faq">
-          {FAQ.map(({ q, a }) => (
-            <div key={q} className="pro-page-card convite-faq__item">
-              <div className="pro-page-card__title">{q}</div>
-              <p className="pro-page-card__text">{a}</p>
             </div>
           ))}
         </div>
