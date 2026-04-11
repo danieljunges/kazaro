@@ -5,6 +5,7 @@ import { LogoutFlashToast } from "@/components/auth/LogoutFlashToast";
 import { NavigationProgress } from "@/components/common/NavigationProgress";
 import { RouteScrollTop } from "@/components/common/RouteScrollTop";
 import { KzSaasMotion } from "@/components/motion/KzSaasMotion";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { CookieConsentBar } from "@/components/legal/CookieConsentBar";
 import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE_DEFAULT, SITE_TITLE_TEMPLATE } from "@/lib/site";
 
@@ -58,6 +59,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <GoogleAnalytics />
         <NavigationProgress />
         <Suspense fallback={null}>
           <RouteScrollTop />
