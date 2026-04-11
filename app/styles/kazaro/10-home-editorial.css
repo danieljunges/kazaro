@@ -1,4 +1,4 @@
-/* Home / shell público — superfície quente, teal + toques de coral (visual “produto”, não editorial) */
+/* Home / shell público — papel quente + teal (acento único, sem “laranja” solto) */
 .home-editorial {
   --cream: #faf8f5;
   --cream-alt: #f3eee8;
@@ -20,7 +20,7 @@
   --shadow-lime: 0 10px 36px rgba(15, 118, 110, 0.22);
   background:
     radial-gradient(ellipse 90% 60% at 0% -8%, rgba(15, 118, 110, 0.075), transparent 52%),
-    radial-gradient(ellipse 75% 50% at 100% 0%, rgba(255, 90, 44, 0.055), transparent 50%),
+    radial-gradient(ellipse 78% 52% at 100% 0%, rgba(15, 118, 110, 0.045), transparent 50%),
     var(--cream);
   color: var(--ink);
   font-family: var(--sans);
@@ -459,7 +459,7 @@
   height: min(540px, 78vh);
   background:
     radial-gradient(ellipse 58% 72% at 14% 38%, rgba(15, 118, 110, 0.1), transparent 62%),
-    radial-gradient(ellipse 42% 55% at 92% 18%, rgba(255, 90, 44, 0.06), transparent 58%);
+    radial-gradient(ellipse 42% 55% at 92% 18%, rgba(15, 118, 110, 0.055), transparent 58%);
   pointer-events: none;
   z-index: 0;
 }
@@ -511,7 +511,7 @@
 .home-editorial .hero-headline em {
   font-style: normal;
   font-weight: 700;
-  color: var(--coral, #ff5a2c);
+  color: var(--lime-deep);
 }
 .home-editorial .hero-sub {
   font-size: 15px;
@@ -675,7 +675,8 @@
   background: linear-gradient(145deg, #7dd3fc 0%, #0369a1 90%);
 }
 .home-editorial .hcm-photo-fallback.ph-amber {
-  background: linear-gradient(145deg, #fcd34d 0%, #c2410c 88%);
+  /* Terceira superfície da rotação: neutro quente (evita laranja que “briga” com o teal) */
+  background: linear-gradient(145deg, #d6d3d1 0%, #44403c 90%);
 }
 .home-editorial .hcm-avail-pill {
   position: absolute;
@@ -942,7 +943,7 @@
 .home-editorial .sec-title em {
   font-style: normal;
   font-weight: 700;
-  color: var(--coral, #ff5a2c);
+  color: var(--lime-deep);
 }
 .home-editorial .sec-sub {
   font-size: 15px;
@@ -998,7 +999,7 @@
   border-top: 1px solid var(--border);
 }
 .home-editorial .rail-row:hover {
-  background: linear-gradient(90deg, rgba(15, 118, 110, 0.05), rgba(255, 90, 44, 0.03));
+  background: linear-gradient(90deg, rgba(15, 118, 110, 0.06), rgba(15, 118, 110, 0.02));
   margin: 0 -20px;
   padding-left: 20px;
   padding-right: 20px;
@@ -1052,7 +1053,15 @@
   transform: translateX(3px);
 }
 
-/* Como funciona — desktop em 3 colunas; tablet/mobile em lista com badge ao lado */
+/* Como funciona — módulo editorial sério (SaaS B2B), sem “adesivo” de template */
+.home-editorial .section--how .sec-eyebrow {
+  color: var(--ink60);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+.home-editorial .section--how .sec-title {
+  letter-spacing: -0.034em;
+}
 .home-editorial .section--how .how-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1091,33 +1100,36 @@
 }
 .home-editorial .how-num {
   font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 600;
   line-height: 1;
-  letter-spacing: 0.04em;
-  width: 48px;
-  height: 48px;
+  letter-spacing: 0.16em;
+  font-variant-numeric: tabular-nums;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
-  border-radius: 14px;
+  border-radius: 10px;
   display: grid;
   place-items: center;
-  margin-bottom: 18px;
-  color: var(--lime-deep);
-  background: linear-gradient(145deg, rgba(15, 118, 110, 0.12), rgba(45, 212, 191, 0.08));
-  border: 1px solid rgba(15, 118, 110, 0.14);
+  margin-bottom: 20px;
+  color: var(--ink);
+  background: var(--white);
+  border: 1px solid var(--border-md);
+  box-shadow: 0 1px 2px rgba(28, 25, 23, 0.05);
 }
 .home-editorial .how-title {
-  font-size: clamp(17px, 2.2vw, 18px);
+  font-size: clamp(16px, 2vw, 17px);
   font-weight: 600;
   color: var(--ink);
-  margin-bottom: 10px;
-  line-height: 1.25;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  letter-spacing: -0.018em;
 }
 .home-editorial .how-desc {
-  font-size: clamp(13px, 1.5vw, 14px);
+  font-size: clamp(13px, 1.45vw, 14px);
   font-weight: 400;
-  line-height: 1.65;
-  color: var(--ink50);
+  line-height: 1.6;
+  color: var(--ink60);
   max-width: 42rem;
   margin: 0;
 }
@@ -1133,7 +1145,7 @@
     align-items: flex-start;
     gap: clamp(14px, 3.5vw, 20px);
     padding-bottom: clamp(20px, 4vw, 28px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-md);
   }
   .home-editorial .how-step:last-child {
     padding-bottom: 0;
@@ -1157,10 +1169,10 @@
     padding: 18px 0;
   }
   .home-editorial .how-num {
-    width: 44px;
-    height: 44px;
-    font-size: 12px;
-    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+    font-size: 11px;
+    border-radius: 10px;
   }
 }
 
@@ -1209,7 +1221,7 @@
   background: linear-gradient(145deg, #7dd3fc 0%, #0369a1 90%);
 }
 .home-editorial .ph-amber {
-  background: linear-gradient(145deg, #fcd34d 0%, #c2410c 88%);
+  background: linear-gradient(145deg, #d6d3d1 0%, #44403c 90%);
 }
 .home-editorial .pro-avail {
   position: absolute;
@@ -1381,7 +1393,7 @@
 .home-editorial .why-quote em {
   font-style: normal;
   font-weight: 600;
-  color: #fde68a;
+  color: var(--lime-bright);
 }
 .home-editorial .why-attrib {
   font-size: 12px;
@@ -1512,7 +1524,7 @@
   width: 320px;
   height: 320px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 90, 44, 0.12) 0%, transparent 68%);
+  background: radial-gradient(circle, rgba(94, 234, 212, 0.14) 0%, transparent 68%);
   opacity: 1;
 }
 .home-editorial .pb-inner {

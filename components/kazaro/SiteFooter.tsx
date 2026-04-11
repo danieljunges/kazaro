@@ -19,7 +19,7 @@ export function SiteFooter() {
               Kazaro
             </Link>
             <p className="footer-tagline">
-              Encontre profissionais, veja serviços e agende em um só lugar. Florianópolis.
+              Encontre profissionais, veja serviços e agende em um só lugar.
             </p>
           </div>
           <div>
@@ -81,7 +81,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span className="footer-copy">© {new Date().getFullYear()} Kazaro. Florianópolis, SC.</span>
+          <span className="footer-copy">© {new Date().getFullYear()} Kazaro.</span>
           <div className="footer-bottom-end">
             <a
               href={INSTAGRAM_URL}

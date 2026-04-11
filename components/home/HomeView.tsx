@@ -3,7 +3,6 @@ import type { ProfessionalCard } from "@/lib/professionals";
 import { availBadge, proSurfaceClass, starsFromRatingPt } from "@/lib/home/spotlight-helpers";
 
 const TRUST_LINE = [
-  "Profissionais com verificação de antecedentes",
   "Agendamento com data e horário combinados",
   "Preços publicados no perfil",
   "Pagamento e suporte pelo Kazaro",
